@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/fniessink/next-action.svg?branch=master)](https://travis-ci.com/fniessink/next-action)
+
 # Next-action
 
 Determine the next action to work on from a list of actions in a todo.txt file.
