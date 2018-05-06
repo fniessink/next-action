@@ -1,6 +1,10 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
+__pycache__
 *.py[cod]
-
-# mypy
-.mypy_cache/
+.coverage
+.mypy_cache
+.sonarlint
+.vscode
+.DS_Store
+build
+dist
+*.egg-info
