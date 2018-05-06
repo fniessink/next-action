@@ -14,8 +14,8 @@ def parse_arguments() -> argparse.Namespace:
 def next_action() -> None:
     with open(parse_arguments().file, "r") as tasks:
         tasks = [Task(line.strip()) for line in tasks.readlines()]
-    next = next_action_based_on_priority(*tasks)
-    if next:
-        print(next.text)
+    action = next_action_based_on_priority(*tasks)
+    if action:
+        print(action.text)
     else:
         print("Nothing to do!")
