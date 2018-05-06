@@ -3,4 +3,5 @@ python:
   - "3.6"
 sudo: false
 script:
-  - pytest
+  - coverage run --branch pytest
+  - coverage xml --fail-under=100
