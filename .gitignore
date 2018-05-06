@@ -6,5 +6,6 @@ __pycache__
 .vscode
 .DS_Store
 build
+coverage.xml
 dist
 *.egg-info
