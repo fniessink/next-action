@@ -28,6 +28,5 @@ and more.""",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Topic :: Office/Business :: Scheduling"],
     keywords=["todo.txt", "task management", "todolist"])
