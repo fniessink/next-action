@@ -6,3 +6,10 @@ script:
   - coverage run --branch -m unittest
   - coverage xml --fail-under=100
   - python-codacy-coverage -r coverage.xml
+deploy:
+  provider: pypi
+  user: fniessink
+  password:
+    secure: FI9Q2kC5D6i2hjK7t0GTVzYIgmU7H9GoI0qqtzVtT6V7gfV74HtfPxuIbkF6HND09GY1moSF5I0vyR8Bm2nMxEs+9PflYtNUMeNlyrEEof/brbYIrKujPGr6wVdgT4iZlMAVeybRTWhPQpo5PFsGuGcQa5cZOzt4fPPy/KO8C0c=
+  on:
+    tags: true
