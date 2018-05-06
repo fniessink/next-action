@@ -1,14 +1,6 @@
 language: python
-  python:
-    - "3.6"
+python:
+  - "3.6"
 sudo: false
 script:
   - pytest
-deploy:
-  provider: pypi
-  user: fniessink
-  password:
-    secure: LziuJfYaa8IjErTKFDE+tVPXzWySYOo1QAeXLxOQcFbKjsGKK1xV6jnUJL5CshWT07M5kILMcUMfg2zaxZd0gJG1eKFheqkm0bz7qP5zCYn8H72dl4ogRdMnyO3+YsF++Nl0TMnCW/cgNzGvyQslS+7CrhdP9HppNKP/5rgL8K79y7uSGPGu6fHMTSPmnu3H/rMsSMxBWvNoKWcIExQfjRVxgBzHd+HXcxsL7MF/d4qtk3hQdUbuR+SuMPh6qiZjgGGGrjay2qACgaO/7rhYtW+R9eRWZ8JwEsxEF0cG40PvA91+aASbkNtUalZqpf3gsuPfDuei/pPAEjiCxp5kMBa2fCVBMW6o7bfNeq9rcSkdSUkNWsWSSlKzWNYWRT6H4kM3Yt6f9ldfoe02GAjGSui3PEwZbE8ayKXWavP4WPhX6YDnOqRzW81YL0wVwb1HGuShKi2ZhQn/tdrUVIWA6xF1NxA2BjRFQzfMiiJm+9yIcdl7y20U9I8Lv5NuoqxNjvd9aJfQkkrv8OFrF5jaWkKXly0LOcm+JUroNK+pdZEHm74pfmJUDnc56bsCRAuazeeKD5lklwr54PzG84sutFVTYl+iS54fCpAiSLxogTiRDeLO9cnYpxZ0yvySbctIcYdIaAg07svUglGUbTgM+pbHPFqf3l87l+uZbff1VXU=
-  on:
-    tags: true
-
