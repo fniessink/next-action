@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="next-action",
-    version="0.0.1",
+    version="0.0.2",
     description="Show the next action to work on from a todo.txt file",
     long_description="""Show the next action to work on from a todo.txt file, based on context, priority,
 and more.""",
