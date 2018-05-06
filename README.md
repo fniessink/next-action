@@ -12,7 +12,9 @@ Next-action is not a tool for editing todo.txt files, see <http://todotxt.org> f
 
 ## Installation
 
-pip install next-action
+Next-action requires Python 3.6 or newer.
+
+`pip install next-action`
 
 ## Usage
 
