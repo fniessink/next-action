@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Show friendly error message when file cannot be found.
+- Show default filename in the help message. Fixes #3.
+- Show friendly error message when file cannot be found. Fixes #2.
 
 ## [0.0.2] - 2018-05-09
 
