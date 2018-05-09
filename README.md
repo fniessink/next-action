@@ -21,4 +21,15 @@ Next-action requires Python 3.6 or newer.
 
 ## Usage
 
-`next_action --help`
+```console
+$ next_action --help
+
+usage: next_action [-h] [-f FILE]
+
+Show the next action in your todo.txt
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILE, --file FILE  Filename of the todo.txt file to read (default:
+                        todo.txt)
+```
