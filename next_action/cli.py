@@ -1,5 +1,3 @@
-import sys
-
 from next_action.todotxt import Task
 from next_action.pick_action import next_action_based_on_priority
 from next_action.arguments import parse_arguments
