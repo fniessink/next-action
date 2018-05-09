@@ -21,3 +21,11 @@ class CLITest(unittest.TestCase):
         """ Test the response when the task file has one task. """
         next_action()
         self.assertEqual([call("Todo"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch("next_action.cli.open")
+    @patch.object(sys.stdout, "write")
+    def test_missing_file(self, mock_stdout_write, mock_open):
+        """ Test the response when the task file can't be found. """
+        mock_open.side_effect = FileNotFoundError
+        next_action()
+        self.assertEqual([call("Can't find todo.txt"), call("\n")], mock_stdout_write.call_args_list)
