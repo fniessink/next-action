@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Runing tests with "python setup.py test" would result in test failures. Fixes #15.
 - Move development dependencies to requirements-dev.txt so they don't get installed when a user installs Next-action. Fixes #14.
 - Make Travis generate a wheel distribution in addition to the source distribution. Fixes #14.
 

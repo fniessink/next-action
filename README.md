@@ -33,3 +33,9 @@ optional arguments:
   -f FILE, --file FILE  Filename of the todo.txt file to read (default:
                         todo.txt)
 ```
+
+## Develop
+
+Clone the repository and run the unit tests with `python setup.py test`.
+
+To create the unit test coverage report install the development dependencies with `pip install -r requirements-dev.txt` and run the unit tests under coverage with `coverage run --branch -m unittest; coverage html --fail-under=100 --directory=build/htmlcov`.
