@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Move development dependencies to requirements-dev.txt so they don't get installed when a user installs Next-action. Fixes #14.
+- Make Travis generate a wheel distribution in addition to the source distribution. Fixes #14.
 
 ## [0.0.3] - 2018-05-10
 

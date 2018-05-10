@@ -11,5 +11,6 @@ script:
 deploy:
   provider: pypi
   user: fniessink
+  distributions: "sdist bdist_wheel"
   on:
     tags: true
