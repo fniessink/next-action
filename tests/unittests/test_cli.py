@@ -1,6 +1,7 @@
+import os
+import sys
 import unittest
 from unittest.mock import patch, mock_open, call
-import sys
 
 from next_action.cli import next_action
 from next_action import __version__
@@ -37,20 +38,20 @@ class CLITest(unittest.TestCase):
     @patch.object(sys, "argv", ["next_action", "--help"])
     @patch.object(sys.stdout, "write")
     def test_help(self, mock_stdout_write):
-        """ Test that the help contains the default filename. """
-        try:
-            next_action()
-        except SystemExit:
-            pass
-        self.assertEqual(call("""usage: next_action [-h] [-f FILE] [--version]
+        """ Test the help message. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, next_action)
+        self.assertEqual(call("""usage: next_action [-h] [--version] [-f FILE] [@CONTEXT]
 
 Show the next action in your todo.txt
 
+positional arguments:
+  @CONTEXT              Show the next action in the specified context (default: None)
+
 optional arguments:
   -h, --help            show this help message and exit
-  -f FILE, --file FILE  filename of the todo.txt file to read (default:
-                        todo.txt)
   --version             show program's version number and exit
+  -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
 """),
                         mock_stdout_write.call_args_list[0])
 
@@ -58,8 +59,5 @@ optional arguments:
     @patch.object(sys.stdout, "write")
     def test_version(self, mock_stdout_write):
         """ Test that --version shows the version number. """
-        try:
-            next_action()
-        except SystemExit:
-            pass
+        self.assertRaises(SystemExit, next_action)
         self.assertEqual([call("Next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)

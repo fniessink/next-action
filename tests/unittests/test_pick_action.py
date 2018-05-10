@@ -41,3 +41,10 @@ class PickActionTest(unittest.TestCase):
         uncompleted_task = todotxt.Task("Todo")
         self.assertEqual(uncompleted_task,
                          pick_action.next_action_based_on_priority([completed_task, uncompleted_task]))
+
+    def test_next_action_limited_to_context(self):
+        """ Test that the next action can be limited to a specific context. """
+        task1 = todotxt.Task("Todo 1 @work")
+        task2 = todotxt.Task("(B) Todo 2 @work")
+        task3 = todotxt.Task("(A) Todo 3 @home")
+        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], context="work"))

@@ -23,16 +23,17 @@ Next-action requires Python 3.6 or newer.
 
 ```console
 $ next_action --help
-
-usage: next_action [-h] [-f FILE] [--version]
+usage: next_action [-h] [--version] [-f FILE] [@CONTEXT]
 
 Show the next action in your todo.txt
 
+positional arguments:
+  @CONTEXT              Show the next action in the specified context (default: None)
+
 optional arguments:
   -h, --help            show this help message and exit
-  -f FILE, --file FILE  filename of the todo.txt file to read (default:
-                        todo.txt)
   --version             show program's version number and exit
+  -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
 ```
 
 ## Develop
