@@ -1,13 +1,16 @@
 language: python
 python:
-- '3.6'
+  - '3.6'
 sudo: false
+install:
+  - pip install -r requirements-dev.txt
 script:
-- coverage run --branch -m unittest
-- coverage xml --fail-under=100
-- python-codacy-coverage -r coverage.xml
+  - coverage run --branch -m unittest
+  - coverage xml --fail-under=100
+  - python-codacy-coverage -r coverage.xml
 deploy:
   provider: pypi
   user: fniessink
+  distributions: "sdist bdist_wheel"
   on:
     tags: true
