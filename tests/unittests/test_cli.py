@@ -3,6 +3,7 @@ from unittest.mock import patch, mock_open, call
 import sys
 
 from next_action.cli import next_action
+from next_action import __version__
 
 
 class CLITest(unittest.TestCase):
@@ -41,13 +42,24 @@ class CLITest(unittest.TestCase):
             next_action()
         except SystemExit:
             pass
-        self.assertEqual(call("""usage: next_action [-h] [-f FILE]
+        self.assertEqual(call("""usage: next_action [-h] [-f FILE] [--version]
 
 Show the next action in your todo.txt
 
 optional arguments:
   -h, --help            show this help message and exit
-  -f FILE, --file FILE  Filename of the todo.txt file to read (default:
+  -f FILE, --file FILE  filename of the todo.txt file to read (default:
                         todo.txt)
+  --version             show program's version number and exit
 """),
                         mock_stdout_write.call_args_list[0])
+
+    @patch.object(sys, "argv", ["next_action", "--version"])
+    @patch.object(sys.stdout, "write")
+    def test_version(self, mock_stdout_write):
+        """ Test that --version shows the version number. """
+        try:
+            next_action()
+        except SystemExit:
+            pass
+        self.assertEqual([call("Next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)
