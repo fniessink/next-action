@@ -1,6 +1,7 @@
+import os
+import sys
 import unittest
 from unittest.mock import patch, call
-import sys
 
 from next_action.arguments import parse_arguments
 
@@ -36,7 +37,8 @@ class ArgumentParserTest(unittest.TestCase):
     @patch.object(sys, "argv", ["next_action", "home"])
     @patch.object(sys.stderr, "write")
     def test_faulty_context(self, mock_stderr_write):
-        """ Test that the argument parser exists if the context is faulty. """
+        """ Test that the argument parser exits if the context is faulty. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call("usage: next_action [-h] [--version] [-f FILE] [@CONTEXT]\n"),
                           call("next_action: error: Contexts should start with an @.\n")],
