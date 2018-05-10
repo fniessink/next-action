@@ -1,9 +1,11 @@
 from setuptools import setup, find_packages
 
+import next_action
+
 
 setup(
     name="next-action",
-    version="0.0.3",
+    version=next_action.__version__,
     description="Show the next action to work on from a todo.txt file",
     long_description="""Show the next action to work on from a todo.txt file, based on context, priority,
 and more.""",

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Version number command line argument (`--version`) to display Next-action's version number.
+
 ### Fixed
 
 - Runing tests with "python setup.py test" would result in test failures. Fixes #15.
