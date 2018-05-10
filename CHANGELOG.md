@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- Move development dependencies to requirements-dev.txt so they don't get installed when a user installs Next-action. Fixes #14.
+
 ## [0.0.3] - 2018-05-10
 
-### Changed
+### Fixed
 
 - Show default filename in the help message. Fixes #3.
 - Show friendly error message when file cannot be found. Fixes #2.
@@ -22,5 +28,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `next_action` script that reads a todo.txt file and prints the next action the user should
-  work on, based on the priorities of the tasks.
+- `next_action` script that reads a todo.txt file and prints the next action the user should work on, based on the priorities of the tasks.
