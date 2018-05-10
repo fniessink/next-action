@@ -4,7 +4,7 @@ import next_action
 
 
 setup(
-    name=next_action.__name__,
+    name=next_action.__title__,
     version=next_action.__version__,
     description="Command-line application to show the next action to work on from a todo.txt file",
     long_description="""Show the next action to work on from a todo.txt file, based on context, priority,
