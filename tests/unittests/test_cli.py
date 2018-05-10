@@ -8,6 +8,7 @@ from next_action.cli import next_action
 class CLITest(unittest.TestCase):
     """ Unit tests for the command-line interface. """
 
+    @patch.object(sys, "argv", ["next_action"])
     @patch("next_action.cli.open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
     def test_empty_task_file(self, mock_stdout_write):
@@ -15,6 +16,7 @@ class CLITest(unittest.TestCase):
         next_action()
         self.assertEqual([call("Nothing to do!"), call("\n")], mock_stdout_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next_action"])
     @patch("next_action.cli.open", mock_open(read_data="Todo\n"))
     @patch.object(sys.stdout, "write")
     def test_one_task(self, mock_stdout_write):
@@ -22,6 +24,7 @@ class CLITest(unittest.TestCase):
         next_action()
         self.assertEqual([call("Todo"), call("\n")], mock_stdout_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next_action"])
     @patch("next_action.cli.open")
     @patch.object(sys.stdout, "write")
     def test_missing_file(self, mock_stdout_write, mock_open):
