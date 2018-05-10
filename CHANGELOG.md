@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Allow for limiting the next action to a specific context. Closes #5.
 - Version number command line argument (`--version`) to display Next-action's version number.
 
 ### Fixed

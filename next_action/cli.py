@@ -4,7 +4,8 @@ from next_action.arguments import parse_arguments
 
 
 def next_action() -> None:
-    filename: str = parse_arguments().file
+    arguments = parse_arguments()
+    filename: str = arguments.file
     try:
         todotxt_file = open(filename, "r")
     except FileNotFoundError:
@@ -12,5 +13,5 @@ def next_action() -> None:
         return
     with todotxt_file:
         tasks = [Task(line.strip()) for line in todotxt_file.readlines()]
-    action = next_action_based_on_priority(tasks)
+    action = next_action_based_on_priority(tasks, arguments.context)
     print(action.text if action else "Nothing to do!")

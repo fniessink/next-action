@@ -4,15 +4,15 @@ import next_action
 
 
 setup(
-    name="next-action",
+    name=next_action.__name__,
     version=next_action.__version__,
-    description="Show the next action to work on from a todo.txt file",
+    description="Command-line application to show the next action to work on from a todo.txt file",
     long_description="""Show the next action to work on from a todo.txt file, based on context, priority,
 and more.""",
-    author='Frank Niessink',
-    author_email='frank@niessink.com',
-    url='https://github.com/fniessink/next-action',
-    license='Apache License, Version 2.0',
+    author="Frank Niessink",
+    author_email="frank@niessink.com",
+    url="https://github.com/fniessink/next-action",
+    license="Apache License, Version 2.0",
     python_requires=">=3.6",
     packages=find_packages(),
     entry_points={
