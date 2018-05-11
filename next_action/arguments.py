@@ -12,9 +12,8 @@ class ContextProjectAction(argparse.Action):  # pylint: disable=too-few-public-m
     """ An argument parser action that checks for contexts and projects. """
     def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace,
                  values: Union[str, Sequence[Any], None], option_string: str = None) -> None:
-        if not values:
+        if not values or not isinstance(values, str):
             return
-        assert isinstance(values, str)  # Next-action doesn't support repeated context or projects yet
         if values.startswith("@"):
             if len(values) > 1:
                 setattr(namespace, "context", values)
