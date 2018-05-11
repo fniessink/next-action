@@ -50,3 +50,18 @@ class PickActionTest(unittest.TestCase):
         task2 = todotxt.Task("(B) Todo 2 @work")
         task3 = todotxt.Task("(A) Todo 3 @home")
         self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], context="work"))
+
+    def test_project(self):
+        """ Test that the next action can be limited to a specific project. """
+        task1 = todotxt.Task("Todo 1 +ProjectX")
+        task2 = todotxt.Task("(B) Todo 2 +ProjectX")
+        task3 = todotxt.Task("(A) Todo 3 +ProjectY")
+        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], project="ProjectX"))
+
+    def test_project_and_context(self):
+        """ Test that the next action can be limited to a specific project and context. """
+        task1 = todotxt.Task("Todo 1 +ProjectX @office")
+        task2 = todotxt.Task("(B) Todo 2 +ProjectX")
+        task3 = todotxt.Task("(A) Todo 3 +ProjectY")
+        self.assertEqual(task1, pick_action.next_action_based_on_priority([task1, task2, task3], project="ProjectX",
+                                                                          context="office"))
