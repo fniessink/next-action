@@ -23,12 +23,13 @@ Next-action requires Python 3.6 or newer.
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f FILE] [@CONTEXT]
+usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]
 
 Show the next action in your todo.txt
 
 positional arguments:
-  @CONTEXT              Show the next action in the specified context (default: None)
+  @CONTEXT              show the next action in the specified context (default: None)
+  +PROJECT              show the next action for the specified project (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -43,11 +44,15 @@ $ next-action
 (A) Call mom @phone
 ```
 
-You can limit the tasks from which Next-action picks the next action by passing a context:
+You can limit the tasks from which Next-action picks the next action by passing a context and/or a project:
 
 ```console
 $ next-action @work
 (C) Finish proposal for important client @work
+$ next-action +DogHouse
+(G) Buy wood for +DogHouse @store
+$ next-action +DogHouse @home
+Get rid of old +DogHouse @home
 ```
 
 Since Next-action is still alpha-stage, this is it for the moment. Stay tuned for more options.
