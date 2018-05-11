@@ -8,6 +8,7 @@ script:
   - coverage run --branch -m unittest
   - coverage xml --fail-under=100
   - python-codacy-coverage -r coverage.xml
+  - pylint next_action
 deploy:
   provider: pypi
   user: fniessink

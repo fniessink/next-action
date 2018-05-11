@@ -1,3 +1,5 @@
+""" Class that represents one task (i.e. one line) from a todo.txt file. """
+
 import datetime
 import re
 from typing import Optional, Set

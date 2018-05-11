@@ -1,3 +1,5 @@
+""" Unit tests for the command-line interface entry point. """
+
 import os
 import sys
 import unittest
@@ -29,9 +31,9 @@ class CLITest(unittest.TestCase):
     @patch.object(sys, "argv", ["next-action"])
     @patch("next_action.cli.open")
     @patch.object(sys.stdout, "write")
-    def test_missing_file(self, mock_stdout_write, mock_open):
+    def test_missing_file(self, mock_stdout_write, mock_file_open):
         """ Test the response when the task file can't be found. """
-        mock_open.side_effect = FileNotFoundError
+        mock_file_open.side_effect = FileNotFoundError
         next_action()
         self.assertEqual([call("Can't find todo.txt"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -53,7 +55,7 @@ optional arguments:
   --version             show program's version number and exit
   -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
 """),
-                        mock_stdout_write.call_args_list[0])
+                         mock_stdout_write.call_args_list[0])
 
     @patch.object(sys, "argv", ["next-action", "--version"])
     @patch.object(sys.stdout, "write")

@@ -1,3 +1,5 @@
+""" Unit test for the next action algorithm. """
+
 import unittest
 
 from next_action import todotxt, pick_action
@@ -29,20 +31,20 @@ class PickActionTest(unittest.TestCase):
         task3 = todotxt.Task("(A) Todo 3")
         self.assertEqual(task3, pick_action.next_action_based_on_priority([task1, task2, task3]))
 
-    def test_completed_tasks_are_not_next_action_based_on_priority(self):
-        """ If all tasks are completed, there's no next action. """
-        completed_task1 = todotxt.Task("x Completed")
-        completed_task2 = todotxt.Task("x Completed too")
-        self.assertEqual(None, pick_action.next_action_based_on_priority([completed_task1, completed_task2]))
-
-    def test_completed_task_is_not_next_action_based_on_priority(self):
+    def test_completed_task_is_ignored(self):
         """ If there's one completed and one uncompleted task, the uncompleted one is the next action. """
         completed_task = todotxt.Task("x Completed")
         uncompleted_task = todotxt.Task("Todo")
         self.assertEqual(uncompleted_task,
                          pick_action.next_action_based_on_priority([completed_task, uncompleted_task]))
 
-    def test_next_action_limited_to_context(self):
+    def test_completed_tasks_only(self):
+        """ If all tasks are completed, there's no next action. """
+        completed_task1 = todotxt.Task("x Completed")
+        completed_task2 = todotxt.Task("x Completed too")
+        self.assertEqual(None, pick_action.next_action_based_on_priority([completed_task1, completed_task2]))
+
+    def test_context(self):
         """ Test that the next action can be limited to a specific context. """
         task1 = todotxt.Task("Todo 1 @work")
         task2 = todotxt.Task("(B) Todo 2 @work")

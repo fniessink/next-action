@@ -1,9 +1,18 @@
+""" Entry point for Next-action's command-line interface. """
+
 from next_action.todotxt import Task
 from next_action.pick_action import next_action_based_on_priority
 from next_action.arguments import parse_arguments
 
 
 def next_action() -> None:
+    """ Entry point for the command-line interface.
+
+        Basic recipe:
+        1) parse command-line arguments,
+        2) read todo.txt file,
+        3) determine the next action and display it.
+    """
     arguments = parse_arguments()
     filename: str = arguments.file
     try:

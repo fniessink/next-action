@@ -1,3 +1,5 @@
+""" Algorithm for deciding the next action. """
+
 from typing import Optional, Iterable
 
 from .todotxt import Task

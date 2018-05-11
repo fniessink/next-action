@@ -1,3 +1,5 @@
+""" Parse the command line arguments. """
+
 import argparse
 import os
 import shutil
@@ -5,7 +7,7 @@ import shutil
 import next_action
 
 
-class ContextAction(argparse.Action):
+class ContextAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """ A context action that checks whether contexts start with an @. """
     def __call__(self, parser, namespace, values, option_string=None):
         if not values:

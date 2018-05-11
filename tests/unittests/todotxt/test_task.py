@@ -1,3 +1,5 @@
+""" Unit tests for the todo.txt Task class. """
+
 import datetime
 import unittest
 import string
@@ -85,7 +87,7 @@ class CreationDateTest(unittest.TestCase):
         """ Test a valid creation date. """
         self.assertEqual(datetime.date(2018, 1, 2), todotxt.Task("2018-01-02 Todo").creation_date())
 
-    def test_creation_date_after_priority(self):
+    def test_creation_date_after_priority(self):  # pylint:disable=invalid-name
         """ Test a valid creation date after the priority. """
         self.assertEqual(datetime.date(2018, 12, 3), todotxt.Task("(B) 2018-12-03 Todo").creation_date())
 

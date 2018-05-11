@@ -1,3 +1,5 @@
+""" Unit tests for the argument parsing classes. """
+
 import os
 import sys
 import unittest
