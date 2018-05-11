@@ -10,7 +10,7 @@ from next_action import __version__
 class CLITest(unittest.TestCase):
     """ Unit tests for the command-line interface. """
 
-    @patch.object(sys, "argv", ["next_action"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch("next_action.cli.open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
     def test_empty_task_file(self, mock_stdout_write):
@@ -18,7 +18,7 @@ class CLITest(unittest.TestCase):
         next_action()
         self.assertEqual([call("Nothing to do!"), call("\n")], mock_stdout_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next_action"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch("next_action.cli.open", mock_open(read_data="Todo\n"))
     @patch.object(sys.stdout, "write")
     def test_one_task(self, mock_stdout_write):
@@ -26,7 +26,7 @@ class CLITest(unittest.TestCase):
         next_action()
         self.assertEqual([call("Todo"), call("\n")], mock_stdout_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next_action"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch("next_action.cli.open")
     @patch.object(sys.stdout, "write")
     def test_missing_file(self, mock_stdout_write, mock_open):
@@ -35,13 +35,13 @@ class CLITest(unittest.TestCase):
         next_action()
         self.assertEqual([call("Can't find todo.txt"), call("\n")], mock_stdout_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next_action", "--help"])
+    @patch.object(sys, "argv", ["next-action", "--help"])
     @patch.object(sys.stdout, "write")
     def test_help(self, mock_stdout_write):
         """ Test the help message. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual(call("""usage: next_action [-h] [--version] [-f FILE] [@CONTEXT]
+        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [@CONTEXT]
 
 Show the next action in your todo.txt
 
@@ -55,9 +55,9 @@ optional arguments:
 """),
                         mock_stdout_write.call_args_list[0])
 
-    @patch.object(sys, "argv", ["next_action", "--version"])
+    @patch.object(sys, "argv", ["next-action", "--version"])
     @patch.object(sys.stdout, "write")
     def test_version(self, mock_stdout_write):
         """ Test that --version shows the version number. """
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual([call("Next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)
+        self.assertEqual([call("next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)

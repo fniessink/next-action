@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fniessink/next-action&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&utm_medium=referral&utm_content=fniessink/next-action&utm_campaign=Badge_Coverage)
 
-Determine the next action to work on from a list of actions in a todo.txt file.
+Determine the next action to work on from a list of actions in a todo.txt file. Next-action is alpha-stage at the moment, so its options are rather limited at the moment.
 
 Don't know what todo.txt is? See <https://github.com/todotxt/todo.txt> for the todo.txt specification.
 
@@ -22,8 +22,8 @@ Next-action requires Python 3.6 or newer.
 ## Usage
 
 ```console
-$ next_action --help
-usage: next_action [-h] [--version] [-f FILE] [@CONTEXT]
+$ next-action --help
+usage: next-action [-h] [--version] [-f FILE] [@CONTEXT]
 
 Show the next action in your todo.txt
 
@@ -35,6 +35,22 @@ optional arguments:
   --version             show program's version number and exit
   -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
 ```
+
+Assuming your todo.txt file is in the current folder, running Next-action without arguments will show the next action you should do based on your tasks' priorities:
+
+```console
+$ next-action
+(A) Call mom @phone
+```
+
+You can limit the tasks from which Next-action picks the next action by passing a context:
+
+```console
+$ next-action @work
+(C) Finish proposal for important client @work
+```
+
+Since Next-action is still alpha-stage, this is it for the moment. Stay tuned for more options.
 
 ## Develop
 
