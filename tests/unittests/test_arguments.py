@@ -36,12 +36,37 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser returns the context if the user passes one. """
         self.assertEqual("@home", parse_arguments().context)
 
-    @patch.object(sys, "argv", ["next-action", "home"])
+    @patch.object(sys, "argv", ["next-action", "@"])
     @patch.object(sys.stderr, "write")
-    def test_faulty_context(self, mock_stderr_write):
-        """ Test that the argument parser exits if the context is faulty. """
+    def test_empty_context(self, mock_stderr_write):
+        """ Test that the argument parser exits if the context is empty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT]\n"),
-                          call("next-action: error: Contexts should start with an @.\n")],
+        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]\n"),
+                          call("next-action: error: Context name cannot be empty.\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "+DogHouse"])
+    def test_one_project(self):
+        """ Test that the argument parser returns the project if the user passes one. """
+        self.assertEqual("+DogHouse", parse_arguments().project)
+
+    @patch.object(sys, "argv", ["next-action", "+"])
+    @patch.object(sys.stderr, "write")
+    def test_empty_project(self, mock_stderr_write):
+        """ Test that the argument parser exits if the project is empty. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]\n"),
+                          call("next-action: error: Project name cannot be empty.\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "home"])
+    @patch.object(sys.stderr, "write")
+    def test_faulty_option(self, mock_stderr_write):
+        """ Test that the argument parser exits if the option is faulty. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]\n"),
+                          call("next-action: error: Unrecognized option 'home'.\n")],
                          mock_stderr_write.call_args_list)

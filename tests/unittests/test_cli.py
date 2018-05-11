@@ -28,6 +28,22 @@ class CLITest(unittest.TestCase):
         next_action()
         self.assertEqual([call("Todo"), call("\n")], mock_stdout_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next-action", "@work"])
+    @patch("next_action.cli.open", mock_open(read_data="Todo @home\nTodo @work\n"))
+    @patch.object(sys.stdout, "write")
+    def test_context(self, mock_stdout_write):
+        """ Test the response when the user passes a context. """
+        next_action()
+        self.assertEqual([call("Todo @work"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "+DogHouse"])
+    @patch("next_action.cli.open", mock_open(read_data="Walk the dog @home\nBuy wood +DogHouse\n"))
+    @patch.object(sys.stdout, "write")
+    def test_project(self, mock_stdout_write):
+        """ Test the response when the user passes a project. """
+        next_action()
+        self.assertEqual([call("Buy wood +DogHouse"), call("\n")], mock_stdout_write.call_args_list)
+
     @patch.object(sys, "argv", ["next-action"])
     @patch("next_action.cli.open")
     @patch.object(sys.stdout, "write")
@@ -43,12 +59,13 @@ class CLITest(unittest.TestCase):
         """ Test the help message. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [@CONTEXT]
+        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]
 
 Show the next action in your todo.txt
 
 positional arguments:
-  @CONTEXT              Show the next action in the specified context (default: None)
+  @CONTEXT              show the next action in the specified context (default: None)
+  +PROJECT              show the next action for the specified project (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
