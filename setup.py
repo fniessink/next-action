@@ -17,7 +17,7 @@ and more.""",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "next_action=next_action.cli:next_action",
+            "next-action=next_action.cli:next_action",
         ],
     },
     test_suite="tests",
