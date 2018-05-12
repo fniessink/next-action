@@ -23,13 +23,13 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]
+usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]]
 
 Show the next action in your todo.txt
 
 positional arguments:
-  @CONTEXT              show the next action in the specified context (default: None)
-  +PROJECT              show the next action for the specified project (default: None)
+  @CONTEXT              show the next action in the specified contexts (default: None)
+  +PROJECT              show the next action for the specified projects (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -44,15 +44,24 @@ $ next-action
 (A) Call mom @phone
 ```
 
-You can limit the tasks from which *Next-action* picks the next action by passing a context and/or a project:
+You can limit the tasks from which *Next-action* picks the next action by passing contexts and/or projects:
 
 ```console
 $ next-action @work
 (C) Finish proposal for important client @work
+
 $ next-action +DogHouse
 (G) Buy wood for new +DogHouse @store
+
 $ next-action +DogHouse @home
 Get rid of old +DogHouse @home
+```
+
+When you supply multiple contexts and/or projects, the next action belongs to all of the contexts and at least one of the projects:
+
+```console
+$ next-action +DogHouse +PaintHouse @store @weekend
+(B) Buy paint to +PaintHouse @store @weekend
 ```
 
 Since *Next-action* is still pre-alpha-stage, this is it for the moment. Stay tuned for more options.
