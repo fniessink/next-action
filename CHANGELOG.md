@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Specify the number of next actions to show: `next-action --number 3`. Closes #7.
+- Show all next actions: `next-action --all`. Closes #29.
 
 ## [0.0.7] - 2018-05-12
 
