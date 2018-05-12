@@ -23,7 +23,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]]
+usage: next-action [-h] [--version] [-f FILE] [-n N] [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]]
 
 Show the next action in your todo.txt
 
@@ -35,6 +35,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
+  -n N, --number N      number of next actions to show (default: 1)
 ```
 
 Assuming your todo.txt file is in the current folder, running *Next-action* without arguments will show the next action you should do based on your tasks' priorities:
@@ -62,6 +63,15 @@ When you supply multiple contexts and/or projects, the next action belongs to al
 ```console
 $ next-action +DogHouse +PaintHouse @store @weekend
 (B) Buy paint to +PaintHouse @store @weekend
+```
+
+To show more than one next action, supply the number you think you can handle:
+
+```console
+$ next-action --number 3
+(A) Call mom @phone
+(B) Buy paint to +PaintHouse @store @weekend
+(C) Finish proposal for important client @work
 ```
 
 Since *Next-action* is still pre-alpha-stage, this is it for the moment. Stay tuned for more options.
