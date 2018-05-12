@@ -49,19 +49,27 @@ class PickActionTest(unittest.TestCase):
         task1 = todotxt.Task("Todo 1 @work")
         task2 = todotxt.Task("(B) Todo 2 @work")
         task3 = todotxt.Task("(A) Todo 3 @home")
-        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], context="work"))
+        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], contexts={"work"}))
+
+    def test_contexts(self):
+        """ Test that the next action can be limited to a set of contexts. """
+        task1 = todotxt.Task("Todo 1 @work @computer")
+        task2 = todotxt.Task("(B) Todo 2 @work @computer")
+        task3 = todotxt.Task("(A) Todo 3 @home @computer")
+        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3],
+                                                                          contexts={"work", "computer"}))
 
     def test_project(self):
         """ Test that the next action can be limited to a specific project. """
         task1 = todotxt.Task("Todo 1 +ProjectX")
         task2 = todotxt.Task("(B) Todo 2 +ProjectX")
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
-        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], project="ProjectX"))
+        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], projects={"ProjectX"}))
 
     def test_project_and_context(self):
         """ Test that the next action can be limited to a specific project and context. """
         task1 = todotxt.Task("Todo 1 +ProjectX @office")
         task2 = todotxt.Task("(B) Todo 2 +ProjectX")
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
-        self.assertEqual(task1, pick_action.next_action_based_on_priority([task1, task2, task3], project="ProjectX",
-                                                                          context="office"))
+        self.assertEqual(task1, pick_action.next_action_based_on_priority([task1, task2, task3], projects={"ProjectX"},
+                                                                          contexts={"office"}))
