@@ -13,6 +13,10 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 *Next-action* is not a tool for editing todo.txt files, see <http://todotxt.org> for available options.
 
+## Demo
+
+![gif](demo.gif)
+
 ## Installation
 
 *Next-action* requires Python 3.6 or newer.
