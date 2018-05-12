@@ -79,15 +79,12 @@ $ next-action --number 3
 (C) Finish proposal for important client @work
 ```
 
-Or even show all next actions:
+Or show all next actions, e.g. for a specific context:
 
 ```console
-$ next-action --number 3
-(A) Call mom @phone
+$ next-action --all @store
 (B) Buy paint to +PaintHouse @store @weekend
-(C) Finish proposal for important client @work
 (G) Buy wood for new +DogHouse @store
-...
 ```
 
 Note that completed tasks are never shown since they can't be a next action.
