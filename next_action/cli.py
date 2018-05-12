@@ -22,5 +22,5 @@ def next_action() -> None:
         return
     with todotxt_file:
         tasks = [Task(line.strip()) for line in todotxt_file.readlines()]
-    action = next_action_based_on_priority(tasks, arguments.context or "", arguments.project or "")
+    action = next_action_based_on_priority(tasks, set(arguments.contexts), set(arguments.projects))
     print(action.text if action else "Nothing to do!")

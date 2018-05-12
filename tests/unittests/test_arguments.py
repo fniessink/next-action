@@ -28,13 +28,18 @@ class ArgumentParserTest(unittest.TestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     def test_no_context(self):
-        """ Test that the argument parser returns no context if the user doesn't pass one. """
-        self.assertEqual(None, parse_arguments().context)
+        """ Test that the argument parser returns no contexts if the user doesn't pass one. """
+        self.assertEqual([], parse_arguments().contexts)
 
     @patch.object(sys, "argv", ["next-action", "@home"])
     def test_one_context(self):
         """ Test that the argument parser returns the context if the user passes one. """
-        self.assertEqual("@home", parse_arguments().context)
+        self.assertEqual(["home"], parse_arguments().contexts)
+
+    @patch.object(sys, "argv", ["next-action", "@home", "@work"])
+    def test_multiple_contexts(self):
+        """ Test that the argument parser returns all contexts if the user passes multiple contexts. """
+        self.assertEqual(["home", "work"], parse_arguments().contexts)
 
     @patch.object(sys, "argv", ["next-action", "@"])
     @patch.object(sys.stderr, "write")
@@ -42,14 +47,20 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser exits if the context is empty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]\n"),
+        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] "
+                               "[+PROJECT [+PROJECT ...]]\n"),
                           call("next-action: error: Context name cannot be empty.\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])
     def test_one_project(self):
         """ Test that the argument parser returns the project if the user passes one. """
-        self.assertEqual("+DogHouse", parse_arguments().project)
+        self.assertEqual(["DogHouse"], parse_arguments().projects)
+
+    @patch.object(sys, "argv", ["next-action", "+DogHouse", "+PaintHouse"])
+    def test_multiple_projects(self):
+        """ Test that the argument parser returns the projects if the user passes multiple projects. """
+        self.assertEqual(["DogHouse", "PaintHouse"], parse_arguments().projects)
 
     @patch.object(sys, "argv", ["next-action", "+"])
     @patch.object(sys.stderr, "write")
@@ -57,9 +68,16 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser exits if the project is empty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]\n"),
+        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] "
+                               "[+PROJECT [+PROJECT ...]]\n"),
                           call("next-action: error: Project name cannot be empty.\n")],
                          mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "+DogHouse", "@home", "+PaintHouse", "@weekend"])
+    def test_contexts_and_projects(self):
+        """ Test that the argument parser returns the contexts and the projects, even when mixed. """
+        self.assertEqual(["home", "weekend"], parse_arguments().contexts)
+        self.assertEqual(["DogHouse", "PaintHouse"], parse_arguments().projects)
 
     @patch.object(sys, "argv", ["next-action", "home"])
     @patch.object(sys.stderr, "write")
@@ -67,6 +85,7 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser exits if the option is faulty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT] [+PROJECT]\n"),
-                          call("next-action: error: Unrecognized option 'home'.\n")],
+        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] "
+                               "[+PROJECT [+PROJECT ...]]\n"),
+                          call("next-action: error: Unrecognized argument 'home'.\n")],
                          mock_stderr_write.call_args_list)
