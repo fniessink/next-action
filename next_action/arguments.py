@@ -47,8 +47,8 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Show the next action in your todo.txt",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
-    parser.add_argument("-f", "--file", help="filename of the todo.txt file to read",
-                        type=str, default="todo.txt")
+    parser.add_argument("-f", "--file", help="filename of the todo.txt file to read", type=str, default="todo.txt")
+    parser.add_argument("-n", "--number", metavar="N", help="number of next actions to show", type=int, default=1)
     parser.add_argument("contexts", metavar="@CONTEXT", help="show the next action in the specified contexts",
                         nargs="*", type=str, default=None, action=ContextProjectAction)
     parser.add_argument("projects", metavar="+PROJECT", help="show the next action for the specified projects",

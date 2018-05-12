@@ -11,6 +11,9 @@ from next_action.arguments import parse_arguments
 class ArgumentParserTest(unittest.TestCase):
     """ Unit tests for the argument parses. """
 
+    usage_message = "usage: next-action [-h] [--version] [-f FILE] [-n N] [@CONTEXT [@CONTEXT ...]] " \
+                    "[+PROJECT [+PROJECT ...]]\n"
+
     @patch.object(sys, "argv", ["next-action"])
     def test_default_filename(self):
         """ Test that the argument parser has a default filename. """
@@ -47,9 +50,7 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser exits if the context is empty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] "
-                               "[+PROJECT [+PROJECT ...]]\n"),
-                          call("next-action: error: Context name cannot be empty.\n")],
+        self.assertEqual([call(self.usage_message), call("next-action: error: Context name cannot be empty.\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])
@@ -68,9 +69,7 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser exits if the project is empty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] "
-                               "[+PROJECT [+PROJECT ...]]\n"),
-                          call("next-action: error: Project name cannot be empty.\n")],
+        self.assertEqual([call(self.usage_message), call("next-action: error: Project name cannot be empty.\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "@home", "+PaintHouse", "@weekend"])
@@ -85,7 +84,25 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that the argument parser exits if the option is faulty. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call("usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] "
-                               "[+PROJECT [+PROJECT ...]]\n"),
-                          call("next-action: error: Unrecognized argument 'home'.\n")],
+        self.assertEqual([call(self.usage_message), call("next-action: error: Unrecognized argument 'home'.\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action"])
+    def test_default_number(self):
+        """ Test that the argument parser has a default number of actions to return. """
+        self.assertEqual(1, parse_arguments().number)
+
+    @patch.object(sys, "argv", ["next-action", "--number", "3"])
+    def test_number(self):
+        """ Test that a number of actions to be shown can be passed. """
+        self.assertEqual(3, parse_arguments().number)
+
+    @patch.object(sys, "argv", ["next-action", "--number", "not_a_number"])
+    @patch.object(sys.stderr, "write")
+    def test_faulty_number(self, mock_stderr_write):
+        """ Test that the argument parser exits if the option is faulty. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(self.usage_message),
+                          call("next-action: error: argument -n/--number: invalid int value: 'not_a_number'\n")],
                          mock_stderr_write.call_args_list)

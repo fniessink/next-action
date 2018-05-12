@@ -10,18 +10,18 @@ class PickActionTest(unittest.TestCase):
 
     def test_no_tasks(self):
         """ Test that no tasks means no next action. """
-        self.assertEqual(None, pick_action.next_action_based_on_priority([]))
+        self.assertEqual([], pick_action.next_actions([]))
 
     def test_one_task(self):
         """ If there is one task, that one is the next action. """
         task = todotxt.Task("Todo")
-        self.assertEqual(task, pick_action.next_action_based_on_priority([task]))
+        self.assertEqual([task], pick_action.next_actions([task]))
 
     def test_multiple_tasks(self):
         """ If there are multiple tasks, the first is the next action. """
         task1 = todotxt.Task("Todo 1")
         task2 = todotxt.Task("Todo 2")
-        self.assertEqual(task1, pick_action.next_action_based_on_priority([task1, task2]))
+        self.assertEqual([task1, task2], pick_action.next_actions([task1, task2]))
 
     def test_higher_prio_goes_first(self):
         """ If there are multiple tasks with different priorities, the task with the
@@ -29,47 +29,45 @@ class PickActionTest(unittest.TestCase):
         task1 = todotxt.Task("Todo 1")
         task2 = todotxt.Task("(B) Todo 2")
         task3 = todotxt.Task("(A) Todo 3")
-        self.assertEqual(task3, pick_action.next_action_based_on_priority([task1, task2, task3]))
+        self.assertEqual([task3, task2, task1], pick_action.next_actions([task1, task2, task3]))
 
     def test_completed_task_is_ignored(self):
         """ If there's one completed and one uncompleted task, the uncompleted one is the next action. """
         completed_task = todotxt.Task("x Completed")
         uncompleted_task = todotxt.Task("Todo")
-        self.assertEqual(uncompleted_task,
-                         pick_action.next_action_based_on_priority([completed_task, uncompleted_task]))
+        self.assertEqual([uncompleted_task], pick_action.next_actions([completed_task, uncompleted_task]))
 
     def test_completed_tasks_only(self):
         """ If all tasks are completed, there's no next action. """
         completed_task1 = todotxt.Task("x Completed")
         completed_task2 = todotxt.Task("x Completed too")
-        self.assertEqual(None, pick_action.next_action_based_on_priority([completed_task1, completed_task2]))
+        self.assertEqual([], pick_action.next_actions([completed_task1, completed_task2]))
 
     def test_context(self):
         """ Test that the next action can be limited to a specific context. """
         task1 = todotxt.Task("Todo 1 @work")
         task2 = todotxt.Task("(B) Todo 2 @work")
         task3 = todotxt.Task("(A) Todo 3 @home")
-        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], contexts={"work"}))
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], contexts={"work"}))
 
     def test_contexts(self):
         """ Test that the next action can be limited to a set of contexts. """
         task1 = todotxt.Task("Todo 1 @work @computer")
         task2 = todotxt.Task("(B) Todo 2 @work @computer")
         task3 = todotxt.Task("(A) Todo 3 @home @computer")
-        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3],
-                                                                          contexts={"work", "computer"}))
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], contexts={"work", "computer"}))
 
     def test_project(self):
         """ Test that the next action can be limited to a specific project. """
         task1 = todotxt.Task("Todo 1 +ProjectX")
         task2 = todotxt.Task("(B) Todo 2 +ProjectX")
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
-        self.assertEqual(task2, pick_action.next_action_based_on_priority([task1, task2, task3], projects={"ProjectX"}))
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], projects={"ProjectX"}))
 
     def test_project_and_context(self):
         """ Test that the next action can be limited to a specific project and context. """
         task1 = todotxt.Task("Todo 1 +ProjectX @office")
         task2 = todotxt.Task("(B) Todo 2 +ProjectX")
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
-        self.assertEqual(task1, pick_action.next_action_based_on_priority([task1, task2, task3], projects={"ProjectX"},
-                                                                          contexts={"office"}))
+        self.assertEqual([task1],
+                         pick_action.next_actions([task1, task2, task3], projects={"ProjectX"}, contexts={"office"}))

@@ -59,7 +59,7 @@ class CLITest(unittest.TestCase):
         """ Test the help message. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [@CONTEXT [@CONTEXT ...]] \
+        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [-n N] [@CONTEXT [@CONTEXT ...]] \
 [+PROJECT [+PROJECT ...]]
 
 Show the next action in your todo.txt
@@ -72,6 +72,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
+  -n N, --number N      number of next actions to show (default: 1)
 """),
                          mock_stdout_write.call_args_list[0])
 
@@ -81,3 +82,19 @@ optional arguments:
         """ Test that --version shows the version number. """
         self.assertRaises(SystemExit, next_action)
         self.assertEqual([call("next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--number", "2"])
+    @patch("next_action.cli.open", mock_open(read_data="Walk the dog @home\n(A) Buy wood +DogHouse\n(B) Call mom\n"))
+    @patch.object(sys.stdout, "write")
+    def test_number(self, mock_stdout_write):
+        """ Test that the number of next actions can be specified. """
+        next_action()
+        self.assertEqual([call("(A) Buy wood +DogHouse\n(B) Call mom"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--number", "3"])
+    @patch("next_action.cli.open", mock_open(read_data="\nWalk the dog @home\n   \n(B) Call mom\n"))
+    @patch.object(sys.stdout, "write")
+    def test_ignore_empty_lines(self, mock_stdout_write):
+        """ Test that empty lines in the todo.txt file are ignored. """
+        next_action()
+        self.assertEqual([call("(B) Call mom\nWalk the dog @home"), call("\n")], mock_stdout_write.call_args_list)
