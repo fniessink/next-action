@@ -59,7 +59,7 @@ class CLITest(unittest.TestCase):
         """ Test the help message. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [-n N] [@CONTEXT [@CONTEXT ...]] \
+        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [-n N | -a] [@CONTEXT [@CONTEXT ...]] \
 [+PROJECT [+PROJECT ...]]
 
 Show the next action in your todo.txt
@@ -73,6 +73,7 @@ optional arguments:
   --version             show program's version number and exit
   -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
   -n N, --number N      number of next actions to show (default: 1)
+  -a, --all             show all next actions (default: False)
 """),
                          mock_stdout_write.call_args_list[0])
 
