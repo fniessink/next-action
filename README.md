@@ -52,7 +52,7 @@ $ next-action
 
 The next action is determined using priority. Creation date is considered after priority, with older tasks getting precedence over newer tasks.
 
-Completed tasks (`x This is a completed task`) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
+Completed tasks (<del>`x This is a completed task`</del>) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
 
 ### Limit next actions
 
