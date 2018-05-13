@@ -10,17 +10,18 @@ def next_action() -> None:
 
         Basic recipe:
         1) parse command-line arguments,
-        2) read todo.txt file,
+        2) read todo.txt file(s),
         3) determine the next action(s) and display them.
     """
     arguments = parse_arguments()
-    filename: str = arguments.file
-    try:
-        todotxt_file = open(filename, "r")
-    except FileNotFoundError:
-        print("Can't find {0}".format(filename))
-        return
-    with todotxt_file:
-        tasks = [Task(line.strip()) for line in todotxt_file.readlines() if line.strip()]
+    tasks = []
+    for filename in arguments.filenames:
+        try:
+            todotxt_file = open(filename, "r")
+        except FileNotFoundError:
+            print("Can't find {0}".format(filename))
+            return
+        with todotxt_file:
+            tasks.extend([Task(line.strip()) for line in todotxt_file.readlines() if line.strip()])
     actions = next_actions(tasks, set(arguments.contexts), set(arguments.projects))
     print("\n".join(action.text for action in actions[:arguments.number]) if actions else "Nothing to do!")

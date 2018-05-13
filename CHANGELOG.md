@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added
+
+- Next-action can now read multiple todo.txt files to select the next action from. For example: `next-action --file todo.txt --file big-project-todo.txt`. Closes #35.
+
 ### Changed
 
 - Ignore tasks that have a start date in the future. Closes #34.

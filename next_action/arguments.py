@@ -48,7 +48,9 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Show the next action in your todo.txt",
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
-    parser.add_argument("-f", "--file", help="filename of the todo.txt file to read", type=str, default="todo.txt")
+    default_filenames = ["todo.txt"]
+    parser.add_argument("-f", "--file", help="todo.txt file to read; argument can be repeated", type=str,
+                        action="append", dest="filenames", metavar="FILE", default=default_filenames)
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-n", "--number", metavar="N", help="number of next actions to show", type=int, default=1)
     group.add_argument("-a", "--all", help="show all next actions", action="store_true")
@@ -57,6 +59,14 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("projects", metavar="+PROJECT", help="show the next action for the specified projects",
                         nargs="*", type=str, default=None, action=ContextProjectAction)
     namespace = parser.parse_args()
+    # Work around the issue that the "append" action doesn't overwrite defaults.
+    # See https://bugs.python.org/issue16399.
+    if default_filenames != namespace.filenames:
+        for default_filename in default_filenames:
+            namespace.filenames.remove(default_filename)
+    # Remove duplicate filenames while maintaining order.
+    namespace.filenames = list(dict.fromkeys(namespace.filenames))
+    # If the user wants to see all next actions, set the number to something big.
     if namespace.all:
         namespace.number = sys.maxsize
     return namespace
