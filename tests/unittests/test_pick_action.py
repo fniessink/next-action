@@ -94,3 +94,17 @@ class PickActionTest(unittest.TestCase):
         older_task = todotxt.Task("2017-01-01 Task 3")
         self.assertEqual([priority, older_task, newer_task],
                          pick_action.next_actions([priority, newer_task, older_task]))
+
+    def test_due_dates(self):
+        """ Test that a task with an earlier due date takes precedence. """
+        no_due_date = todotxt.Task("Task 1")
+        earlier_task = todotxt.Task("Task 2 due:2018-02-02")
+        later_task = todotxt.Task("Task 3 due:2019-01-01")
+        self.assertEqual([earlier_task, later_task, no_due_date],
+                         pick_action.next_actions([no_due_date, later_task, earlier_task]))
+
+    def test_due_and_creation_dates(self):
+        """ Test that a task with a due date takes precedence over creation date. """
+        task1 = todotxt.Task("2018-1-1 Task 1")
+        task2 = todotxt.Task("Task 2 due:2018-1-1")
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2]))

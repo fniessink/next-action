@@ -3,10 +3,14 @@
 import datetime
 import re
 from typing import Optional, Set
+from typing.re import Match  # pylint: disable=import-error
 
 
 class Task(object):
     """ A task from a line in a todo.txt file. """
+
+    iso_date_reg_exp = r"(\d{4})-(\d{1,2})-(\d{1,2})"
+
     def __init__(self, todo_txt: str) -> None:
         self.text = todo_txt
 
@@ -28,13 +32,13 @@ class Task(object):
 
     def creation_date(self) -> Optional[datetime.date]:
         """ Return the creation date of the task. """
-        match = re.match(r"(?:\([A-Z]\) )?(\d{4})-(\d{1,2})-(\d{1,2})", self.text)
-        if match:
-            try:
-                return datetime.date(*(int(group) for group in match.groups()))
-            except ValueError:
-                pass
-        return None
+        match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)
+        return self.__create_date(match)
+
+    def due_date(self) -> Optional[datetime.date]:
+        """ Return the due date of the task. """
+        match = re.search(r"\bdue:{0}\b".format(self.iso_date_reg_exp), self.text)
+        return self.__create_date(match)
 
     def is_completed(self) -> bool:
         """ Return whether the task is completed or not. """
@@ -48,3 +52,13 @@ class Task(object):
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """
         return {match.group(1) for match in re.finditer(" {0}([^ ]+)".format(prefix), self.text)}
+
+    @staticmethod
+    def __create_date(match: Match) -> Optional[datetime.date]:
+        """ Create a date from the match, if possible. """
+        if match:
+            try:
+                return datetime.date(*(int(group) for group in match.groups()))
+            except ValueError:
+                pass
+        return None

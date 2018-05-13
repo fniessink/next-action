@@ -24,7 +24,7 @@ and more.""",
     },
     test_suite="tests",
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: Apache Software License",
