@@ -17,17 +17,32 @@ class ArgumentParserTest(unittest.TestCase):
     @patch.object(sys, "argv", ["next-action"])
     def test_default_filename(self):
         """ Test that the argument parser has a default filename. """
-        self.assertEqual("todo.txt", parse_arguments().file)
+        self.assertEqual(["todo.txt"], parse_arguments().filenames)
 
     @patch.object(sys, "argv", ["next-action", "-f", "my_todo.txt"])
     def test_filename_argument(self):
         """ Test that the argument parser accepts a filename. """
-        self.assertEqual("my_todo.txt", parse_arguments().file)
+        self.assertEqual(["my_todo.txt"], parse_arguments().filenames)
 
     @patch.object(sys, "argv", ["next-action", "--file", "my_other_todo.txt"])
     def test_long_filename_argument(self):
         """ Test that the argument parser accepts a filename. """
-        self.assertEqual("my_other_todo.txt", parse_arguments().file)
+        self.assertEqual(["my_other_todo.txt"], parse_arguments().filenames)
+
+    @patch.object(sys, "argv", ["next-action", "-f", "todo.txt"])
+    def test_add_default_filename(self):
+        """ Test that adding the default filename doesn't get it included twice. """
+        self.assertEqual(["todo.txt"], parse_arguments().filenames)
+
+    @patch.object(sys, "argv", ["next-action", "-f", "todo.txt", "-f", "other.txt"])
+    def test_default_and_non_default(self):
+        """ Test that adding the default filename and another filename gets both included. """
+        self.assertEqual(["todo.txt", "other.txt"], parse_arguments().filenames)
+
+    @patch.object(sys, "argv", ["next-action", "-f", "other.txt", "-f", "other.txt"])
+    def test__add_filename_twice(self):
+        """ Test that adding the same filename twice includes it only once. """
+        self.assertEqual(["other.txt"], parse_arguments().filenames)
 
     @patch.object(sys, "argv", ["next-action"])
     def test_no_context(self):

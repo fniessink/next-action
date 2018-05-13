@@ -71,7 +71,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  -f FILE, --file FILE  filename of the todo.txt file to read (default: todo.txt)
+  -f FILE, --file FILE  todo.txt file to read; argument can be repeated (default: ['todo.txt'])
   -n N, --number N      number of next actions to show (default: 1)
   -a, --all             show all next actions (default: False)
 """),
