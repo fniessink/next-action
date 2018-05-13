@@ -7,7 +7,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fniessink/next-action&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&utm_medium=referral&utm_content=fniessink/next-action&utm_campaign=Badge_Coverage)
 
-Determine the next action to work on from a list of actions in a todo.txt file. *Next-action* is pre-alpha-stage at the moment, so its functionality is still rather limited.
+Determine the next action to work on from a list of actions in a todo.txt file. *Next-action* is alpha-stage at the moment, so its functionality is still rather limited.
 
 Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the *Todo.txt* specification.
 
@@ -50,7 +50,7 @@ $ next-action
 (A) Call mom @phone
 ```
 
-The next action is determined using priority. Creation date is considered after priority, with older tasks getting precedence over newer tasks.
+The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks.
 
 Completed tasks (~~`x This is a completed task`~~) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
 
@@ -97,7 +97,7 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-*Next-action* being still pre-alpha-stage, this is it for the moment. Stay tuned for more options.
+*Next-action* being still alpha-stage, this is it for the moment. Stay tuned for more options.
 
 ## Develop
 
