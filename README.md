@@ -43,14 +43,16 @@ optional arguments:
   -a, --all             show all next actions (default: False)
 ```
 
-Assuming your todo.txt file is in the current folder, running *Next-action* without arguments will show the next action you should do based on your tasks' priorities:
+Assuming your todo.txt file is in the current folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](todo.txt), calling mom would be the next action:
 
 ```console
 $ next-action
 (A) Call mom @phone
 ```
 
-Completed tasks (`x This is a completed task`) and tasks with a start date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
+The next action is determined using priority. Creation date is considered after priority, with older tasks getting precedence over newer tasks.
+
+Completed tasks (`x This is a completed task`) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
 
 ### Limit next actions
 
@@ -93,7 +95,7 @@ $ next-action --all @store
 (G) Buy wood for new +DogHouse @store
 ```
 
-Note that completed tasks and task with a future start date are never shown since they can't be a next action.
+Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
 *Next-action* being still pre-alpha-stage, this is it for the moment. Stay tuned for more options.
 
@@ -104,4 +106,3 @@ Clone the repository and run the unit tests with `python setup.py test` or `pyth
 To create the unit test coverage report install the development dependencies with `pip install -r requirements-dev.txt` and run the unit tests under coverage with `coverage run --branch -m unittest; coverage html --fail-under=100 --directory=build/htmlcov`.
 
 Quality checks can be run with `pylint next_action` and `pycodestyle next_action`.
-
