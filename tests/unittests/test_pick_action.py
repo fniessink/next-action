@@ -78,3 +78,19 @@ class PickActionTest(unittest.TestCase):
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
         self.assertEqual([task1],
                          pick_action.next_actions([task1, task2, task3], projects={"ProjectX"}, contexts={"office"}))
+
+    def test_creation_dates(self):
+        """ Test that a task with an older creation date takes precedence. """
+        no_creation_date = todotxt.Task("Task 1")
+        newer_task = todotxt.Task("2018-02-02 Task 2")
+        older_task = todotxt.Task("2017-01-01 Task 3")
+        self.assertEqual([older_task, newer_task, no_creation_date],
+                         pick_action.next_actions([no_creation_date, newer_task, older_task]))
+
+    def test_priority_and_creation_date(self):
+        """ Test that priority takes precedence over creation date. """
+        priority = todotxt.Task("(C) Task 1")
+        newer_task = todotxt.Task("2018-02-02 Task 2")
+        older_task = todotxt.Task("2017-01-01 Task 3")
+        self.assertEqual([priority, older_task, newer_task],
+                         pick_action.next_actions([priority, newer_task, older_task]))

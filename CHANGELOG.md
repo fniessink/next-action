@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 
 - Ignore tasks that have a start date in the future. Closes #34.
+- Take creation date into account when determining the next action. Tasks created earlier take precedence. Closes #26.
 
 ## [0.0.8] - 2018-05-13
 
