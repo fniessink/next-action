@@ -95,6 +95,16 @@ class CreationDateTest(unittest.TestCase):
         """ Test an invalid creation date. """
         self.assertEqual(None, todotxt.Task("2018-14-02 Todo").creation_date())
 
+    def test_single_digits(self):
+        """ Test a creation date with single digits for day and/or month. """
+        self.assertEqual(datetime.date(2018, 12, 3), todotxt.Task("(B) 2018-12-3 Todo").creation_date())
+        self.assertEqual(datetime.date(2018, 1, 13), todotxt.Task("(B) 2018-1-13 Todo").creation_date())
+        self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task("(B) 2018-1-1 Todo").creation_date())
+
+    def test_is_future_task(self):
+        """ Test that a task with a creation date in the future is a future task. """
+        self.assertTrue(todotxt.Task("9999-01-01 Prepare for five-digit years").is_future())
+
 
 class TaskCompletionTest(unittest.TestCase):
     """ Unit tests for the completion status of tasks. """

@@ -50,6 +50,10 @@ $ next-action
 (A) Call mom @phone
 ```
 
+Completed tasks (`x This is a completed task`) and tasks with a start date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
+
+### Limit next actions
+
 You can limit the tasks from which *Next-action* picks the next action by passing contexts and/or projects:
 
 ```console
@@ -70,6 +74,8 @@ $ next-action +DogHouse +PaintHouse @store @weekend
 (B) Buy paint to +PaintHouse @store @weekend
 ```
 
+### Extend next actions
+
 To show more than one next action, supply the number you think you can handle:
 
 ```console
@@ -87,12 +93,15 @@ $ next-action --all @store
 (G) Buy wood for new +DogHouse @store
 ```
 
-Note that completed tasks are never shown since they can't be a next action.
+Note that completed tasks and task with a future start date are never shown since they can't be a next action.
 
-Since *Next-action* is still pre-alpha-stage, this is it for the moment. Stay tuned for more options.
+*Next-action* being still pre-alpha-stage, this is it for the moment. Stay tuned for more options.
 
 ## Develop
 
-Clone the repository and run the unit tests with `python setup.py test`.
+Clone the repository and run the unit tests with `python setup.py test` or `python -m unittest`.
 
 To create the unit test coverage report install the development dependencies with `pip install -r requirements-dev.txt` and run the unit tests under coverage with `coverage run --branch -m unittest; coverage html --fail-under=100 --directory=build/htmlcov`.
+
+Quality checks can be run with `pylint next_action` and `pycodestyle next_action`.
+

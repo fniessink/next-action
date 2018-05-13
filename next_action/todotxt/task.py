@@ -28,7 +28,7 @@ class Task(object):
 
     def creation_date(self) -> Optional[datetime.date]:
         """ Return the creation date of the task. """
-        match = re.match(r"(?:\([A-Z]\) )?(\d\d\d\d)-(\d\d)-(\d\d)", self.text)
+        match = re.match(r"(?:\([A-Z]\) )?(\d{4})-(\d{1,2})-(\d{1,2})", self.text)
         if match:
             try:
                 return datetime.date(*(int(group) for group in match.groups()))
@@ -39,6 +39,11 @@ class Task(object):
     def is_completed(self) -> bool:
         """ Return whether the task is completed or not. """
         return self.text.startswith("x ")
+
+    def is_future(self) -> bool:
+        """ Return whether the task is a future task, i.e. has a creation date in the future. """
+        creation_date = self.creation_date()
+        return creation_date > datetime.date.today() if creation_date else False
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """
