@@ -4,7 +4,7 @@ import argparse
 import os
 import shutil
 import sys
-from typing import Any, Sequence, Union
+from typing import Any, List, Sequence, Union
 
 import next_action
 
@@ -61,19 +61,10 @@ def parse_arguments() -> argparse.Namespace:
                         nargs="*", type=str, default=None, action=ContextProjectAction)
     parser.add_argument("excluded_contexts", metavar="-@CONTEXT", help="exclude actions in the specified contexts",
                         nargs="*", type=str, default=None)
+    parser.add_argument("excluded_projects", metavar="-+PROJECT", help="exclude actions for the specified projects",
+                        nargs="*", type=str, default=None)
     namespace, remaining = parser.parse_known_args()
-    # Get the excluded contexts from the remaining arguments
-    excluded_contexts = []
-    for argument in remaining:
-        if is_valid_prefixed_arg("context", "-@", argument, parser):
-            context = argument[len("-@"):]
-            if context in namespace.contexts:
-                parser.error("context {0} is both included and excluded".format(context))
-            else:
-                excluded_contexts.append(context)
-        else:
-            parser.error("unrecognized arguments: {0}".format(argument))
-    namespace.excluded_contexts = excluded_contexts
+    parse_remaining_args(parser, remaining, namespace)
     # Work around the issue that the "append" action doesn't overwrite defaults.
     # See https://bugs.python.org/issue16399.
     if default_filenames != namespace.filenames:
@@ -85,3 +76,26 @@ def parse_arguments() -> argparse.Namespace:
     if namespace.all:
         namespace.number = sys.maxsize
     return namespace
+
+
+def parse_remaining_args(parser: argparse.ArgumentParser, remaining: List[str], namespace: argparse.Namespace) -> None:
+    """ Parse the remaining command line arguments. """
+    excluded_contexts = []
+    excluded_projects = []
+    for argument in remaining:
+        if is_valid_prefixed_arg("context", "-@", argument, parser):
+            context = argument[len("-@"):]
+            if context in namespace.contexts:
+                parser.error("context {0} is both included and excluded".format(context))
+            else:
+                excluded_contexts.append(context)
+        elif is_valid_prefixed_arg("project", "-+", argument, parser):
+            project = argument[len("-+"):]
+            if project in namespace.projects:
+                parser.error("project {0} is both included and excluded".format(project))
+            else:
+                excluded_projects.append(project)
+        else:
+            parser.error("unrecognized arguments: {0}".format(argument))
+    namespace.excluded_contexts = excluded_contexts
+    namespace.excluded_projects = excluded_projects

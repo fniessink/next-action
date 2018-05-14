@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Allow for excluding contexts from which the next action is selected: `next-action -@office`. Closes #20.
+- Allow for excluding projects from which the next action is selected: `next-action -+DogHouse`. Closes #32.
 
 ## [0.1.0] - 2018-05-13
 

@@ -61,6 +61,7 @@ class CLITest(unittest.TestCase):
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
                    [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
+                   [-+PROJECT [-+PROJECT ...]]
 
 Show the next action in your todo.txt
 
@@ -68,6 +69,7 @@ positional arguments:
   @CONTEXT              show the next action in the specified contexts (default: None)
   +PROJECT              show the next action for the specified projects (default: None)
   -@CONTEXT             exclude actions in the specified contexts (default: None)
+  -+PROJECT             exclude actions for the specified projects (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit

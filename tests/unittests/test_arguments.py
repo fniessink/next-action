@@ -13,6 +13,7 @@ class ArgumentParserTest(unittest.TestCase):
 
     usage_message = """usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
                    [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
+                   [-+PROJECT [-+PROJECT ...]]
 """
 
     @patch.object(sys, "argv", ["next-action"])
@@ -110,6 +111,21 @@ class ArgumentParserTest(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(self.usage_message), call("next-action: error: project name cannot be empty\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "-+DogHouse"])
+    def test_exclude_project(self):
+        """ Test that projects can be excluded. """
+        self.assertEqual(["DogHouse"], parse_arguments().excluded_projects)
+
+    @patch.object(sys, "argv", ["next-action", "+DogHouse", "-+DogHouse"])
+    @patch.object(sys.stderr, "write")
+    def test_include_exclude_project(self, mock_stderr_write):
+        """ Test that projects cannot be included and excluded. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(self.usage_message),
+                          call("next-action: error: project DogHouse is both included and excluded\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "@home", "+PaintHouse", "@weekend"])

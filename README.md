@@ -29,6 +29,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 $ next-action --help
 usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
                    [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
+                   [-+PROJECT [-+PROJECT ...]]
 
 Show the next action in your todo.txt
 
@@ -36,6 +37,7 @@ positional arguments:
   @CONTEXT              show the next action in the specified contexts (default: None)
   +PROJECT              show the next action for the specified projects (default: None)
   -@CONTEXT             exclude actions in the specified contexts (default: None)
+  -+PROJECT             exclude actions for the specified projects (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -43,6 +45,7 @@ optional arguments:
   -f FILE, --file FILE  todo.txt file to read; argument can be repeated (default: ['todo.txt'])
   -n N, --number N      number of next actions to show (default: 1)
   -a, --all             show all next actions (default: False)
+
 ```
 
 Assuming your todo.txt file is in the current folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](todo.txt), calling mom would be the next action:
@@ -83,6 +86,13 @@ It is also possible to exclude contexts, which means the next action will not ha
 ```console
 $ next-action +PaintHouse -@store
 Borrow ladder from the neighbors +PaintHouse @home
+```
+
+And of course, in a similar vein, projects can be excluded:
+
+```console
+$ next-action -+PaintHouse @store
+(G) Buy wood for new +DogHouse @store
 ```
 
 ### Extend next actions
