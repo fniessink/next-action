@@ -3,5 +3,6 @@
 (C) Finish proposal for important client @work
 (G) Buy wood for new +DogHouse @store
 Get rid of old +DogHouse @home
+Borrow ladder from the neighbors +PaintHouse @home
 x This is a completed task
 9999-01-01 Start preparing for five-digit years

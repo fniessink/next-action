@@ -49,6 +49,11 @@ class Task(object):
         creation_date = self.creation_date()
         return creation_date > datetime.date.today() if creation_date else False
 
+    def is_actionable(self) -> bool:
+        """ Return whether the task is actionable, i.e. whether it's not completed and doesn't have a future creation
+            date. """
+        return not self.is_completed() and not self.is_future()
+
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """
         return {match.group(1) for match in re.finditer(" {0}([^ ]+)".format(prefix), self.text)}

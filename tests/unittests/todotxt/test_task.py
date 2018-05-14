@@ -155,3 +155,27 @@ class TaskCompletionTest(unittest.TestCase):
     def test_x_must_be_lowercase(self):
         """ Test that a task that starts with an X isn't completed. """
         self.assertFalse(todotxt.Task("X Not completed").is_completed())
+
+
+class ActionableTest(unittest.TestCase):
+    """ Unit tests for the actionable status of tasks. """
+
+    def test_default(self):
+        """ Test that a default task is actionable. """
+        self.assertTrue(todotxt.Task("Todo").is_actionable())
+
+    def test_past_creation_date(self):
+        """ Test that a task with a past creation date is actionable. """
+        self.assertTrue(todotxt.Task("2018-01-01 Todo").is_actionable())
+
+    def test_future_creation_date(self):
+        """ Test that a task with a future creation date is not actionable. """
+        self.assertFalse(todotxt.Task("9999-01-01 Todo").is_actionable())
+
+    def test_completed_task(self):
+        """ Test that a completed task is not actionable. """
+        self.assertFalse(todotxt.Task("x 2018-01-01 Todo").is_actionable())
+
+    def test_two_dates(self):
+        """ Test that a completed task with a past creation date is not actionable. """
+        self.assertFalse(todotxt.Task("x 2018-01-01 2018-01-01 Todo").is_actionable())

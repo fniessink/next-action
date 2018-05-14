@@ -76,6 +76,13 @@ $ next-action +DogHouse +PaintHouse @store @weekend
 (B) Buy paint to +PaintHouse @store @weekend
 ```
 
+It is also possible to exclude contexts, which means the next action will not have the specified contexts:
+
+```console
+$ next-action +PaintHouse -@store
+Borrow ladder from the neighbors +PaintHouse @home
+```
+
 ### Extend next actions
 
 To show more than one next action, supply the number you think you can handle:

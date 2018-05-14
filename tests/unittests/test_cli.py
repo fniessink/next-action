@@ -59,14 +59,15 @@ class CLITest(unittest.TestCase):
         """ Test the help message. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [-n N | -a] [@CONTEXT [@CONTEXT ...]] \
-[+PROJECT [+PROJECT ...]]
+        self.assertEqual(call("""usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
+                   [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
 
 Show the next action in your todo.txt
 
 positional arguments:
   @CONTEXT              show the next action in the specified contexts (default: None)
   +PROJECT              show the next action for the specified projects (default: None)
+  -@CONTEXT             exclude actions in the specified contexts (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit

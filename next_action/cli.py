@@ -23,5 +23,5 @@ def next_action() -> None:
             return
         with todotxt_file:
             tasks.extend([Task(line.strip()) for line in todotxt_file.readlines() if line.strip()])
-    actions = next_actions(tasks, set(arguments.contexts), set(arguments.projects))
+    actions = next_actions(tasks, set(arguments.contexts), set(arguments.projects), set(arguments.excluded_contexts))
     print("\n".join(action.text for action in actions[:arguments.number]) if actions else "Nothing to do!")
