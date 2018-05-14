@@ -27,13 +27,15 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f FILE] [-n N | -a] [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]]
+usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
+                   [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
 
 Show the next action in your todo.txt
 
 positional arguments:
   @CONTEXT              show the next action in the specified contexts (default: None)
   +PROJECT              show the next action for the specified projects (default: None)
+  -@CONTEXT             exclude actions in the specified contexts (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -74,6 +76,13 @@ When you supply multiple contexts and/or projects, the next action belongs to al
 ```console
 $ next-action +DogHouse +PaintHouse @store @weekend
 (B) Buy paint to +PaintHouse @store @weekend
+```
+
+It is also possible to exclude contexts, which means the next action will not have the specified contexts:
+
+```console
+$ next-action +PaintHouse -@store
+Borrow ladder from the neighbors +PaintHouse @home
 ```
 
 ### Extend next actions

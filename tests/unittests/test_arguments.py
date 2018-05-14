@@ -11,8 +11,9 @@ from next_action.arguments import parse_arguments
 class ArgumentParserTest(unittest.TestCase):
     """ Unit tests for the argument parses. """
 
-    usage_message = "usage: next-action [-h] [--version] [-f FILE] [-n N | -a] [@CONTEXT [@CONTEXT ...]] " \
-                    "[+PROJECT [+PROJECT ...]]\n"
+    usage_message = """usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
+                   [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
+"""
 
     @patch.object(sys, "argv", ["next-action"])
     def test_default_filename(self):
@@ -66,6 +67,30 @@ class ArgumentParserTest(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(self.usage_message), call("next-action: error: context name cannot be empty\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "-@home"])
+    def test_exclude_context(self):
+        """ Test that contexts can be excluded. """
+        self.assertEqual(["home"], parse_arguments().excluded_contexts)
+
+    @patch.object(sys, "argv", ["next-action", "@home", "-@home"])
+    @patch.object(sys.stderr, "write")
+    def test_include_exclude_context(self, mock_stderr_write):
+        """ Test that contexts cannot be included and excluded. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(self.usage_message),
+                          call("next-action: error: context home is both included and excluded\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "-^"])
+    @patch.object(sys.stderr, "write")
+    def test_invalid_extra_argument(self, mock_stderr_write):
+        """ Test that the argument parser exits if the extra argument is invalid. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(self.usage_message), call("next-action: error: unrecognized arguments: -^\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])

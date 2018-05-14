@@ -9,6 +9,17 @@ from typing import Any, Sequence, Union
 import next_action
 
 
+def is_valid_prefixed_arg(argument_type: str, argument_prefix: str, value: str,
+                          parser: argparse.ArgumentParser) -> bool:
+    """ Check whether the value is a (valid) prefixed argument. """
+    if value.startswith(argument_prefix):
+        if len(value) > len(argument_prefix):
+            return True
+        else:
+            parser.error("{0} name cannot be empty".format(argument_type))
+    return False
+
+
 class ContextProjectAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """ An argument parser action that checks for contexts and projects. """
     def __call__(self, parser: argparse.ArgumentParser, namespace: argparse.Namespace,
@@ -18,9 +29,9 @@ class ContextProjectAction(argparse.Action):  # pylint: disable=too-few-public-m
         contexts = []
         projects = []
         for value in values:
-            if self.__is_valid("context", "@", value, parser):
+            if is_valid_prefixed_arg("context", "@", value, parser):
                 contexts.append(value.strip("@"))
-            elif self.__is_valid("project", "+", value, parser):
+            elif is_valid_prefixed_arg("project", "+", value, parser):
                 projects.append(value.strip("+"))
             else:
                 parser.error("unrecognized argument: {0}".format(value))
@@ -28,16 +39,6 @@ class ContextProjectAction(argparse.Action):  # pylint: disable=too-few-public-m
             namespace.contexts = contexts
         if namespace.projects is None:
             namespace.projects = projects
-
-    @staticmethod
-    def __is_valid(argument_type: str, argument_prefix: str, value: str, parser: argparse.ArgumentParser) -> bool:
-        """ Check whether the value is a (valid) prefixed argument. """
-        if value.startswith(argument_prefix):
-            if len(value) > 1:
-                return True
-            else:
-                parser.error("{0} name cannot be empty".format(argument_type))
-        return False
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -58,7 +59,21 @@ def parse_arguments() -> argparse.Namespace:
                         nargs="*", type=str, default=None, action=ContextProjectAction)
     parser.add_argument("projects", metavar="+PROJECT", help="show the next action for the specified projects",
                         nargs="*", type=str, default=None, action=ContextProjectAction)
-    namespace = parser.parse_args()
+    parser.add_argument("excluded_contexts", metavar="-@CONTEXT", help="exclude actions in the specified contexts",
+                        nargs="*", type=str, default=None)
+    namespace, remaining = parser.parse_known_args()
+    # Get the excluded contexts from the remaining arguments
+    excluded_contexts = []
+    for argument in remaining:
+        if is_valid_prefixed_arg("context", "-@", argument, parser):
+            context = argument[len("-@"):]
+            if context in namespace.contexts:
+                parser.error("context {0} is both included and excluded".format(context))
+            else:
+                excluded_contexts.append(context)
+        else:
+            parser.error("unrecognized arguments: {0}".format(argument))
+    namespace.excluded_contexts = excluded_contexts
     # Work around the issue that the "append" action doesn't overwrite defaults.
     # See https://bugs.python.org/issue16399.
     if default_filenames != namespace.filenames:

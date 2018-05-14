@@ -64,6 +64,21 @@ class PickActionTest(unittest.TestCase):
         task3 = todotxt.Task("(A) Todo 3 @home @computer")
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], contexts={"work", "computer"}))
 
+    def test_excluded_context(self):
+        """ Test that contexts can be excluded. """
+        task = todotxt.Task("(A) Todo @computer")
+        self.assertEqual([], pick_action.next_actions([task], excluded_contexts={"computer"}))
+
+    def test_excluded_contexts(self):
+        """ Test that contexts can be excluded. """
+        task = todotxt.Task("(A) Todo @computer @work")
+        self.assertEqual([], pick_action.next_actions([task], excluded_contexts={"computer"}))
+
+    def test_not_excluded_context(self):
+        """ Test that a task is not excluded if it doesn't belong to the excluded category. """
+        task = todotxt.Task("(A) Todo @computer")
+        self.assertEqual([task], pick_action.next_actions([task], excluded_contexts={"phone"}))
+
     def test_project(self):
         """ Test that the next action can be limited to a specific project. """
         task1 = todotxt.Task("Todo 1 +ProjectX")
