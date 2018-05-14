@@ -27,13 +27,15 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f FILE] [-n N | -a] [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]]
+usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
+                   [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
 
 Show the next action in your todo.txt
 
 positional arguments:
   @CONTEXT              show the next action in the specified contexts (default: None)
   +PROJECT              show the next action for the specified projects (default: None)
+  -@CONTEXT             exclude actions in the specified contexts (default: None)
 
 optional arguments:
   -h, --help            show this help message and exit
