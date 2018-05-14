@@ -2,8 +2,8 @@
 
 import datetime
 import re
+import typing
 from typing import Optional, Set
-from typing.re import Match  # pylint: disable=import-error
 
 
 class Task(object):
@@ -59,7 +59,7 @@ class Task(object):
         return {match.group(1) for match in re.finditer(" {0}([^ ]+)".format(prefix), self.text)}
 
     @staticmethod
-    def __create_date(match: Match) -> Optional[datetime.date]:
+    def __create_date(match: Optional[typing.Match[str]]) -> Optional[datetime.date]:
         """ Create a date from the match, if possible. """
         if match:
             try:

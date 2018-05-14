@@ -6,7 +6,7 @@ from typing import Set, Sequence, Tuple
 from .todotxt import Task
 
 
-def sort_key(task: Task) -> Tuple[str, datetime.date]:
+def sort_key(task: Task) -> Tuple[str, datetime.date, datetime.date]:
     """ Return the sort key for a task. """
     return (task.priority() or "ZZZ", task.due_date() or datetime.date.max, task.creation_date() or datetime.date.max)
 
