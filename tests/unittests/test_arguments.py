@@ -11,10 +11,7 @@ from next_action.arguments import parse_arguments
 class ArgumentParserTest(unittest.TestCase):
     """ Unit tests for the argument parses. """
 
-    usage_message = """usage: next-action [-h] [--version] [-f FILE] [-n N | -a]
-                   [@CONTEXT [@CONTEXT ...]] [+PROJECT [+PROJECT ...]] [-@CONTEXT [-@CONTEXT ...]]
-                   [-+PROJECT [-+PROJECT ...]]
-"""
+    usage_message = "usage: next-action [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]\n"
 
     @patch.object(sys, "argv", ["next-action"])
     def test_default_filename(self):
