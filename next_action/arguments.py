@@ -60,15 +60,14 @@ def parse_arguments() -> argparse.Namespace:
     group.add_argument("-n", "--number", metavar="<number>", help="number of next actions to show", type=int, default=1)
     group.add_argument("-a", "--all", help="show all next actions", action="store_true")
     filters = parser.add_argument_group("optional context and project arguments; these can be repeated")
-    filter_kwargs = dict(nargs="*", type=str, default=None)
     filters.add_argument("contexts", metavar="@<context>", help="context the next action must have",
-                         action=ContextProjectAction, **filter_kwargs)
+                         action=ContextProjectAction, nargs="*", type=str)
     filters.add_argument("projects", metavar="+<project>", help="project the next action must be part of",
-                         action=ContextProjectAction, **filter_kwargs)
+                         action=ContextProjectAction, nargs="*", type=str)
     filters.add_argument("excluded_contexts", metavar="-@<context>", help="context the next action must not have",
-                         **filter_kwargs)
+                         nargs="*", type=str)
     filters.add_argument("excluded_projects", metavar="-+<project>",
-                         help="project the next action must not be part of", **filter_kwargs)
+                         help="project the next action must not be part of", nargs="*", type=str)
     namespace, remaining = parser.parse_known_args()
     parse_remaining_args(parser, remaining, namespace)
     # Work around the issue that the "append" action doesn't overwrite defaults.
