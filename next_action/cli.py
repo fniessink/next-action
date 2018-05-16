@@ -1,8 +1,8 @@
 """ Entry point for Next-action's command-line interface. """
 
-from next_action.todotxt import Task
-from next_action.pick_action import next_actions
 from next_action.arguments import parse_arguments
+from next_action.pick_action import next_actions
+from next_action.todotxt import read_todotxt_file
 
 
 def next_action() -> None:
@@ -21,8 +21,7 @@ def next_action() -> None:
         except FileNotFoundError:
             print("Can't find {0}".format(filename))
             return
-        with todotxt_file:
-            tasks.extend([Task(line.strip()) for line in todotxt_file.readlines() if line.strip()])
+        tasks.extend(read_todotxt_file(todotxt_file))
     actions = next_actions(tasks,
                            set(arguments.contexts), set(arguments.projects),
                            set(arguments.excluded_contexts), set(arguments.excluded_projects))
