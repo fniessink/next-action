@@ -23,13 +23,13 @@ def build_parser(default_filenames: List[str]) -> argparse.ArgumentParser:
     number.add_argument("-a", "--all", help="show all next actions", action="store_true")
     filters = parser.add_argument_group("optional context and project arguments; these can be repeated")
     filters.add_argument("contexts", metavar="@<context>", help="context the next action must have",
-                         action=ContextProjectAction, nargs="*", type=str)
+                         action=ContextProjectAction, nargs="*", type=str, default=argparse.SUPPRESS)
     filters.add_argument("projects", metavar="+<project>", help="project the next action must be part of",
-                         action=ContextProjectAction, nargs="*", type=str)
+                         action=ContextProjectAction, nargs="*", type=str, default=argparse.SUPPRESS)
     filters.add_argument("excluded_contexts", metavar="-@<context>", help="context the next action must not have",
-                         nargs="*", type=str)
-    filters.add_argument("excluded_projects", metavar="-+<project>",
-                         help="project the next action must not be part of", nargs="*", type=str)
+                         nargs="*", type=str, default=argparse.SUPPRESS)
+    filters.add_argument("excluded_projects", metavar="-+<project>", help="project the next action must not be part of",
+                         nargs="*", type=str, default=argparse.SUPPRESS)
     return parser
 
 
@@ -49,9 +49,9 @@ class ContextProjectAction(argparse.Action):  # pylint: disable=too-few-public-m
                 projects.append(value.strip("+"))
             else:
                 parser.error("unrecognized argument: {0}".format(value))
-        if namespace.contexts is None:
+        if not hasattr(namespace, "contexts"):
             namespace.contexts = contexts
-        if namespace.projects is None:
+        if not hasattr(namespace, "projects"):
             namespace.projects = projects
 
 

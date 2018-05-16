@@ -53,8 +53,8 @@ def parse_arguments() -> Arguments:
     arguments.filenames = namespace.filenames
     arguments.number = namespace.number
     arguments.show_all(namespace.all)
-    arguments.contexts = namespace.contexts
-    arguments.projects = namespace.projects
+    arguments.contexts = getattr(namespace, "contexts", [])
+    arguments.projects = getattr(namespace, "projects", [])
     arguments.excluded_contexts, arguments.excluded_projects = parse_remaining_args(
         parser, remaining, arguments.contexts, arguments.projects)
     return arguments
