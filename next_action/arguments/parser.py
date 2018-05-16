@@ -1,7 +1,7 @@
 """ Parser for the command line arguments. """
 
 import argparse
-from typing import Any, List, Sequence, Union
+from typing import Any, List, Sequence, Tuple, Union
 
 import next_action
 
@@ -55,27 +55,26 @@ class ContextProjectAction(argparse.Action):  # pylint: disable=too-few-public-m
             namespace.projects = projects
 
 
-def parse_remaining_args(parser: argparse.ArgumentParser, remaining: List[str], namespace: argparse.Namespace) -> None:
+def parse_remaining_args(parser: argparse.ArgumentParser, remaining: List[str],
+                         contexts: List[str], projects: List[str]) -> Tuple[List[str], List[str]]:
     """ Parse the remaining command line arguments. """
-    excluded_contexts = []
-    excluded_projects = []
+    excluded_contexts, excluded_projects = [], []
     for argument in remaining:
         if is_valid_prefixed_arg("context", "-@", argument, parser):
             context = argument[len("-@"):]
-            if context in namespace.contexts:
+            if context in contexts:
                 parser.error("context {0} is both included and excluded".format(context))
             else:
                 excluded_contexts.append(context)
         elif is_valid_prefixed_arg("project", "-+", argument, parser):
             project = argument[len("-+"):]
-            if project in namespace.projects:
+            if project in projects:
                 parser.error("project {0} is both included and excluded".format(project))
             else:
                 excluded_projects.append(project)
         else:
             parser.error("unrecognized arguments: {0}".format(argument))
-    namespace.excluded_contexts = excluded_contexts
-    namespace.excluded_projects = excluded_projects
+    return excluded_contexts, excluded_projects
 
 
 def is_valid_prefixed_arg(argument_type: str, argument_prefix: str, value: str,

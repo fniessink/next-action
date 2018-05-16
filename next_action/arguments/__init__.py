@@ -15,7 +15,8 @@ def parse_arguments() -> argparse.Namespace:
     default_filenames = ["todo.txt"]
     parser = build_parser(default_filenames)
     namespace, remaining = parser.parse_known_args()
-    parse_remaining_args(parser, remaining, namespace)
+    namespace.excluded_contexts, namespace.excluded_projects = parse_remaining_args(
+        parser, remaining, namespace.contexts, namespace.projects)
     # Work around the issue that the "append" action doesn't overwrite defaults.
     # See https://bugs.python.org/issue16399.
     if default_filenames != namespace.filenames:
