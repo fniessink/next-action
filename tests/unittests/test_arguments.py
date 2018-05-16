@@ -163,7 +163,6 @@ class ArgumentParserTest(unittest.TestCase):
     @patch.object(sys, "argv", ["next-action", "--all"])
     def test_all_actions(self):
         """ Test that --all option also sets the number of actions to show to a very big number. """
-        self.assertTrue(parse_arguments().all)
         self.assertEqual(sys.maxsize, parse_arguments().number)
 
     @patch.object(sys, "argv", ["next-action", "--all", "--number", "3"])
