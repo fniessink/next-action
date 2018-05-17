@@ -11,13 +11,22 @@ from next_action.arguments import parse_arguments
 USAGE_MESSAGE = "usage: next-action [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]\n"
 
 
-class ArgumentParserTest(unittest.TestCase):
-    """ Unit tests for the argument parses. """
+class NoArgumentTest(unittest.TestCase):
+    """ Unit tests for the argument parser, without arguments. """
 
     @patch.object(sys, "argv", ["next-action"])
-    def test_default_filename(self):
-        """ Test that the argument parser has a default filename. """
+    def test_filters(self):
+        """ Test that the argument parser returns no filters if the user doesn't pass one. """
+        self.assertEqual([], parse_arguments().filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    def test_filename(self):
+        """ Test that the argument parser returns the default filename if the user doesn't pass one. """
         self.assertEqual(["todo.txt"], parse_arguments().filenames)
+
+
+class FilenameTest(unittest.TestCase):
+    """ Unit tests for the --filename argument. """
 
     @patch.object(sys, "argv", ["next-action", "-f", "my_todo.txt"])
     def test_filename_argument(self):
@@ -44,10 +53,9 @@ class ArgumentParserTest(unittest.TestCase):
         """ Test that adding the same filename twice includes it only once. """
         self.assertEqual(["other.txt"], parse_arguments().filenames)
 
-    @patch.object(sys, "argv", ["next-action"])
-    def test_no_context(self):
-        """ Test that the argument parser returns no contexts if the user doesn't pass one. """
-        self.assertEqual([], parse_arguments().filters)
+
+class FilterArgumentTest(unittest.TestCase):
+    """ Unit tests for the @object and +project filter arguments. """
 
     @patch.object(sys, "argv", ["next-action", "@home"])
     def test_one_context(self):
@@ -138,7 +146,6 @@ class ArgumentParserTest(unittest.TestCase):
                           call("next-action: error: argument <context|project>: project name missing\n")],
                          mock_stderr_write.call_args_list)
 
-
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "@home", "+PaintHouse", "@weekend"])
     def test_contexts_and_projects(self):
         """ Test that the argument parser returns the contexts and the projects, even when mixed. """
@@ -155,7 +162,7 @@ class ArgumentParserTest(unittest.TestCase):
                          mock_stderr_write.call_args_list)
 
 
-class NumberArgumentTest(unittest.TestCase):
+class NumberTest(unittest.TestCase):
     """ Unit tests for the --number and --all arguments. """
 
     @patch.object(sys, "argv", ["next-action"])
