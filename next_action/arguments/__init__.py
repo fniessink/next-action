@@ -4,7 +4,7 @@ import argparse
 import os
 import shutil
 import sys
-from typing import List, Set
+from typing import Dict, List, Set
 
 from .parser import build_parser, parse_remaining_args
 
@@ -15,10 +15,7 @@ class Arguments(object):
         self.__default_filenames = default_filenames
         self.__filenames: List[str] = []
         self.number = 1
-        self.contexts: List[str] = []
-        self.projects: List[str] = []
-        self.excluded_contexts: List[str] = []
-        self.excluded_projects: List[str] = []
+        self.filters: List[str] = []
 
     @property
     def filenames(self) -> List[str]:
@@ -50,11 +47,9 @@ def parse_arguments() -> Arguments:
     arguments = Arguments(default_filenames)
     parser = build_parser(default_filenames)
     namespace, remaining = parser.parse_known_args()
+    parse_remaining_args(parser, remaining, namespace)
     arguments.filenames = namespace.filenames
     arguments.number = namespace.number
     arguments.show_all(namespace.all)
-    arguments.contexts = getattr(namespace, "contexts", [])
-    arguments.projects = getattr(namespace, "projects", [])
-    arguments.excluded_contexts, arguments.excluded_projects = parse_remaining_args(
-        parser, remaining, arguments.contexts, arguments.projects)
+    arguments.filters = getattr(namespace, "filters", [])
     return arguments
