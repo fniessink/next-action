@@ -23,54 +23,40 @@ def build_parser(default_filenames: List[str]) -> argparse.ArgumentParser:
     number.add_argument("-a", "--all", help="show all next actions", action="store_true")
     filters = parser.add_argument_group("optional context and project arguments; these can be repeated")
     filters.add_argument("filters", metavar="<context|project>", help=argparse.SUPPRESS, nargs="*", type=filter_type)
-    # These are here for the help info only:
+    # These two are here for the help info only, the previous arguments collects them:
     filters.add_argument("filters", metavar="@<context>", help="context the next action must have",
                          nargs="*", type=filter_type, default=argparse.SUPPRESS)
     filters.add_argument("filters", metavar="+<project>", help="project the next action must be part of",
                          nargs="*", type=filter_type, default=argparse.SUPPRESS)
+    # These arguments won't be collected because they start with a -. They'll be parsed by parse_remaining_args below
     filters.add_argument("filters", metavar="-@<context>", help="context the next action must not have",
-                         nargs="*", type=filter_type, default=argparse.SUPPRESS)
+                         nargs="*", default=argparse.SUPPRESS)
     filters.add_argument("filters", metavar="-+<project>", help="project the next action must not be part of",
-                         nargs="*", type=filter_type, default=argparse.SUPPRESS)
+                         nargs="*", default=argparse.SUPPRESS)
     return parser
 
 
 def parse_remaining_args(parser: argparse.ArgumentParser, remaining: List[str], namespace: argparse.Namespace) -> None:
     """ Parse the remaining command line arguments. """
-    for argument in remaining:
-        if is_valid_prefixed_arg("context", "-@", argument, parser):
-            if argument[1:] in getattr(namespace, "filters", []):
-                parser.error("context {0} is both included and excluded".format(argument[len("-@"):]))
+    for value in remaining:
+        if value.startswith("-@") or value.startswith("-+"):
+            argument_type = "context" if value.startswith("-@") else "project"
+            if len(value) == 2:
+                parser.error("argument <context|project>: {0} name missing".format(argument_type))
+            elif value[1:] in namespace.filters:
+                parser.error("{0} {1} is both included and excluded".format(argument_type, value[2:]))
             else:
-                namespace.filters.append(argument)
-        elif is_valid_prefixed_arg("project", "-+", argument, parser):
-            if argument[1:] in getattr(namespace, "filters", []):
-                parser.error("project {0} is both included and excluded".format(argument[len("-@"):]))
-            else:
-                namespace.filters.append(argument)
+                namespace.filters.append(value)
         else:
-            parser.error("unrecognized arguments: {0}".format(argument))
-
-
-def is_valid_prefixed_arg(argument_type: str, argument_prefix: str, value: str,
-                          parser: argparse.ArgumentParser) -> bool:
-    """ Check whether the value is a (valid) prefixed argument. """
-    if value.startswith(argument_prefix):
-        if len(value) > len(argument_prefix):
-            return True
-        else:
-            parser.error("argument <context|project>: {0} name missing".format(argument_type))
-    return False
+            parser.error("unrecognized arguments: {0}".format(value))
 
 
 def filter_type(value: str) -> str:
     """ Return the filter if it's valid, else raise an error. """
-    prefixes = ("@", "+", "-@", "-+")
-    name = {"@": "context", "-@": "context", "+": "project", "-+": "project"}
-    for prefix in prefixes:
-        if value.startswith(prefix):
-            if len(value) > len(prefix):
-                return value
-            else:
-                raise argparse.ArgumentTypeError("{0} name missing".format(name[prefix]))
+    if value.startswith("@") or value.startswith("+"):
+        if len(value) > 1:
+            return value
+        else:
+            value_type = "context" if value.startswith("@") else "project"
+            raise argparse.ArgumentTypeError("{0} name missing".format(value_type))
     raise argparse.ArgumentTypeError("unrecognized arguments: {0}".format(value))
