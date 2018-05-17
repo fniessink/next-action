@@ -76,10 +76,10 @@ optional arguments:
   -a, --all             show all next actions (default: False)
 
 optional context and project arguments; these can be repeated:
-  @<context>            context the next action must have (default: None)
-  +<project>            project the next action must be part of (default: None)
-  -@<context>           context the next action must not have (default: None)
-  -+<project>           project the next action must not be part of (default: None)
+  @<context>            context the next action must have
+  +<project>            project the next action must be part of
+  -@<context>           context the next action must not have
+  -+<project>           project the next action must not be part of
 """),
                          mock_stdout_write.call_args_list[0])
 
