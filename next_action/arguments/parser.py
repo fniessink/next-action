@@ -13,27 +13,39 @@ def build_parser(default_filenames: List[str]) -> argparse.ArgumentParser:
                      file based on priority, due date, creation date, and supplied filters.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         usage="%(prog)s [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]")
-    parser.add_argument("--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
+    add_optional_arguments(parser, default_filenames)
+    add_positional_arguments(parser)
+    return parser
+
+
+def add_optional_arguments(parser: argparse.ArgumentParser, default_filenames: List[str]) -> None:
+    """ Add the optional arguments to the parser. """
+    parser.add_argument(
+        "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
     parser.add_argument(
         "-f", "--file", action="append", dest="filenames", metavar="<todo.txt>", default=default_filenames, type=str,
         help="todo.txt file to read; argument can be repeated to read tasks from multiple todo.txt files")
     number = parser.add_mutually_exclusive_group()
-    number.add_argument("-n", "--number", metavar="<number>", help="number of next actions to show", type=int,
-                        default=1)
+    number.add_argument(
+        "-n", "--number", metavar="<number>", help="number of next actions to show", type=int, default=1)
     number.add_argument("-a", "--all", help="show all next actions", action="store_true")
+
+
+def add_positional_arguments(parser: argparse.ArgumentParser) -> None:
+    """ Add the positional arguments to the parser. """
     filters = parser.add_argument_group("optional context and project arguments; these can be repeated")
+    # Collect all context and project arguments in one list:
     filters.add_argument("filters", metavar="<context|project>", help=argparse.SUPPRESS, nargs="*", type=filter_type)
-    # These two are here for the help info only, the previous arguments collects them:
-    filters.add_argument("filters", metavar="@<context>", help="context the next action must have",
-                         nargs="*", type=filter_type, default=argparse.SUPPRESS)
-    filters.add_argument("filters", metavar="+<project>", help="project the next action must be part of",
-                         nargs="*", type=filter_type, default=argparse.SUPPRESS)
+    # Add two dummy arguments for the help info:
+    filters.add_argument("dummy", metavar="@<context>", help="context the next action must have",
+                         nargs="*", default=argparse.SUPPRESS)
+    filters.add_argument("dummy", metavar="+<project>", help="project the next action must be part of",
+                         nargs="*", default=argparse.SUPPRESS)
     # These arguments won't be collected because they start with a -. They'll be parsed by parse_remaining_args below
-    filters.add_argument("filters", metavar="-@<context>", help="context the next action must not have",
+    filters.add_argument("dummy", metavar="-@<context>", help="context the next action must not have",
                          nargs="*", default=argparse.SUPPRESS)
-    filters.add_argument("filters", metavar="-+<project>", help="project the next action must not be part of",
+    filters.add_argument("dummy", metavar="-+<project>", help="project the next action must not be part of",
                          nargs="*", default=argparse.SUPPRESS)
-    return parser
 
 
 def parse_remaining_args(parser: argparse.ArgumentParser, remaining: List[str], namespace: argparse.Namespace) -> None:
