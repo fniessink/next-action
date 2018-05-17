@@ -22,10 +22,6 @@ def next_action() -> None:
             print("Can't find {0}".format(filename))
             return
         tasks.extend(read_todotxt_file(todotxt_file))
-    filters = arguments.filters
-    contexts = set([f.strip("@") for f in filters if f.startswith("@")])
-    projects = set([f.strip("+") for f in filters if f.startswith("+")])
-    excluded_contexts = set([f.strip("-@") for f in filters if f.startswith("-@")])
-    excluded_projects = set([f.strip("-+") for f in filters if f.startswith("-+")])
-    actions = next_actions(tasks, contexts, projects, excluded_contexts, excluded_projects)
+    actions = next_actions(
+        tasks, arguments.contexts, arguments.projects, arguments.excluded_contexts, arguments.excluded_projects)
     print("\n".join(action.text for action in actions[:arguments.number]) if actions else "Nothing to do!")
