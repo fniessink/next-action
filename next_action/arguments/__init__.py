@@ -51,5 +51,5 @@ def parse_arguments() -> Arguments:
     arguments.filenames = namespace.filenames
     arguments.number = namespace.number
     arguments.show_all(namespace.all)
-    arguments.filters = getattr(namespace, "filters", [])
+    arguments.filters = namespace.filters
     return arguments
