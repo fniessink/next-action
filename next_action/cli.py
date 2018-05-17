@@ -22,6 +22,5 @@ def next_action() -> None:
             print("Can't find {0}".format(filename))
             return
         tasks.extend(read_todotxt_file(todotxt_file))
-    actions = next_actions(
-        tasks, arguments.contexts, arguments.projects, arguments.excluded_contexts, arguments.excluded_projects)
+    actions = next_actions(tasks, *arguments.filters)
     print("\n".join(action.text for action in actions[:arguments.number]) if actions else "Nothing to do!")

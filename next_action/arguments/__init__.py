@@ -22,5 +22,5 @@ def parse_arguments() -> Arguments:
     arguments.filenames = namespace.filenames
     arguments.number = namespace.number
     arguments.show_all(namespace.all)
-    arguments.set_filters(namespace.filters)
+    arguments.filters = namespace.filters
     return arguments
