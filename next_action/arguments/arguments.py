@@ -1,12 +1,14 @@
 """ Argument data class for transfering command line arguments. """
 
+import argparse
 import sys
 from typing import List, Set
 
 
 class Arguments(object):
     """ Argument data class. """
-    def __init__(self, default_filenames: List[str]) -> None:
+    def __init__(self, parser: argparse.ArgumentParser, default_filenames: List[str]) -> None:
+        self.parser = parser
         self.__default_filenames = default_filenames
         self.__filenames: List[str] = []
         self.__filters: List[Set[str]] = []
