@@ -12,7 +12,7 @@ def build_parser(default_filenames: List[str]) -> argparse.ArgumentParser:
         description="Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt \
                      file based on priority, due date, creation date, and supplied filters.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        usage="%(prog)s [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]")
+        usage="%(prog)s [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]")
     add_optional_arguments(parser, default_filenames)
     add_positional_arguments(parser)
     return parser
@@ -23,8 +23,9 @@ def add_optional_arguments(parser: argparse.ArgumentParser, default_filenames: L
     parser.add_argument(
         "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
     parser.add_argument(
-        "-f", "--file", action="append", dest="filenames", metavar="<todo.txt>", default=default_filenames, type=str,
-        help="todo.txt file to read; argument can be repeated to read tasks from multiple todo.txt files")
+        "-f", "--file", action="append", dest="filenames", metavar="<filename>", default=default_filenames, type=str,
+        help="filename of todo.txt file to read; can be - to read from standard input; argument can be repeated to "
+             "read tasks from multiple todo.txt files")
     number = parser.add_mutually_exclusive_group()
     number.add_argument(
         "-n", "--number", metavar="<number>", help="number of next actions to show", type=int, default=1)

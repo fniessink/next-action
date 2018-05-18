@@ -27,26 +27,26 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
+usage: next-action [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]
 
-Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt
-file based on priority, due date, creation date, and supplied filters.
+Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on
+priority, due date, creation date, and supplied filters.
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  -f <todo.txt>, --file <todo.txt>
-                        todo.txt file to read; argument can be repeated to read tasks from multiple
-                        todo.txt files (default: ['todo.txt'])
+  -f <filename>, --file <filename>
+                        filename of todo.txt file to read; can be - to read from standard input; argument can be
+                        repeated to read tasks from multiple todo.txt files (default: ['todo.txt'])
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions (default: False)
 
 optional context and project arguments; these can be repeated:
-  @<context>            context the next action must have (default: None)
-  +<project>            project the next action must be part of (default: None)
-  -@<context>           context the next action must not have (default: None)
-  -+<project>           project the next action must not be part of (default: None)
+  @<context>            context the next action must have
+  +<project>            project the next action must be part of
+  -@<context>           context the next action must not have
+  -+<project>           project the next action must not be part of
 ```
 
 Assuming your todo.txt file is in the current folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](todo.txt), calling mom would be the next action:
