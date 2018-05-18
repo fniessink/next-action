@@ -67,10 +67,8 @@ You can limit the tasks from which *Next-action* picks the next action by passin
 ```console
 $ next-action @work
 (C) Finish proposal for important client @work
-
 $ next-action +DogHouse
 (G) Buy wood for new +DogHouse @store
-
 $ next-action +DogHouse @home
 Get rid of old +DogHouse @home
 ```
