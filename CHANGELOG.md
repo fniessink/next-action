@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - The `--file` argument accepts `-` to read input from standard input. Closes #42.
 
+### Changed
+
+- Give consistent error message when files can't be opened. Fixes #54.
+
 ## [0.2.1] - 2018-05-16
 
 ### Changed
