@@ -15,7 +15,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Demo
 
-![gif](demo.gif)
+![gif](https://raw.githubusercontent.com/fniessink/next-action/master/demo.gif)
 
 ## Installation
 
