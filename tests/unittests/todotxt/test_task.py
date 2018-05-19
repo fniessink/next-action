@@ -136,7 +136,6 @@ class DueDateTest(unittest.TestCase):
         self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task("(B) due:2018-1-1 Todo").due_date())
 
 
-
 class TaskCompletionTest(unittest.TestCase):
     """ Unit tests for the completion status of tasks. """
 
