@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.1] - 2018-05-19
+
+### Added
+
+- Add the README file to the package description on the Python Package Index (https://pypi.org/project/next-action/). Closes #59.
+
 ## [0.5.0] - 2018-05-19
 
 ### Added
