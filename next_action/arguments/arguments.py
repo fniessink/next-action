@@ -1,6 +1,7 @@
 """ Argument data class for transfering command line arguments. """
 
 import argparse
+import os.path
 import sys
 from typing import List, Set
 
@@ -28,7 +29,7 @@ class Arguments(object):
             for default_filename in self.__default_filenames:
                 filenames.remove(default_filename)
         # Remove duplicate filenames while maintaining order.
-        self.__filenames = list(dict.fromkeys(filenames))
+        self.__filenames = [os.path.expanduser(filename) for filename in list(dict.fromkeys(filenames))]
 
     def show_all(self, show_all: bool) -> None:
         """ If the user wants to see all next actions, set the number to something big. """

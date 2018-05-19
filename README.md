@@ -37,7 +37,7 @@ optional arguments:
   --version             show program's version number and exit
   -f <filename>, --file <filename>
                         filename of todo.txt file to read; can be - to read from standard input; argument can be
-                        repeated to read tasks from multiple todo.txt files (default: ['todo.txt'])
+                        repeated to read tasks from multiple todo.txt files (default: ['~/todo.txt'])
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions (default: False)
@@ -49,7 +49,7 @@ optional context and project arguments; these can be repeated:
   -+<project>           project the next action must not be part of
 ```
 
-Assuming your todo.txt file is in the current folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](todo.txt), calling mom would be the next action:
+Assuming your todo.txt file is your home folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](todo.txt), calling mom would be the next action:
 
 ```console
 $ next-action

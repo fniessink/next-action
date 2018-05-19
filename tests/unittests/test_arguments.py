@@ -22,7 +22,7 @@ class NoArgumentTest(unittest.TestCase):
     @patch.object(sys, "argv", ["next-action"])
     def test_filename(self):
         """ Test that the argument parser returns the default filename if the user doesn't pass one. """
-        self.assertEqual(["todo.txt"], parse_arguments().filenames)
+        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
 
 
 class FilenameTest(unittest.TestCase):

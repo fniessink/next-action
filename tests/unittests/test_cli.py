@@ -73,7 +73,7 @@ optional arguments:
   --version             show program's version number and exit
   -f <filename>, --file <filename>
                         filename of todo.txt file to read; can be - to read from standard input; argument can be
-                        repeated to read tasks from multiple todo.txt files (default: ['todo.txt'])
+                        repeated to read tasks from multiple todo.txt files (default: ['~/todo.txt'])
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions (default: False)
