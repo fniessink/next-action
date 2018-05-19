@@ -61,6 +61,18 @@ class PickActionTest(unittest.TestCase):
         task2 = todotxt.Task("Task 2 due:2018-1-1")
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2]))
 
+    def test_project(self):
+        """ Test that a task with a project takes precedence over a task without a project. """
+        task1 = todotxt.Task("Task 1")
+        task2 = todotxt.Task("Task 2 +Project")
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2]))
+
+    def test_projects(self):
+        """ Test that a task with more projects takes precedence over a task with less projects. """
+        task1 = todotxt.Task("Task 1 +Project")
+        task2 = todotxt.Task("Task 2 +Project1 +Project2")
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2]))
+
 
 class FilterTasksTest(unittest.TestCase):
     """ Test that the tasks from which the next action is picked, can be filtered. """
