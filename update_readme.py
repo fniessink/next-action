@@ -25,6 +25,6 @@ def update_readme():
                 print(line)
 
 
-if  __name__ == "__main__":
+if __name__ == "__main__":
     os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
     update_readme()
