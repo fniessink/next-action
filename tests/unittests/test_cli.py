@@ -62,7 +62,8 @@ class CLITest(unittest.TestCase):
         """ Test the help message. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual(call("""usage: next-action [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]
+        self.assertEqual(call("""\
+usage: next-action [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on
 priority, due date, creation date, and supplied filters.

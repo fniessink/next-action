@@ -31,24 +31,39 @@ class PickActionTest(unittest.TestCase):
         task3 = todotxt.Task("(A) Todo 3")
         self.assertEqual([task3, task2, task1], pick_action.next_actions([task1, task2, task3]))
 
-    def test_ignore_completed_task(self):
-        """ If there's one completed and one uncompleted task, the uncompleted one is the next action. """
-        completed_task = todotxt.Task("x Completed")
-        uncompleted_task = todotxt.Task("Todo")
-        self.assertEqual([uncompleted_task], pick_action.next_actions([completed_task, uncompleted_task]))
+    def test_creation_dates(self):
+        """ Test that a task with an older creation date takes precedence. """
+        no_creation_date = todotxt.Task("Task 1")
+        newer_task = todotxt.Task("2018-02-02 Task 2")
+        older_task = todotxt.Task("2017-01-01 Task 3")
+        self.assertEqual([older_task, newer_task, no_creation_date],
+                         pick_action.next_actions([no_creation_date, newer_task, older_task]))
 
-    def test_ignore_future_task(self):
-        """ Ignore tasks with a start date in the future. """
-        future_task = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
-        regular_task = todotxt.Task("(B) Look busy")
-        self.assertEqual([regular_task], pick_action.next_actions([future_task, regular_task]))
+    def test_priority_and_creation_date(self):
+        """ Test that priority takes precedence over creation date. """
+        priority = todotxt.Task("(C) Task 1")
+        newer_task = todotxt.Task("2018-02-02 Task 2")
+        older_task = todotxt.Task("2017-01-01 Task 3")
+        self.assertEqual([priority, older_task, newer_task],
+                         pick_action.next_actions([priority, newer_task, older_task]))
 
-    def test_ignore_these_tasks(self):
-        """ If all tasks are completed or future tasks, there's no next action. """
-        completed_task1 = todotxt.Task("x Completed")
-        completed_task2 = todotxt.Task("x Completed too")
-        future_task = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
-        self.assertEqual([], pick_action.next_actions([completed_task1, completed_task2, future_task]))
+    def test_due_dates(self):
+        """ Test that a task with an earlier due date takes precedence. """
+        no_due_date = todotxt.Task("Task 1")
+        earlier_task = todotxt.Task("Task 2 due:2018-02-02")
+        later_task = todotxt.Task("Task 3 due:2019-01-01")
+        self.assertEqual([earlier_task, later_task, no_due_date],
+                         pick_action.next_actions([no_due_date, later_task, earlier_task]))
+
+    def test_due_and_creation_dates(self):
+        """ Test that a task with a due date takes precedence over creation date. """
+        task1 = todotxt.Task("2018-1-1 Task 1")
+        task2 = todotxt.Task("Task 2 due:2018-1-1")
+        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2]))
+
+
+class FilterTasksTest(unittest.TestCase):
+    """ Test that the tasks from which the next action is picked, can be filtered. """
 
     def test_context(self):
         """ Test that the next action can be limited to a specific context. """
@@ -109,32 +124,25 @@ class PickActionTest(unittest.TestCase):
         self.assertEqual([task1],
                          pick_action.next_actions([task1, task2, task3], projects={"ProjectX"}, contexts={"office"}))
 
-    def test_creation_dates(self):
-        """ Test that a task with an older creation date takes precedence. """
-        no_creation_date = todotxt.Task("Task 1")
-        newer_task = todotxt.Task("2018-02-02 Task 2")
-        older_task = todotxt.Task("2017-01-01 Task 3")
-        self.assertEqual([older_task, newer_task, no_creation_date],
-                         pick_action.next_actions([no_creation_date, newer_task, older_task]))
 
-    def test_priority_and_creation_date(self):
-        """ Test that priority takes precedence over creation date. """
-        priority = todotxt.Task("(C) Task 1")
-        newer_task = todotxt.Task("2018-02-02 Task 2")
-        older_task = todotxt.Task("2017-01-01 Task 3")
-        self.assertEqual([priority, older_task, newer_task],
-                         pick_action.next_actions([priority, newer_task, older_task]))
+class IgnoredTasksTest(unittest.TestCase):
+    """ Test that certain tasks are ignored when picking the next action. """
 
-    def test_due_dates(self):
-        """ Test that a task with an earlier due date takes precedence. """
-        no_due_date = todotxt.Task("Task 1")
-        earlier_task = todotxt.Task("Task 2 due:2018-02-02")
-        later_task = todotxt.Task("Task 3 due:2019-01-01")
-        self.assertEqual([earlier_task, later_task, no_due_date],
-                         pick_action.next_actions([no_due_date, later_task, earlier_task]))
+    def test_ignore_completed_task(self):
+        """ If there's one completed and one uncompleted task, the uncompleted one is the next action. """
+        completed_task = todotxt.Task("x Completed")
+        uncompleted_task = todotxt.Task("Todo")
+        self.assertEqual([uncompleted_task], pick_action.next_actions([completed_task, uncompleted_task]))
 
-    def test_due_and_creation_dates(self):
-        """ Test that a task with a due date takes precedence over creation date. """
-        task1 = todotxt.Task("2018-1-1 Task 1")
-        task2 = todotxt.Task("Task 2 due:2018-1-1")
-        self.assertEqual([task2, task1], pick_action.next_actions([task1, task2]))
+    def test_ignore_future_task(self):
+        """ Ignore tasks with a start date in the future. """
+        future_task = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
+        regular_task = todotxt.Task("(B) Look busy")
+        self.assertEqual([regular_task], pick_action.next_actions([future_task, regular_task]))
+
+    def test_ignore_these_tasks(self):
+        """ If all tasks are completed or future tasks, there's no next action. """
+        completed_task1 = todotxt.Task("x Completed")
+        completed_task2 = todotxt.Task("x Completed too")
+        future_task = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
+        self.assertEqual([], pick_action.next_actions([completed_task1, completed_task2, future_task]))
