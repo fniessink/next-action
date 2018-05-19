@@ -14,7 +14,7 @@ def parse_arguments() -> Arguments:
     """ Build the argument parser, paerse the command line arguments, and post-process them. """
     # Ensure that the help info is printed using all columns available
     os.environ['COLUMNS'] = str(shutil.get_terminal_size().columns)
-    default_filenames = ["todo.txt"]
+    default_filenames = ["~/todo.txt"]
     parser = build_parser(default_filenames)
     arguments = Arguments(parser, default_filenames)
     namespace, remaining = parser.parse_known_args()
