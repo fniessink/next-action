@@ -65,8 +65,9 @@ class CLITest(unittest.TestCase):
         self.assertEqual(call("""\
 usage: next-action [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]
 
-Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on
-priority, due date, creation date, and supplied filters.
+Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
+properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
+specifying contexts the tasks must have and/or projects the tasks must belong to.
 
 optional arguments:
   -h, --help            show this help message and exit

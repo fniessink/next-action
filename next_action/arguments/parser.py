@@ -10,7 +10,9 @@ def build_parser(default_filenames: List[str]) -> argparse.ArgumentParser:
     """ Create the arguments parsers. """
     parser = argparse.ArgumentParser(
         description="Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt \
-                     file based on priority, due date, creation date, and supplied filters.",
+                     file based on task properties such as priority, due date, and creation date. Limit the tasks from \
+                     which the next action is selected by specifying contexts the tasks must have and/or projects the \
+                     tasks must belong to.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         usage="%(prog)s [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]")
     add_optional_arguments(parser, default_filenames)

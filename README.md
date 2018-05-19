@@ -29,8 +29,9 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 $ next-action --help
 usage: next-action [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]
 
-Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on
-priority, due date, creation date, and supplied filters.
+Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
+properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
+specifying contexts the tasks must have and/or projects the tasks must belong to.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -56,7 +57,7 @@ $ next-action
 (A) Call mom @phone
 ```
 
-The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks.
+The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks. FInally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
 
 Completed tasks (~~`x This is a completed task`~~) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
 

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Other properties being equal, task with more projects get precedence over tasks with fewer projects when selecting the next action. Closes #57.
+
 ## [0.4.0] - 2018-05-19
 
 ### Changed
