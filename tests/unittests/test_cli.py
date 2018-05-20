@@ -8,7 +8,7 @@ from unittest.mock import patch, mock_open, call
 from next_action.cli import next_action
 from next_action import __version__
 
-from .test_arguments import USAGE_MESSAGE
+from .arguments.test_parser import USAGE_MESSAGE
 
 
 class CLITest(unittest.TestCase):

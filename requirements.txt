@@ -1,2 +1,2 @@
-# Dependencies - None at the moment
-
+# Dependencies
+PyYAML=3.12

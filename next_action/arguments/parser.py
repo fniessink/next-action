@@ -1,7 +1,9 @@
 """ Parser for the command line arguments. """
 
 import argparse
-from typing import List
+from typing import Dict, List, Optional
+
+import yaml
 
 import next_action
 
@@ -16,7 +18,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            usage="%(prog)s [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] "
+            usage="next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] "
                   "[<context|project> ...]")
         self.add_optional_arguments(default_filenames)
         self.add_positional_arguments()
@@ -29,7 +31,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-c", "--config-file", metavar="<config.cfg>", type=str,
             help="filename of configuration file to read")
         self.add_argument(
-            "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames, type=str,
+            "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
                  "repeated to read tasks from multiple todo.txt files")
         number = self.add_mutually_exclusive_group()
@@ -61,8 +63,20 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """ Parse the command-line arguments. """
+        config_file = self.parse_config_file()
+        config = self.read_config_file(config_file)
         namespace, remaining = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining, namespace)
+        if namespace.file == self.get_default("file"):
+            filenames = config.get("file", []) if isinstance(config, dict) else []
+            if isinstance(filenames, str):
+                filenames = [filenames]
+            if not isinstance(filenames, list):
+                self.error("invalid filenames in {0}: {1}".format(config_file, filenames))
+            for filename in filenames:
+                if not isinstance(filename, str):
+                    self.error("invalid filenames in {0}: {1}".format(config_file, filename))
+            getattr(namespace, "file").extend(filenames)
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
@@ -78,6 +92,22 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                     namespace.filters.append(value)
             else:
                 self.error("unrecognized arguments: {0}".format(value))
+
+    def parse_config_file(self) -> Optional[str]:
+        """ Parse the config file argument from the command line arguments. """
+        parser = argparse.ArgumentParser(add_help=False, usage=self.usage)
+        parser.add_argument("-c", "--config-file", dest="config_file", type=str)
+        namespace, _ = parser.parse_known_args()
+        return namespace.config_file
+
+    def read_config_file(self, filename: str) -> Dict[str, List[str]]:
+        """ Read the config file. """
+        try:
+            return yaml.safe_load(open(filename, "r").read()) if filename else dict()
+        except OSError as reason:
+            self.error("can't open {0}: {1}".format(filename, reason))
+        except yaml.YAMLError as reason:
+            self.error("can't parse {0}: {1}".format(filename, reason))
 
 
 def filter_type(value: str) -> str:
