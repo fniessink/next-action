@@ -9,7 +9,7 @@ import next_action
 class NextActionArgumentParser(argparse.ArgumentParser):
     """ Command-line argument parser for Next-action. """
 
-    def __init__(self, default_filenames: str) -> None:
+    def __init__(self, default_filenames: List[str]) -> None:
         super().__init__(
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
