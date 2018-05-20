@@ -55,6 +55,12 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "dummy", metavar="-+<project>", help="project the next action must not be part of", nargs="*",
             default=argparse.SUPPRESS)
 
+    def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
+        """ Parse the command-line arguments. """
+        namespace, remaining = self.parse_known_args(args, namespace)
+        self.parse_remaining_args(remaining, namespace)
+        return namespace
+
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
         """ Parse the remaining command line arguments. """
         for value in remaining:

@@ -17,8 +17,7 @@ def parse_arguments() -> Arguments:
     default_filenames = ["~/todo.txt"]
     parser = NextActionArgumentParser(default_filenames)
     arguments = Arguments(parser, default_filenames)
-    namespace, remaining = parser.parse_known_args()
-    parser.parse_remaining_args(remaining, namespace)
+    namespace = parser.parse_args()
     arguments.filenames = namespace.filenames
     arguments.number = namespace.number
     arguments.show_all(namespace.all)
