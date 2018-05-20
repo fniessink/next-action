@@ -18,7 +18,7 @@ def parse_arguments() -> Arguments:
     parser = NextActionArgumentParser(default_filenames)
     arguments = Arguments(parser, default_filenames)
     namespace = parser.parse_args()
-    arguments.filenames = namespace.filenames
+    arguments.filenames = namespace.file
     arguments.number = namespace.number
     arguments.show_all(namespace.all)
     arguments.filters = namespace.filters
