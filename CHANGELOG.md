@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Add the README file to the package description on the Python Package Index (https://pypi.org/project/next-action/). Closes #59.
+- Add the README file to the package description on the [Python Package Index](https://pypi.org/project/next-action/). Closes #59.
 
 ## [0.5.0] - 2018-05-19
 
