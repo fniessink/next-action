@@ -63,7 +63,7 @@ class CLITest(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
-usage: next-action [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
+usage: next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -72,6 +72,8 @@ specifying contexts the tasks must have and/or projects the tasks must belong to
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
+  -c <config.cfg>, --config-file <config.cfg>
+                        filename of configuration file to read (default: None)
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ['~/todo.txt'])

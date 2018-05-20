@@ -16,7 +16,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            usage="%(prog)s [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]")
+            usage="%(prog)s [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] "
+                  "[<context|project> ...]")
         self.add_optional_arguments(default_filenames)
         self.add_positional_arguments()
 
@@ -24,6 +25,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Add the optional arguments to the parser. """
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
+        self.add_argument(
+            "-c", "--config-file", metavar="<config.cfg>", type=str,
+            help="filename of configuration file to read")
         self.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames, type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "

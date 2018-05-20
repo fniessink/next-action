@@ -8,7 +8,8 @@ from unittest.mock import patch, call
 from next_action.arguments import parse_arguments
 
 
-USAGE_MESSAGE = "usage: next-action [-h] [--version] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]\n"
+USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] " \
+                "[<context|project> ...]\n"
 
 
 class NoArgumentTest(unittest.TestCase):
