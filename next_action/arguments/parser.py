@@ -2,7 +2,7 @@
 
 import argparse
 import os
-from typing import Dict, List, Optional
+from typing import Any, List
 
 import yaml
 
@@ -64,20 +64,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """ Parse the command-line arguments. """
-        config_filename = self.parse_config_file()
-        config = self.read_config_file(config_filename)
         namespace, remaining = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining, namespace)
-        if namespace.file == self.get_default("file"):
-            filenames = config.get("file", []) if isinstance(config, dict) else []
-            if isinstance(filenames, str):
-                filenames = [filenames]
-            if not isinstance(filenames, list):
-                self.error("invalid filenames in '{0}': {1}".format(config_filename, filenames))
-            for filename in filenames:
-                if not isinstance(filename, str):
-                    self.error("invalid filenames in '{0}': {1}".format(config_filename, filename))
-            getattr(namespace, "file").extend(filenames)
+        self.process_config_file(namespace)
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
@@ -94,15 +83,22 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             else:
                 self.error("unrecognized arguments: {0}".format(value))
 
-    def parse_config_file(self) -> Optional[str]:
-        """ Parse the config file argument from the command line arguments. """
-        parser = argparse.ArgumentParser(add_help=False, usage=self.usage)
-        parser.add_argument("-c", "--config-file", dest="config_file", default=self.get_default("config_file"),
-                            type=str)
-        namespace, _ = parser.parse_known_args()
-        return namespace.config_file
+    def process_config_file(self, namespace: argparse.Namespace) -> None:
+        """ Process the configuration file. """
+        config_filename = namespace.config_file
+        config = self.read_config_file(config_filename)
+        if namespace.file == self.get_default("file"):
+            filenames = config.get("file", []) if isinstance(config, dict) else []
+            if isinstance(filenames, str):
+                filenames = [filenames]
+            if not isinstance(filenames, list):
+                self.error("invalid filenames in '{0}': {1}".format(config_filename, filenames))
+            for filename in filenames:
+                if not isinstance(filename, str):
+                    self.error("invalid filenames in '{0}': {1}".format(config_filename, filename))
+            getattr(namespace, "file").extend(filenames)
 
-    def read_config_file(self, filename: str) -> Dict[str, List[str]]:
+    def read_config_file(self, filename: str) -> Any:
         """ Read and parse the configuration file. """
         try:
             with open(os.path.expanduser(filename), "r") as config_file:
