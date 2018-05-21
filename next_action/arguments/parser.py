@@ -1,6 +1,7 @@
 """ Parser for the command line arguments. """
 
 import argparse
+import os
 from typing import Dict, List, Optional
 
 import yaml
@@ -28,7 +29,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
         self.add_argument(
-            "-c", "--config-file", metavar="<config.cfg>", type=str,
+            "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg",
             help="filename of configuration file to read")
         self.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames[:], type=str,
@@ -63,8 +64,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """ Parse the command-line arguments. """
-        config_file = self.parse_config_file()
-        config = self.read_config_file(config_file)
+        config_filename = self.parse_config_file()
+        config = self.read_config_file(config_filename)
         namespace, remaining = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining, namespace)
         if namespace.file == self.get_default("file"):
@@ -72,10 +73,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             if isinstance(filenames, str):
                 filenames = [filenames]
             if not isinstance(filenames, list):
-                self.error("invalid filenames in {0}: {1}".format(config_file, filenames))
+                self.error("invalid filenames in '{0}': {1}".format(config_filename, filenames))
             for filename in filenames:
                 if not isinstance(filename, str):
-                    self.error("invalid filenames in {0}: {1}".format(config_file, filename))
+                    self.error("invalid filenames in '{0}': {1}".format(config_filename, filename))
             getattr(namespace, "file").extend(filenames)
         return namespace
 
@@ -96,18 +97,27 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def parse_config_file(self) -> Optional[str]:
         """ Parse the config file argument from the command line arguments. """
         parser = argparse.ArgumentParser(add_help=False, usage=self.usage)
-        parser.add_argument("-c", "--config-file", dest="config_file", type=str)
+        parser.add_argument("-c", "--config-file", dest="config_file", default=self.get_default("config_file"),
+                            type=str)
         namespace, _ = parser.parse_known_args()
         return namespace.config_file
 
     def read_config_file(self, filename: str) -> Dict[str, List[str]]:
-        """ Read the config file. """
+        """ Read and parse the configuration file. """
+        if not filename:
+            return dict()
         try:
-            return yaml.safe_load(open(filename, "r").read()) if filename else dict()
+            with open(os.path.expanduser(filename), "r") as config_file:
+                return yaml.safe_load(config_file.read())
+        except FileNotFoundError as reason:
+            if filename == self.get_default("config_file"):
+                return dict()  # Don't complain if there's no configuration file at the default location
+            else:
+                self.error("can't open configuration file: {0}".format(reason))
         except OSError as reason:
-            self.error("can't open {0}: {1}".format(filename, reason))
+            self.error("can't open configuration file: {0}".format(reason))
         except yaml.YAMLError as reason:
-            self.error("can't parse {0}: {1}".format(filename, reason))
+            self.error("can't parse configuration file '{0}': {1}".format(filename, reason))
 
 
 def filter_type(value: str) -> str:

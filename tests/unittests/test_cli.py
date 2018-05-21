@@ -73,7 +73,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   -c <config.cfg>, --config-file <config.cfg>
-                        filename of configuration file to read (default: None)
+                        filename of configuration file to read (default: ~/.next-action.cfg)
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ['~/todo.txt'])
