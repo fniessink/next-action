@@ -18,7 +18,7 @@ class Arguments(object):
     @property
     def filenames(self) -> List[str]:
         """ Return the filenames. """
-        return self.__filenames
+        return self.__filenames or self.__default_filenames
 
     @filenames.setter
     def filenames(self, filenames: List[str]) -> None:
@@ -27,7 +27,8 @@ class Arguments(object):
         # See https://bugs.python.org/issue16399.
         if self.__default_filenames != filenames:
             for default_filename in self.__default_filenames:
-                filenames.remove(default_filename)
+                if default_filename in filenames:
+                    filenames.remove(default_filename)
         # Remove duplicate filenames while maintaining order.
         self.__filenames = [os.path.expanduser(filename) for filename in list(dict.fromkeys(filenames))]
 
