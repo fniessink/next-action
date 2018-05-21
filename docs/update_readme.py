@@ -18,9 +18,16 @@ def update_readme():
                 in_console_section = False
             elif line.startswith("$ "):
                 print(line)
-                command = line[2:].split(" ") + ["--file", "docs/todo.txt"]
-                command_output = subprocess.run(command, stdout=subprocess.PIPE, universal_newlines=True)
-                print(command_output.stdout.rstrip())
+                command = line[2:].split(" ")
+                if command[0] == "next-action":
+                    command.extend(["--file", "docs/todo.txt"])
+                command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                                check=True, universal_newlines=True)
+                stdout, stderr = command_output.stdout.strip(), command_output.stderr.strip()
+                if stdout:
+                    print(stdout)
+                if stderr:
+                    print(stderr)
             elif not in_console_section:
                 print(line)
 

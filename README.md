@@ -148,8 +148,21 @@ Command-line options override options in the configuration file.
 
 ## Develop
 
-Clone the repository and run the unit tests with `python setup.py test` or `python -m unittest`.
+Clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`., and install *Next-action* in development mode using `python setup.py develop`.
 
-To create the unit test coverage report install the development dependencies with `pip install -r requirements-dev.txt` and run the unit tests under coverage with `coverage run --branch -m unittest; coverage html --fail-under=100 --directory=build/htmlcov`.
+To run the unit tests:
+
+```console
+$ python -m unittest
+...........................................................................................................
+----------------------------------------------------------------------
+Ran 107 tests in 0.101s
+
+OK
+```
+
+Running `python setup.py test` should give the same results.
+
+To create the unit test coverage report run the unit tests under coverage with `coverage run --branch -m unittest; coverage html --fail-under=100 --directory=build/htmlcov`.
 
 Quality checks can be run with `pylint next_action` and `pycodestyle next_action`.
