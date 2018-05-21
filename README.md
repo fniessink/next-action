@@ -27,7 +27,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-f <filename>] [-n <number> | -a] [<context|project> ...]
+usage: next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -36,8 +36,10 @@ specifying contexts the tasks must have and/or projects the tasks must belong to
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  -f <filename>, --file <filename>
-                        filename of todo.txt file to read; can be - to read from standard input; argument can be
+  -c <config.cfg>, --config-file <config.cfg>
+                        filename of configuration file to read (default: ~/.next-action.cfg)
+  -f <todo.txt>, --file <todo.txt>
+                        filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ['~/todo.txt'])
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
@@ -115,6 +117,32 @@ $ next-action --all @store
 ```
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
+
+### Configure
+
+Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
+
+```console
+$ next-action --config-file .next-action.cfg
+(A) Call mom @phone
+```
+
+The configuration file format is [YAML](http://yaml.org). The only option supported at the moment is to specify one or more todo.txt files to read:
+
+```yaml
+file: ~/Dropbox/todo.txt
+```
+
+Or:
+
+```yaml
+file:
+  - personal-todo.txt
+  - work-todo.txt
+  - big-project/tasks.txt
+```
+
+Command-line options override options in the configuration file.
 
 *Next-action* being still alpha-stage, this is it for the moment. Stay tuned for more options.
 
