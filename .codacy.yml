@@ -1,0 +1,6 @@
+---
+engines:
+ pylint:
+   enabled: true
+   python_version: 3
+
