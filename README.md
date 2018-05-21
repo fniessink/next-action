@@ -118,16 +118,16 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Configure
+### Configuring *Next-action*
 
 Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
 
 ```console
-$ next-action --config-file .next-action.cfg
+$ next-action --config-file my-next-action.cfg
 (A) Call mom @phone
 ```
 
-The configuration file format is [YAML](http://yaml.org). The only option supported at the moment is to specify one or more todo.txt files to read:
+The configuration file format is [YAML](http://yaml.org). The only option supported at the moment is to specify one or more todo.txt files to read, for example:
 
 ```yaml
 file: ~/Dropbox/todo.txt
