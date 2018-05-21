@@ -18,7 +18,7 @@ def update_readme():
                 in_console_section = False
             elif line.startswith("$ "):
                 print(line)
-                command = line[2:].split(" ") + ["--file", "todo.txt"]
+                command = line[2:].split(" ") + ["--file", "docs/todo.txt"]
                 command_output = subprocess.run(command, stdout=subprocess.PIPE, universal_newlines=True)
                 print(command_output.stdout.rstrip())
             elif not in_console_section:
