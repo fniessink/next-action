@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2018-05-21
+
+### Added
+
+- Next-action can read a configuration file in which the todo.txt file(s) to read can be specified. Closes #40.
+
 ## [0.5.2] - 2018-05-19
 
 ### Fixed

@@ -63,7 +63,7 @@ The next action is determined using priority. Due date is considered after prior
 
 Completed tasks (~~`x This is a completed task`~~) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
 
-### Limit next actions
+### Limiting the tasks from which next actions are selected
 
 You can limit the tasks from which *Next-action* picks the next action by passing contexts and/or projects:
 
@@ -97,7 +97,7 @@ $ next-action -+PaintHouse @store
 (G) Buy wood for new +DogHouse @store
 ```
 
-### Extend next actions
+### Showing more than one next action
 
 To show more than one next action, supply the number you think you can handle:
 
@@ -118,7 +118,7 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Configuring *Next-action*
+### Configuring todo.txt files to be read
 
 Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
 
