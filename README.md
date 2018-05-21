@@ -123,7 +123,7 @@ Note again that completed tasks and task with a future creation date are never s
 Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
 
 ```console
-$ next-action --config-file my-next-action.cfg
+$ next-action --config-file .next-action.cfg
 (A) Call mom @phone
 ```
 
