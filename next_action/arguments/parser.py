@@ -104,8 +104,6 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def read_config_file(self, filename: str) -> Dict[str, List[str]]:
         """ Read and parse the configuration file. """
-        if not filename:
-            return dict()
         try:
             with open(os.path.expanduser(filename), "r") as config_file:
                 return yaml.safe_load(config_file.read())

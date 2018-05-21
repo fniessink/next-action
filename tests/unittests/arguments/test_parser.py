@@ -266,6 +266,17 @@ class ConfigFileTest(unittest.TestCase):
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(parser, "open")
     @patch.object(sys.stderr, "write")
+    def test_file_not_found(self, mock_stderr_write, mock_file_open):
+        """ Test a config file that throws an error. """
+        mock_file_open.side_effect = FileNotFoundError("some problem")
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: can't open configuration file: some problem\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(parser, "open")
+    @patch.object(sys.stderr, "write")
     def test_error_opening(self, mock_stderr_write, mock_file_open):
         """ Test a config file that throws an error. """
         mock_file_open.side_effect = OSError("some problem")
