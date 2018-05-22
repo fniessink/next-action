@@ -13,7 +13,7 @@ from .test_parser import USAGE_MESSAGE
 
 
 class ConfigFileTest(unittest.TestCase):
-    """ Unit tests for the config file parameter. """
+    """ Unit tests for the config file. """
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data=""))
@@ -43,6 +43,41 @@ class ConfigFileTest(unittest.TestCase):
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: config.cfg is invalid: {'foo': ['unknown field']}\n")],
                          mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open")
+    @patch.object(sys.stderr, "write")
+    def test_error_opening(self, mock_stderr_write, mock_file_open):
+        """ Test a config file that throws an error. """
+        mock_file_open.side_effect = OSError("some problem")
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open")
+    @patch.object(sys.stderr, "write")
+    def test_error_parsing(self, mock_stderr_write, mock_file_open):
+        """ Test a config file that throws a parsing error. """
+        mock_file_open.side_effect = yaml.YAMLError("some problem")
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't parse config.cfg: some problem\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open")
+    @patch.object(sys.stderr, "write")
+    def test_file_not_found(self, mock_stderr_write, mock_file_open):
+        """ Test a config file that throws an error. """
+        mock_file_open.side_effect = FileNotFoundError("some problem")
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
+                         mock_stderr_write.call_args_list)
+
+
+
+class FilenameTest(unittest.TestCase):
+    """ Unit tests for the config file parameter. """
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data="file: 0"))
@@ -86,32 +121,84 @@ class ConfigFileTest(unittest.TestCase):
         """ Test that a command line argument overrules the filename in the configuration file. """
         self.assertEqual(["tada.txt"], parse_arguments().filenames)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
-    @patch.object(config, "open")
-    @patch.object(sys.stderr, "write")
-    def test_file_not_found(self, mock_stderr_write, mock_file_open):
-        """ Test a config file that throws an error. """
-        mock_file_open.side_effect = FileNotFoundError("some problem")
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
-                         mock_stderr_write.call_args_list)
+
+class NumberTest(unittest.TestCase):
+    """ Unit tests for the number and all parameters. """
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
-    @patch.object(config, "open")
+    @patch.object(config, "open", mock_open(read_data="number: not_a_number"))
     @patch.object(sys.stderr, "write")
-    def test_error_opening(self, mock_stderr_write, mock_file_open):
-        """ Test a config file that throws an error. """
-        mock_file_open.side_effect = OSError("some problem")
+    def test_invalid_number(self, mock_stderr_write):
+        """ Test a config file with an invalid number. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
-                         mock_stderr_write.call_args_list)
+        self.assertEqual(
+            [call(USAGE_MESSAGE), call("next-action: error: config.cfg is invalid: "
+                                       "{'number': [\"must be of ['integer'] type\"]}\n")],
+            mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
-    @patch.object(config, "open")
+    @patch.object(config, "open", mock_open(read_data="number: 0"))
     @patch.object(sys.stderr, "write")
-    def test_error_parsing(self, mock_stderr_write, mock_file_open):
-        """ Test a config file that throws a parsing error. """
-        mock_file_open.side_effect = yaml.YAMLError("some problem")
+    def test_zero(self, mock_stderr_write):
+        """ Test a config file with an invalid number. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't parse config.cfg: some problem\n")],
-                         mock_stderr_write.call_args_list)
+        self.assertEqual(
+            [call(USAGE_MESSAGE), call("next-action: error: config.cfg is invalid: {'number': ['min value is 1']}\n")],
+            mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open", mock_open(read_data="number: 3"))
+    def test_valid_number(self):
+        """ Test that a valid number changes the number argument. """
+        self.assertEqual(3, parse_arguments().number)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--number", "3"])
+    @patch.object(config, "open", mock_open(read_data="number: 2"))
+    def test_cli_takes_precedence(self):
+        """ Test that a command line argument overrules the number in the configuration file. """
+        self.assertEqual(3, parse_arguments().number)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open", mock_open(read_data="all: True"))
+    def test_all_true(self):
+        """ Test that all is true sets number to the max number. """
+        self.assertEqual(sys.maxsize, parse_arguments().number)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open", mock_open(read_data="all: False"))
+    @patch.object(sys.stderr, "write")
+    def test_all_false(self, mock_stderr_write):
+        """ Test a config file with all is false. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: config.cfg is invalid: {'all': ['unallowed value False']}\n")],
+            mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(config, "open", mock_open(read_data="all: True\nnumber: 3"))
+    @patch.object(sys.stderr, "write")
+    def test_all_and_number(self, mock_stderr_write):
+        """ Test that a config file with both --all and --number is invalid. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: config.cfg is invalid: {'number': "
+                  "[\"'all' must not be present with 'number'\"]}\n")],
+            mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--number", "3"])
+    @patch.object(config, "open", mock_open(read_data="all: True"))
+    def test_argument_nr_overrides(self):
+        """ Test that --number on the command line overrides --all in the configuration file. """
+        self.assertEqual(3, parse_arguments().number)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--all"])
+    @patch.object(config, "open", mock_open(read_data="number: 3"))
+    def test_argument_all_overrides(self):
+        """ Test that --all on the command line overrides --number in the configuration file. """
+        self.assertEqual(sys.maxsize, parse_arguments().number)

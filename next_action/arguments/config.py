@@ -29,7 +29,17 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "file": {
             "type": ["string", "list"],
             "schema": {
-                "type": "string"}}}
+                "type": "string"}},
+        "number": {
+            "type": ["integer"],
+            "min": 1,
+            "excludes": "all"
+        },
+        "all": {
+            "type": "boolean",
+            "allowed": [True]
+        }
+    }
     validator = cerberus.Validator(schema)
     try:
         valid = validator.validate(config)

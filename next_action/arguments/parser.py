@@ -1,6 +1,7 @@
 """ Parser for the command line arguments. """
 
 import argparse
+import sys
 from typing import List
 
 import next_action
@@ -88,11 +89,18 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if not config:
             return
         validate_config_file(config, config_filename, self.error)
-        if namespace.file == self.get_default("file"):
-            filenames = config.get("file", []) if isinstance(config, dict) else []
+        if self.arguments_not_specified(namespace, "file"):
+            filenames = config.get("file", [])
             if isinstance(filenames, str):
                 filenames = [filenames]
             getattr(namespace, "file").extend(filenames)
+        if self.arguments_not_specified(namespace, "number", "all"):
+            number = sys.maxsize if config.get("all", False) else config.get("number", 1)
+            setattr(namespace, "number", number)
+
+    def arguments_not_specified(self, namespace: argparse.Namespace, *arguments: str) -> bool:
+        """ Return whether the arguments were not specified on the command line. """
+        return all([getattr(namespace, argument) == self.get_default(argument) for argument in arguments])
 
 
 def filter_type(value: str) -> str:
