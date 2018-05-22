@@ -16,7 +16,7 @@ setup(
     url="https://github.com/fniessink/next-action",
     license="Apache License, Version 2.0",
     python_requires=">=3.6",
-    install_requires=["PyYAML"],
+    install_requires=["Cerberus", "PyYAML"],
     packages=find_packages(),
     entry_points={
         "console_scripts": [

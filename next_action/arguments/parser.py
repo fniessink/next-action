@@ -5,6 +5,7 @@ import os
 from typing import Any, List
 
 import yaml
+import cerberus
 
 import next_action
 
@@ -87,15 +88,20 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Process the configuration file. """
         config_filename = namespace.config_file
         config = self.read_config_file(config_filename)
+        if not config:
+            return
+        schema = {"file": {"type": ["string", "list"], "schema": {"type": "string"}}}
+        validator = cerberus.Validator(schema)
+        try:
+            valid = validator.validate(config)
+        except cerberus.validator.DocumentError as reason:
+            self.error("{0} is invalid: {1}".format(config_filename, reason))
+        if not valid:
+            self.error("{0} is invalid: {1}".format(config_filename, validator.errors))
         if namespace.file == self.get_default("file"):
             filenames = config.get("file", []) if isinstance(config, dict) else []
             if isinstance(filenames, str):
                 filenames = [filenames]
-            if not isinstance(filenames, list):
-                self.error("invalid filenames in '{0}': {1}".format(config_filename, filenames))
-            for filename in filenames:
-                if not isinstance(filename, str):
-                    self.error("invalid filenames in '{0}': {1}".format(config_filename, filename))
             getattr(namespace, "file").extend(filenames)
 
     def read_config_file(self, filename: str) -> Any:
@@ -107,11 +113,11 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             if filename == self.get_default("config_file"):
                 return dict()  # Don't complain if there's no configuration file at the default location
             else:
-                self.error("can't open configuration file: {0}".format(reason))
+                self.error("can't open file: {0}".format(reason))
         except OSError as reason:
-            self.error("can't open configuration file: {0}".format(reason))
+            self.error("can't open file: {0}".format(reason))
         except yaml.YAMLError as reason:
-            self.error("can't parse configuration file '{0}': {1}".format(filename, reason))
+            self.error("can't parse {0}: {1}".format(filename, reason))
 
 
 def filter_type(value: str) -> str:

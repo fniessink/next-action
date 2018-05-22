@@ -215,20 +215,26 @@ class ConfigFileTest(unittest.TestCase):
         self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
-    @patch.object(parser, "open", mock_open(read_data="- file"))
-    def test_no_file_key(self):
-        """ Test that a config file without file key doesn't change the filenames. """
-        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
-
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
-    @patch.object(parser, "open", mock_open(read_data="file:\n  file: todo.txt"))
+    @patch.object(parser, "open", mock_open(read_data="- this_is_invalid"))
     @patch.object(sys.stderr, "write")
-    def test_wrong_type(self, mock_stderr_write):
-        """ Test a config file with the wrong file type value. """
+    def test_invalid_document(self, mock_stderr_write):
+        """ Test that a config file that's not valid YAML raises an error. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: invalid filenames in 'config.cfg': {'file': 'todo.txt'}\n")],
+                          call("next-action: error: config.cfg is invalid: '['this_is_invalid']' is not a document, "
+                               "must be a dict\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(parser, "open", mock_open(read_data="foo: bar"))
+    @patch.object(sys.stderr, "write")
+    def test_no_file_key(self, mock_stderr_write):
+        """ Test that a config file without file key doesn't change the filenames. """
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: config.cfg is invalid: {'foo': ['unknown field']}\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -238,8 +244,10 @@ class ConfigFileTest(unittest.TestCase):
         """ Test a config file with an invalid file name. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: invalid filenames in 'config.cfg': 0\n")],
-                         mock_stderr_write.call_args_list)
+        self.assertEqual(
+            [call(USAGE_MESSAGE), call("next-action: error: config.cfg is invalid: "
+                                       "{'file': [\"must be of ['string', 'list'] type\"]}\n")],
+            mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(parser, "open", mock_open(read_data="file:\n- todo.txt\n- 0"))
@@ -248,8 +256,10 @@ class ConfigFileTest(unittest.TestCase):
         """ Test a config file with an invalid file name. """
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: invalid filenames in 'config.cfg': 0\n")],
-                         mock_stderr_write.call_args_list)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: config.cfg is invalid: {'file': [{1: ['must be of string type']}]}\n")],
+            mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(parser, "open", mock_open(read_data="file: todo.txt"))
@@ -263,6 +273,12 @@ class ConfigFileTest(unittest.TestCase):
         """ Test that a list of valid filenames changes the filenames. """
         self.assertEqual(["todo.txt", "tada.txt"], parse_arguments().filenames)
 
+    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--file", "tada.txt"])
+    @patch.object(parser, "open", mock_open(read_data="file: todo.txt"))
+    def test_cli_takes_precedence(self):
+        """ Test that a command line argument overrules the filename in the configuration file. """
+        self.assertEqual(["tada.txt"], parse_arguments().filenames)
+
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(parser, "open")
     @patch.object(sys.stderr, "write")
@@ -270,8 +286,7 @@ class ConfigFileTest(unittest.TestCase):
         """ Test a config file that throws an error. """
         mock_file_open.side_effect = FileNotFoundError("some problem")
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: can't open configuration file: some problem\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -281,17 +296,15 @@ class ConfigFileTest(unittest.TestCase):
         """ Test a config file that throws an error. """
         mock_file_open.side_effect = OSError("some problem")
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: can't open configuration file: some problem\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(parser, "open")
     @patch.object(sys.stderr, "write")
     def test_error_parsing(self, mock_stderr_write, mock_file_open):
-        """ Test a config file that throws an parsing error. """
+        """ Test a config file that throws a parsing error. """
         mock_file_open.side_effect = yaml.YAMLError("some problem")
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: can't parse configuration file 'config.cfg': some problem\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't parse config.cfg: some problem\n")],
                          mock_stderr_write.call_args_list)
