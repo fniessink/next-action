@@ -75,7 +75,6 @@ class ConfigFileTest(unittest.TestCase):
                          mock_stderr_write.call_args_list)
 
 
-
 class FilenameTest(unittest.TestCase):
     """ Unit tests for the config file parameter. """
 
