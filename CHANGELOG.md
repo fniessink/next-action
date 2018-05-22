@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased] - 2018-05-22
 
+### Added
+
+- The number of next actions to show can be configured in the configuration file. Closes #65.
+
 ### Changed
 
 - Use a third-party package to validate the configuration file YAML instead of custom code. Closes #66.
