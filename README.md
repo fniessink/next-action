@@ -118,7 +118,7 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Configuring todo.txt files to be read
+### Configuring *Next-action*
 
 Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
 
@@ -156,11 +156,9 @@ all: True
 
 Command-line options override options in the configuration file.
 
-*Next-action* being still alpha-stage, this is it for the moment. Stay tuned for more options.
-
 ## Develop
 
-Clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`., and install *Next-action* in development mode using `python setup.py develop`.
+Clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`, and install *Next-action* in development mode using `python setup.py develop`.
 
 To run the unit tests:
 

@@ -3,15 +3,16 @@
 import os
 import sys
 import unittest
-from unittest.mock import patch, call
+from unittest.mock import call, mock_open, patch
 
-from next_action.arguments import parse_arguments
+from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] " \
                 "[<context|project> ...]\n"
 
 
+@patch.object(config, "open", mock_open(read_data=""))
 class NoArgumentTest(unittest.TestCase):
     """ Unit tests for the argument parser, without arguments. """
 
@@ -26,6 +27,7 @@ class NoArgumentTest(unittest.TestCase):
         self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
 
 
+@patch.object(config, "open", mock_open(read_data=""))
 class FilenameTest(unittest.TestCase):
     """ Unit tests for the --filename argument. """
 
@@ -55,6 +57,7 @@ class FilenameTest(unittest.TestCase):
         self.assertEqual(["other.txt"], parse_arguments().filenames)
 
 
+@patch.object(config, "open", mock_open(read_data=""))
 class FilterArgumentTest(unittest.TestCase):
     """ Unit tests for the @object and +project filter arguments. """
 
@@ -164,6 +167,7 @@ class FilterArgumentTest(unittest.TestCase):
                          mock_stderr_write.call_args_list)
 
 
+@patch.object(config, "open", mock_open(read_data=""))
 class NumberTest(unittest.TestCase):
     """ Unit tests for the --number and --all arguments. """
 

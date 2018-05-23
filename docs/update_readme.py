@@ -20,7 +20,7 @@ def update_readme():
                 print(line)
                 command = line[2:].split(" ")
                 if command[0] == "next-action":
-                    command.extend(["--file", "docs/todo.txt"])
+                    command.extend(["--file", "docs/todo.txt", "--config", "docs/.next-action.cfg"])
                 command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                                 check=True, universal_newlines=True)
                 stdout, stderr = command_output.stdout.strip(), command_output.stderr.strip()
