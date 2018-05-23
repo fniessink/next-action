@@ -118,7 +118,7 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Configurin *Next-action*
+### Configuring *Next-action*
 
 Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
 
