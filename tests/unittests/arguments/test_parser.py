@@ -8,7 +8,7 @@ from unittest.mock import call, mock_open, patch
 from next_action.arguments import config, parse_arguments
 
 
-USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] " \
+USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] " \
                 "[<context|project> ...]\n"
 
 
