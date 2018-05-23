@@ -68,7 +68,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Parse the command-line arguments. """
         namespace, remaining = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining, namespace)
-        self.process_config_file(namespace)
+        if not namespace.no_config_file:
+            self.process_config_file(namespace)
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
