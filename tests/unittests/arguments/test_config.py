@@ -21,6 +21,13 @@ class ConfigFileTest(unittest.TestCase):
         """ Test that an empty config file doesn't change the filenames. """
         self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
 
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open")
+    def test_missing_default_config(self, mock_file_open):
+        """ Test that a missing config file at the default location is no problem. """
+        mock_file_open.side_effect = FileNotFoundError("some problem")
+        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
+
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data="- this_is_invalid"))
     @patch.object(sys.stderr, "write")
