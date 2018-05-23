@@ -17,8 +17,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
-            formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-            usage="next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] "
+            usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] "
                   "[<context|project> ...]")
         self.add_optional_arguments(default_filenames)
         self.add_positional_arguments()
@@ -27,16 +26,20 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Add the optional arguments to the parser. """
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
-        self.add_argument(
+        config_file = self.add_mutually_exclusive_group()
+        config_file.add_argument(
             "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg",
-            help="filename of configuration file to read")
+            help="filename of configuration file to read (default: %(default)s)")
+        config_file.add_argument(
+            "-C", "--no-config-file", help="don't read the configuration file", action="store_true")
         self.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
-                 "repeated to read tasks from multiple todo.txt files")
+                 "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
         number = self.add_mutually_exclusive_group()
         number.add_argument(
-            "-n", "--number", metavar="<number>", help="number of next actions to show", type=int, default=1)
+            "-n", "--number", metavar="<number>", type=int, default=1,
+            help="number of next actions to show (default: %(default)s)")
         number.add_argument("-a", "--all", help="show all next actions", action="store_true")
 
     def add_positional_arguments(self) -> None:
@@ -65,7 +68,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Parse the command-line arguments. """
         namespace, remaining = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining, namespace)
-        self.process_config_file(namespace)
+        if not namespace.no_config_file:
+            self.process_config_file(namespace)
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
