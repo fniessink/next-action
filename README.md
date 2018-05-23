@@ -52,7 +52,7 @@ optional context and project arguments; these can be repeated:
   -+<project>           project the next action must not be part of
 ```
 
-Assuming your todo.txt file is your home folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](todo.txt), calling mom would be the next action:
+Assuming your todo.txt file is your home folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](docs/todo.txt), calling mom would be the next action:
 
 ```console
 $ next-action
@@ -118,9 +118,9 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Configuring *Next-action*
+### Configurin *Next-action*
 
-Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
+Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](docs/.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
 
 ```console
 $ next-action --config-file docs/.next-action.cfg
