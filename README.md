@@ -127,19 +127,31 @@ $ next-action --config-file docs/.next-action.cfg
 (A) Call mom @phone
 ```
 
-The configuration file format is [YAML](http://yaml.org). The only option supported at the moment is to specify one or more todo.txt files to read, for example:
+The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read and how many next actions should be shown. A default todo.txt file to use can be specified like this:
 
 ```yaml
 file: ~/Dropbox/todo.txt
 ```
 
-Or:
+Multiple todo.txt files can be listed, if needed:
 
 ```yaml
 file:
   - personal-todo.txt
   - work-todo.txt
   - big-project/tasks.txt
+```
+
+The number of next actions to show can be specified like this:
+
+```yaml
+number: 3
+```
+
+Or you can have *Next-action* show all next actions:
+
+```yaml
+all: True
 ```
 
 Command-line options override options in the configuration file.

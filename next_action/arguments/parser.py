@@ -1,13 +1,11 @@
 """ Parser for the command line arguments. """
 
 import argparse
-import os
-from typing import Any, List
-
-import yaml
-import cerberus
+import sys
+from typing import List
 
 import next_action
+from .config import read_config_file, validate_config_file
 
 
 class NextActionArgumentParser(argparse.ArgumentParser):
@@ -87,37 +85,22 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def process_config_file(self, namespace: argparse.Namespace) -> None:
         """ Process the configuration file. """
         config_filename = namespace.config_file
-        config = self.read_config_file(config_filename)
+        config = read_config_file(config_filename, self.get_default("config_file"), self.error)
         if not config:
             return
-        schema = {"file": {"type": ["string", "list"], "schema": {"type": "string"}}}
-        validator = cerberus.Validator(schema)
-        try:
-            valid = validator.validate(config)
-        except cerberus.validator.DocumentError as reason:
-            self.error("{0} is invalid: {1}".format(config_filename, reason))
-        if not valid:
-            self.error("{0} is invalid: {1}".format(config_filename, validator.errors))
-        if namespace.file == self.get_default("file"):
-            filenames = config.get("file", []) if isinstance(config, dict) else []
+        validate_config_file(config, config_filename, self.error)
+        if self.arguments_not_specified(namespace, "file"):
+            filenames = config.get("file", [])
             if isinstance(filenames, str):
                 filenames = [filenames]
             getattr(namespace, "file").extend(filenames)
+        if self.arguments_not_specified(namespace, "number", "all"):
+            number = sys.maxsize if config.get("all", False) else config.get("number", 1)
+            setattr(namespace, "number", number)
 
-    def read_config_file(self, filename: str) -> Any:
-        """ Read and parse the configuration file. """
-        try:
-            with open(os.path.expanduser(filename), "r") as config_file:
-                return yaml.safe_load(config_file.read())
-        except FileNotFoundError as reason:
-            if filename == self.get_default("config_file"):
-                return dict()  # Don't complain if there's no configuration file at the default location
-            else:
-                self.error("can't open file: {0}".format(reason))
-        except OSError as reason:
-            self.error("can't open file: {0}".format(reason))
-        except yaml.YAMLError as reason:
-            self.error("can't parse {0}: {1}".format(filename, reason))
+    def arguments_not_specified(self, namespace: argparse.Namespace, *arguments: str) -> bool:
+        """ Return whether the arguments were not specified on the command line. """
+        return all([getattr(namespace, argument) == self.get_default(argument) for argument in arguments])
 
 
 def filter_type(value: str) -> str:
