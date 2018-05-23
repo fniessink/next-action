@@ -27,7 +27,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c <config.cfg>] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
+usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -38,12 +38,13 @@ optional arguments:
   --version             show program's version number and exit
   -c <config.cfg>, --config-file <config.cfg>
                         filename of configuration file to read (default: ~/.next-action.cfg)
+  -C, --no-config-file  don't read the configuration file
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
-                        repeated to read tasks from multiple todo.txt files (default: ['~/todo.txt'])
+                        repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
-  -a, --all             show all next actions (default: False)
+  -a, --all             show all next actions
 
 optional context and project arguments; these can be repeated:
   @<context>            context the next action must have
@@ -127,7 +128,11 @@ $ next-action --config-file docs/.next-action.cfg
 (A) Call mom @phone
 ```
 
-The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read and how many next actions should be shown. A default todo.txt file to use can be specified like this:
+The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read and how many next actions should be shown.
+
+#### Configuring a default todo.txt
+
+A default todo.txt file to use can be specified like this:
 
 ```yaml
 file: ~/Dropbox/todo.txt
@@ -142,6 +147,8 @@ file:
   - big-project/tasks.txt
 ```
 
+#### Configuring the number of next actions to show
+
 The number of next actions to show can be specified like this:
 
 ```yaml
@@ -154,7 +161,11 @@ Or you can have *Next-action* show all next actions:
 all: True
 ```
 
-Command-line options override options in the configuration file.
+#### Precedence of options
+
+Options in the configuration file override the default options. Command-line options in turn override options in the configuration file.
+
+If you have a configuration file with default options that you occasionally want to ignore, you can skip reading the configuration file entirely with the `--no-config-file` option.
 
 ## Develop
 
@@ -164,9 +175,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-............................................................................................................
+.......................................................................................................................
 ----------------------------------------------------------------------
-Ran 108 tests in 0.114s
+Ran 119 tests in 0.168s
 
 OK
 ```
