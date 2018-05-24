@@ -19,7 +19,7 @@ def update_readme():
             elif line.startswith("$ "):
                 print(line)
                 command = line[2:].split(" ")
-                if command[0] == "next-action":
+                if command[0] == "next-action" and not "--write-config-file" in command:
                     command.extend(["--config", "docs/.next-action.cfg"])
                 command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                                 check=True, universal_newlines=True)

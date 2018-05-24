@@ -77,6 +77,7 @@ optional arguments:
   -c <config.cfg>, --config-file <config.cfg>
                         filename of configuration file to read (default: ~/.next-action.cfg)
   -C, --no-config-file  don't read the configuration file
+  --write-config-file   generate a sample configuration file and exit
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)

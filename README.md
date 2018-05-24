@@ -39,6 +39,7 @@ optional arguments:
   -c <config.cfg>, --config-file <config.cfg>
                         filename of configuration file to read (default: ~/.next-action.cfg)
   -C, --no-config-file  don't read the configuration file
+  --write-config-file   generate a sample configuration file and exit
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
@@ -121,7 +122,20 @@ Note again that completed tasks and task with a future creation date are never s
 
 ### Configuring *Next-action*
 
-Instead of specifying which todo.txt files to read on the command-line, you can also configure this in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder, but you can tell it to read another configuration file:
+In addition to specifying options on the command-line, you can also configure options in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder.
+
+To get started, you can tell *Next-action* to generate a configuration file with the default options:
+
+```console
+$ next-action --write-config-file
+# Configuration file for Next-action. Edit the settings below as you like.
+file: ~/todo.txt
+number: 1
+```
+
+To make this the configuration that *Next-action* reads by default, redirect the output to `~/.next-action.cfg` like this: `next-action --write-config-file > ~/.next-action.cfg`.
+
+If you want to use a configuration file that is not in the default location (`~/.next-action.cfg`), you'll need to explicitly tell *Next-action* its location:
 
 ```console
 $ next-action --config-file docs/.next-action.cfg
@@ -175,9 +189,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.......................................................................................................................
+........................................................................................................................
 ----------------------------------------------------------------------
-Ran 119 tests in 0.168s
+Ran 120 tests in 0.346s
 
 OK
 ```
