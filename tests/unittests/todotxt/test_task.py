@@ -115,19 +115,39 @@ class DueDateTest(unittest.TestCase):
 
     def test_no_due_date(self):
         """ Test that tasks have no due date by default. """
-        self.assertEqual(None, todotxt.Task("Todo").due_date())
+        task = todotxt.Task("Todo")
+        self.assertEqual(None, task.due_date())
+        self.assertFalse(task.is_overdue())
 
     def test_due_date(self):
         """ Test a valid due date. """
-        self.assertEqual(datetime.date(2018, 1, 2), todotxt.Task("Todo due:2018-01-02").due_date())
+        task = todotxt.Task("Todo due:2018-01-02")
+        self.assertEqual(datetime.date(2018, 1, 2), task.due_date())
+        self.assertTrue(task.is_overdue())
+
+    def test_future_due_date(self):
+        """ Test a future due date. """
+        task = todotxt.Task("Todo due:9999-01-01")
+        self.assertEqual(datetime.date(9999, 1, 1), task.due_date())
+        self.assertFalse(task.is_overdue())
+
+    def test_due_today(self):
+        """ Test a future due date. """
+        task = todotxt.Task("Todo due:{0}".format(datetime.date.today().isoformat()))
+        self.assertEqual(datetime.date.today(), task.due_date())
+        self.assertFalse(task.is_overdue())
 
     def test_invalid_date(self):
         """ Test an invalid due date. """
-        self.assertEqual(None, todotxt.Task("Todo due:2018-01-32").due_date())
+        task = todotxt.Task("Todo due:2018-01-32")
+        self.assertEqual(None, task.due_date())
+        self.assertFalse(task.is_overdue())
 
     def test_no_space_after(self):
         """ Test a due date without a word boundary following it. """
-        self.assertEqual(None, todotxt.Task("Todo due:2018-01-023").due_date())
+        task = todotxt.Task("Todo due:2018-01-023")
+        self.assertEqual(None, task.due_date())
+        self.assertFalse(task.is_overdue())
 
     def test_single_digits(self):
         """ Test a due date with single digits for day and/or month. """

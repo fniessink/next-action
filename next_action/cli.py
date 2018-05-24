@@ -15,11 +15,11 @@ def next_action() -> None:
         2) read todo.txt file(s),
         3) determine the next action(s) and display them.
     """
-    arguments = parse_arguments()
+    parser, arguments = parse_arguments()
     try:
         with fileinput.input(arguments.filenames) as todotxt_file:
             tasks = read_todotxt_file(todotxt_file)
     except OSError as reason:
-        arguments.parser.error("can't open file: {0}".format(reason))
-    actions = next_actions(tasks, *arguments.filters)
+        parser.error("can't open file: {0}".format(reason))
+    actions = next_actions(tasks, arguments)
     print("\n".join(action.text for action in actions[:arguments.number]) if actions else "Nothing to do!")

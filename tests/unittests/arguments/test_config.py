@@ -19,14 +19,14 @@ class ConfigFileTest(unittest.TestCase):
     @patch.object(config, "open", mock_open(read_data=""))
     def test_empty_file(self):
         """ Test that an empty config file doesn't change the filenames. """
-        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
+        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open")
     def test_missing_default_config(self, mock_file_open):
         """ Test that a missing config file at the default location is no problem. """
         mock_file_open.side_effect = FileNotFoundError("some problem")
-        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments().filenames)
+        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data="- this_is_invalid"))
@@ -130,19 +130,19 @@ class FilenameTest(unittest.TestCase):
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
     def test_valid_file(self):
         """ Test that a valid filename changes the filenames. """
-        self.assertEqual(["todo.txt"], parse_arguments().filenames)
+        self.assertEqual(["todo.txt"], parse_arguments()[1].filenames)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data="file:\n- todo.txt\n- tada.txt"))
     def test_valid_files(self):
         """ Test that a list of valid filenames changes the filenames. """
-        self.assertEqual(["todo.txt", "tada.txt"], parse_arguments().filenames)
+        self.assertEqual(["todo.txt", "tada.txt"], parse_arguments()[1].filenames)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--file", "tada.txt"])
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
     def test_cli_takes_precedence(self):
         """ Test that a command line argument overrules the filename in the configuration file. """
-        self.assertEqual(["tada.txt"], parse_arguments().filenames)
+        self.assertEqual(["tada.txt"], parse_arguments()[1].filenames)
 
 
 class NumberTest(unittest.TestCase):
@@ -175,19 +175,19 @@ class NumberTest(unittest.TestCase):
     @patch.object(config, "open", mock_open(read_data="number: 3"))
     def test_valid_number(self):
         """ Test that a valid number changes the number argument. """
-        self.assertEqual(3, parse_arguments().number)
+        self.assertEqual(3, parse_arguments()[1].number)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--number", "3"])
     @patch.object(config, "open", mock_open(read_data="number: 2"))
     def test_cli_takes_precedence(self):
         """ Test that a command line argument overrules the number in the configuration file. """
-        self.assertEqual(3, parse_arguments().number)
+        self.assertEqual(3, parse_arguments()[1].number)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data="all: True"))
     def test_all_true(self):
         """ Test that all is true sets number to the max number. """
-        self.assertEqual(sys.maxsize, parse_arguments().number)
+        self.assertEqual(sys.maxsize, parse_arguments()[1].number)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data="all: False"))
@@ -218,10 +218,10 @@ class NumberTest(unittest.TestCase):
     @patch.object(config, "open", mock_open(read_data="all: True"))
     def test_argument_nr_overrides(self):
         """ Test that --number on the command line overrides --all in the configuration file. """
-        self.assertEqual(3, parse_arguments().number)
+        self.assertEqual(3, parse_arguments()[1].number)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--all"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
     def test_argument_all_overrides(self):
         """ Test that --all on the command line overrides --number in the configuration file. """
-        self.assertEqual(sys.maxsize, parse_arguments().number)
+        self.assertEqual(sys.maxsize, parse_arguments()[1].number)

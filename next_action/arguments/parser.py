@@ -19,7 +19,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
-            usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] "
+            usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] "
                   "[<context|project> ...]")
         self.add_optional_arguments(default_filenames)
         self.add_positional_arguments()
@@ -45,6 +45,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-n", "--number", metavar="<number>", type=int, default=1,
             help="number of next actions to show (default: %(default)s)")
         number.add_argument("-a", "--all", help="show all next actions", action="store_true")
+        self.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
 
     def add_positional_arguments(self) -> None:
         """ Add the positional arguments to the parser. """
