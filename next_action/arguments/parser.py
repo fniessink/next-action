@@ -4,6 +4,8 @@ import argparse
 import sys
 from typing import List
 
+import yaml
+
 import next_action
 from .config import read_config_file, validate_config_file
 
@@ -32,6 +34,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="filename of configuration file to read (default: %(default)s)")
         config_file.add_argument(
             "-C", "--no-config-file", help="don't read the configuration file", action="store_true")
+        config_file.add_argument(
+            "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
         self.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
@@ -70,6 +74,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         self.parse_remaining_args(remaining, namespace)
         if not namespace.no_config_file:
             self.process_config_file(namespace)
+        if namespace.write_config_file:
+            self.write_config_file()
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
@@ -101,6 +107,13 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified(namespace, "number", "all"):
             number = sys.maxsize if config.get("all", False) else config.get("number", 1)
             setattr(namespace, "number", number)
+
+    def write_config_file(self) -> None:
+        """ Generate a configuration file on standard out and exi. """
+        intro = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        config = yaml.dump(dict(file="~/todo.txt", number=1), default_flow_style=False)
+        sys.stdout.write(intro + config)
+        self.exit()
 
     def arguments_not_specified(self, namespace: argparse.Namespace, *arguments: str) -> bool:
         """ Return whether the arguments were not specified on the command line. """

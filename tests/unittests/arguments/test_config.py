@@ -88,6 +88,16 @@ class ConfigFileTest(unittest.TestCase):
         parse_arguments()
         self.assertEqual([], mock_file_open.call_args_list)
 
+    @patch.object(sys, "argv", ["next-action", "--write-config-file"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    @patch.object(sys.stdout, "write")
+    def test_write_config(self, mock_stdout_write):
+        """ Test that a config file can be written to stdout. """
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file: ~/todo.txt\nnumber: 1\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
 
 class FilenameTest(unittest.TestCase):
     """ Unit tests for the config file parameter. """

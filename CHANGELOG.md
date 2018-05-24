@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Option to not read a configuration file. Closes #71.
+- Option to write a default configuration file. Closes #68.
 
 ## [0.7.0] - 2018-05-23
 
