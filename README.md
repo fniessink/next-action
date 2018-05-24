@@ -27,7 +27,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [<context|project> ...]
+usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -46,6 +46,7 @@ optional arguments:
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
+  -o, --overdue         show only overdue next actions
 
 optional context and project arguments; these can be repeated:
   @<context>            context the next action must have
@@ -97,6 +98,13 @@ And of course, in a similar vein, projects can be excluded:
 ```console
 $ next-action -+PaintHouse @store
 (G) Buy wood for new +DogHouse @store
+```
+
+To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
+
+```console
+$ next-action --overdue
+Buy flowers due:2018-02-14
 ```
 
 ### Showing more than one next action
@@ -189,9 +197,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-........................................................................................................................
+...........................................................................................................................
 ----------------------------------------------------------------------
-Ran 120 tests in 0.202s
+Ran 123 tests in 0.187s
 
 OK
 ```
