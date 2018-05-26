@@ -13,6 +13,7 @@ class Arguments(object):
         self.__filters: List[Set[str]] = [set(), set(), set(), set()]
         self.number = 1
         self.overdue = False
+        self.style = None
 
     @property
     def filenames(self) -> List[str]:

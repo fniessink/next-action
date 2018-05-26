@@ -12,8 +12,15 @@ USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f 
                 "[<context|project> ...]\n"
 
 
+class ParserTestCase(unittest.TestCase):
+    """ Base class for the parser unit tests. """
+
+    def setUp(self):
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+
+
 @patch.object(config, "open", mock_open(read_data=""))
-class NoArgumentTest(unittest.TestCase):
+class NoArgumentTest(ParserTestCase):
     """ Unit tests for the argument parser, without arguments. """
 
     @patch.object(sys, "argv", ["next-action"])
@@ -26,9 +33,14 @@ class NoArgumentTest(unittest.TestCase):
         """ Test that the argument parser returns the default filename if the user doesn't pass one. """
         self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
 
+    @patch.object(sys, "argv", ["next-action"])
+    def test_style(self):
+        """ Test that the argument parser returns the default style if the user doesn't pass one. """
+        self.assertEqual(None, parse_arguments()[1].style)
+
 
 @patch.object(config, "open", mock_open(read_data=""))
-class FilenameTest(unittest.TestCase):
+class FilenameTest(ParserTestCase):
     """ Unit tests for the --filename argument. """
 
     @patch.object(sys, "argv", ["next-action", "-f", "my_todo.txt"])
@@ -58,7 +70,7 @@ class FilenameTest(unittest.TestCase):
 
 
 @patch.object(config, "open", mock_open(read_data=""))
-class FilterArgumentTest(unittest.TestCase):
+class FilterArgumentTest(ParserTestCase):
     """ Unit tests for the @object and +project filter arguments. """
 
     @patch.object(sys, "argv", ["next-action", "@home"])
@@ -75,7 +87,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_empty_context(self, mock_stderr_write):
         """ Test that the argument parser exits if the context is empty. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument <context|project>: context name missing\n")],
@@ -90,7 +101,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_include_exclude_context(self, mock_stderr_write):
         """ Test that contexts cannot be included and excluded. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: context home is both included and excluded\n")],
@@ -100,7 +110,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_invalid_extra_argument(self, mock_stderr_write):
         """ Test that the argument parser exits if the extra argument is invalid. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unrecognized arguments: -^\n")],
                          mock_stderr_write.call_args_list)
@@ -119,7 +128,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_empty_project(self, mock_stderr_write):
         """ Test that the argument parser exits if the project is empty. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument <context|project>: project name missing\n")],
@@ -134,7 +142,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_include_exclude_project(self, mock_stderr_write):
         """ Test that projects cannot be included and excluded. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: project DogHouse is both included and excluded\n")],
@@ -144,7 +151,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_empty_excluded_project(self, mock_stderr_write):
         """ Test that the argument parser exits if the project is empty. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument <context|project>: project name missing\n")],
@@ -160,7 +166,6 @@ class FilterArgumentTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_faulty_option(self, mock_stderr_write):
         """ Test that the argument parser exits if the option is faulty. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument <context|project>: unrecognized arguments: home\n")],
@@ -168,7 +173,7 @@ class FilterArgumentTest(unittest.TestCase):
 
 
 @patch.object(config, "open", mock_open(read_data=""))
-class NumberTest(unittest.TestCase):
+class NumberTest(ParserTestCase):
     """ Unit tests for the --number and --all arguments. """
 
     @patch.object(sys, "argv", ["next-action"])
@@ -185,7 +190,6 @@ class NumberTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_faulty_number(self, mock_stderr_write):
         """ Test that the argument parser exits if the option is faulty. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument -n/--number: invalid int value: 'not_a_number'\n")],
@@ -200,7 +204,6 @@ class NumberTest(unittest.TestCase):
     @patch.object(sys.stderr, "write")
     def test_all_and_number(self, mock_stderr_write):
         """ Test that the argument parser exits if the both --all and --number are used. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument -n/--number: not allowed with argument -a/--all\n")],

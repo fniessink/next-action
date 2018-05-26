@@ -22,4 +22,5 @@ def parse_arguments() -> Tuple[argparse.ArgumentParser, Arguments]:
     arguments.show_all(namespace.all)
     arguments.overdue = namespace.overdue
     arguments.filters = namespace.filters
+    arguments.style = namespace.style
     return parser, arguments

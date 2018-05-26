@@ -12,7 +12,13 @@ from next_action.arguments import config, parse_arguments
 from .test_parser import USAGE_MESSAGE
 
 
-class ConfigFileTest(unittest.TestCase):
+class ConfigTestCase(unittest.TestCase):
+    """ Base class for configuration file unit tests. """
+    def setUp(self):
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+
+
+class ConfigFileTest(ConfigTestCase):
     """ Unit tests for the config file. """
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -28,27 +34,25 @@ class ConfigFileTest(unittest.TestCase):
         mock_file_open.side_effect = FileNotFoundError("some problem")
         self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="- this_is_invalid"))
     @patch.object(sys.stderr, "write")
     def test_invalid_document(self, mock_stderr_write):
         """ Test that a config file that's not valid YAML raises an error. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: config.cfg is invalid: '['this_is_invalid']' is not a document, "
-                               "must be a dict\n")],
+                          call("next-action: error: ~/.next-action.cfg is invalid: '['this_is_invalid']' is not a "
+                               "document, must be a dict\n")],
                          mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="foo: bar"))
     @patch.object(sys.stderr, "write")
     def test_no_file_key(self, mock_stderr_write):
         """ Test that a config file without file key doesn't change the filenames. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: config.cfg is invalid: {'foo': ['unknown field']}\n")],
+                          call("next-action: error: ~/.next-action.cfg is invalid: {'foo': ['unknown field']}\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -95,133 +99,154 @@ class ConfigFileTest(unittest.TestCase):
         """ Test that a config file can be written to stdout. """
         self.assertRaises(SystemExit, parse_arguments)
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\nnumber: 1\n"
+        expected += "file: ~/todo.txt\nnumber: 1\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
 
-class FilenameTest(unittest.TestCase):
+class FilenameTest(ConfigTestCase):
     """ Unit tests for the config file parameter. """
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file: 0"))
     @patch.object(sys.stderr, "write")
     def test_invalid_filename(self, mock_stderr_write):
         """ Test a config file with an invalid file name. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: config.cfg is invalid: "
+            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: "
                                        "{'file': [\"must be of ['string', 'list'] type\"]}\n")],
             mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file:\n- todo.txt\n- 0"))
     @patch.object(sys.stderr, "write")
     def test_valid_and_invalid(self, mock_stderr_write):
         """ Test a config file with an invalid file name. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: config.cfg is invalid: {'file': [{1: ['must be of string type']}]}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: {'file': [{1: ['must be of string type']}]}\n")],
             mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
     def test_valid_file(self):
         """ Test that a valid filename changes the filenames. """
         self.assertEqual(["todo.txt"], parse_arguments()[1].filenames)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file:\n- todo.txt\n- tada.txt"))
     def test_valid_files(self):
         """ Test that a list of valid filenames changes the filenames. """
         self.assertEqual(["todo.txt", "tada.txt"], parse_arguments()[1].filenames)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--file", "tada.txt"])
+    @patch.object(sys, "argv", ["next-action", "--file", "tada.txt"])
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
     def test_cli_takes_precedence(self):
         """ Test that a command line argument overrules the filename in the configuration file. """
         self.assertEqual(["tada.txt"], parse_arguments()[1].filenames)
 
 
-class NumberTest(unittest.TestCase):
+class NumberTest(ConfigTestCase):
     """ Unit tests for the number and all parameters. """
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="number: not_a_number"))
     @patch.object(sys.stderr, "write")
     def test_invalid_number(self, mock_stderr_write):
         """ Test a config file with an invalid number. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: config.cfg is invalid: "
+            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: "
                                        "{'number': [\"must be of ['integer'] type\"]}\n")],
             mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="number: 0"))
     @patch.object(sys.stderr, "write")
     def test_zero(self, mock_stderr_write):
         """ Test a config file with an invalid number. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: config.cfg is invalid: {'number': ['min value is 1']}\n")],
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: {'number': ['min value is 1']}\n")],
             mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
     def test_valid_number(self):
         """ Test that a valid number changes the number argument. """
         self.assertEqual(3, parse_arguments()[1].number)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--number", "3"])
+    @patch.object(sys, "argv", ["next-action", "--number", "3"])
     @patch.object(config, "open", mock_open(read_data="number: 2"))
     def test_cli_takes_precedence(self):
         """ Test that a command line argument overrules the number in the configuration file. """
         self.assertEqual(3, parse_arguments()[1].number)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="all: True"))
     def test_all_true(self):
         """ Test that all is true sets number to the max number. """
         self.assertEqual(sys.maxsize, parse_arguments()[1].number)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="all: False"))
     @patch.object(sys.stderr, "write")
     def test_all_false(self, mock_stderr_write):
         """ Test a config file with all is false. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: config.cfg is invalid: {'all': ['unallowed value False']}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: {'all': ['unallowed value False']}\n")],
             mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
+    @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="all: True\nnumber: 3"))
     @patch.object(sys.stderr, "write")
     def test_all_and_number(self, mock_stderr_write):
         """ Test that a config file with both --all and --number is invalid. """
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: config.cfg is invalid: {'number': "
+             call("next-action: error: ~/.next-action.cfg is invalid: {'number': "
                   "[\"'all' must not be present with 'number'\"]}\n")],
             mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--number", "3"])
+    @patch.object(sys, "argv", ["next-action", "--number", "3"])
     @patch.object(config, "open", mock_open(read_data="all: True"))
     def test_argument_nr_overrides(self):
         """ Test that --number on the command line overrides --all in the configuration file. """
         self.assertEqual(3, parse_arguments()[1].number)
 
-    @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg", "--all"])
+    @patch.object(sys, "argv", ["next-action", "--all"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
     def test_argument_all_overrides(self):
         """ Test that --all on the command line overrides --number in the configuration file. """
         self.assertEqual(sys.maxsize, parse_arguments()[1].number)
+
+
+class ConfigStyleTest(ConfigTestCase):
+    """ Unit tests for the style parameter. """
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="style: default"))
+    def test_valid_style(self):
+        """ Test that a valid style changes the style argument. """
+        self.assertEqual("default", parse_arguments()[1].style)
+
+    @patch.object(sys, "argv", ["next-action", "--style", "vim"])
+    @patch.object(config, "open", mock_open(read_data="style: default"))
+    def test_override_style(self):
+        """ Test that a command line style overrides the style in the config file. """
+        self.assertEqual("vim", parse_arguments()[1].style)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="style: invalid_style"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_style(self, mock_stderr_write):
+        """ Test that an invalid style raises an error. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: {'style': ['unallowed value invalid_style']}\n")],
+            mock_stderr_write.call_args_list)
