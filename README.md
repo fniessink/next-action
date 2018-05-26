@@ -135,12 +135,7 @@ Note again that completed tasks and task with a future creation date are never s
 
 ### Styling the output
 
-The next actions can be colorized using the style argument:
-
-```console
-$ next-action --style native
-[38;5;15;01m(A)[39;00m[38;5;252m [39m[38;5;252mCall[39m[38;5;252m [39m[38;5;252mmom[39m[38;5;252m [39m[38;5;214m@phone[39m
-```
+The next actions can be colorized using the `--style` argument:
 
 See the help information for possible styles. When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the section below on how to configure *Next-action*.
 
@@ -226,7 +221,7 @@ To run the unit tests:
 $ python -m unittest
 ...............................................................................................................................
 ----------------------------------------------------------------------
-Ran 127 tests in 0.410s
+Ran 127 tests in 0.389s
 
 OK
 ```
