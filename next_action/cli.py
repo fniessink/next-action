@@ -28,4 +28,4 @@ def next_action() -> None:
         result = colorize("\n".join(action.text for action in actions[:arguments.number]), arguments.style or "")
     else:
         result = "Nothing to do!"
-    print(result.rstrip("\n"))
+    print(result)
