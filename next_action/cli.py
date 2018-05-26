@@ -25,7 +25,7 @@ def next_action() -> None:
         parser.error("can't open file: {0}".format(reason))
     actions = next_actions(tasks, arguments)
     if actions:
-        result = colorize("\n".join(action.text for action in actions[:arguments.number]), arguments.style)
+        result = colorize("\n".join(action.text for action in actions[:arguments.number]), arguments.style or "")
     else:
         result = "Nothing to do!"
     print(result.rstrip("\n"))
