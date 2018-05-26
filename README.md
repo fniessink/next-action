@@ -135,9 +135,9 @@ Note again that completed tasks and task with a future creation date are never s
 
 ### Styling the output
 
-The next actions can be colorized using the `--style` argument:
+The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible styles.
 
-See the help information for possible styles. When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the section below on how to configure *Next-action*.
+When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the section below on how to configure *Next-action*.
 
 ### Configuring *Next-action*
 
@@ -203,7 +203,7 @@ The style can be configured using the style keyword:
 style: colorful
 ```
 
-See the help information for possible styles.
+Run `next-action --help` to see the list of possible styles.
 
 #### Precedence of options
 
