@@ -123,6 +123,15 @@ optional context and project arguments; these can be repeated:
         next_action()
         self.assertEqual([call("(B) Call mom\nWalk the dog @home"), call("\n")], mock_stdout_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next-action", "--all"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\nBuy beer\n(B) Call mom\n"))
+    @patch.object(sys.stdout, "write")
+    def test_show_all_actions(self, mock_stdout_write):
+        """ Test that all actions in the todo.txt file are shown. """
+        next_action()
+        self.assertEqual([call("(B) Call mom\nWalk the dog @home\nBuy beer"), call("\n")],
+                         mock_stdout_write.call_args_list)
+
     @patch.object(sys, "argv", ["next-action", "--file", "-"])
     @patch.object(sys.stdin, "readline")
     @patch.object(sys.stdout, "write")

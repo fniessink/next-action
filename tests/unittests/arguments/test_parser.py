@@ -26,12 +26,12 @@ class NoArgumentTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action"])
     def test_filters(self):
         """ Test that the argument parser returns no filters if the user doesn't pass one. """
-        self.assertEqual([set(), set(), set(), set()], parse_arguments()[1].filters)
+        self.assertEqual([], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action"])
     def test_filename(self):
         """ Test that the argument parser returns the default filename if the user doesn't pass one. """
-        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
+        self.assertEqual(["~/todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action"])
     def test_style(self):
@@ -46,27 +46,27 @@ class FilenameTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action", "-f", "my_todo.txt"])
     def test_filename_argument(self):
         """ Test that the argument parser accepts a filename. """
-        self.assertEqual(["my_todo.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["my_todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "--file", "my_other_todo.txt"])
     def test_long_filename_argument(self):
         """ Test that the argument parser accepts a filename. """
-        self.assertEqual(["my_other_todo.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["my_other_todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "-f", "todo.txt"])
     def test_add_default_filename(self):
         """ Test that adding the default filename doesn't get it included twice. """
-        self.assertEqual(["todo.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "-f", "todo.txt", "-f", "other.txt"])
     def test_default_and_non_default(self):
         """ Test that adding the default filename and another filename gets both included. """
-        self.assertEqual(["todo.txt", "other.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["todo.txt", "other.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "-f", "other.txt", "-f", "other.txt"])
     def test__add_filename_twice(self):
         """ Test that adding the same filename twice includes it only once. """
-        self.assertEqual(["other.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["other.txt"], parse_arguments()[1].file)
 
 
 @patch.object(config, "open", mock_open(read_data=""))
@@ -76,12 +76,12 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action", "@home"])
     def test_one_context(self):
         """ Test that the argument parser returns the context if the user passes one. """
-        self.assertEqual({"home"}, parse_arguments()[1].filters[0])
+        self.assertEqual(["@home"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "@home", "@work"])
     def test_multiple_contexts(self):
         """ Test that the argument parser returns all contexts if the user passes multiple contexts. """
-        self.assertEqual({"home", "work"}, parse_arguments()[1].filters[0])
+        self.assertEqual(["@home", "@work"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "@"])
     @patch.object(sys.stderr, "write")
@@ -95,7 +95,7 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action", "-@home"])
     def test_exclude_context(self):
         """ Test that contexts can be excluded. """
-        self.assertEqual({"home"}, parse_arguments()[1].filters[2])
+        self.assertEqual(["-@home"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "@home", "-@home"])
     @patch.object(sys.stderr, "write")
@@ -117,12 +117,12 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])
     def test_one_project(self):
         """ Test that the argument parser returns the project if the user passes one. """
-        self.assertEqual({"DogHouse"}, parse_arguments()[1].filters[1])
+        self.assertEqual(["+DogHouse"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "+PaintHouse"])
     def test_multiple_projects(self):
         """ Test that the argument parser returns the projects if the user passes multiple projects. """
-        self.assertEqual({"DogHouse", "PaintHouse"}, parse_arguments()[1].filters[1])
+        self.assertEqual(["+DogHouse", "+PaintHouse"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "+"])
     @patch.object(sys.stderr, "write")
@@ -136,7 +136,7 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action", "-+DogHouse"])
     def test_exclude_project(self):
         """ Test that projects can be excluded. """
-        self.assertEqual({"DogHouse"}, parse_arguments()[1].filters[3])
+        self.assertEqual(["-+DogHouse"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "-+DogHouse"])
     @patch.object(sys.stderr, "write")
@@ -159,8 +159,7 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "@home", "+PaintHouse", "@weekend"])
     def test_contexts_and_projects(self):
         """ Test that the argument parser returns the contexts and the projects, even when mixed. """
-        self.assertEqual({"home", "weekend"}, parse_arguments()[1].filters[0])
-        self.assertEqual({"DogHouse", "PaintHouse"}, parse_arguments()[1].filters[1])
+        self.assertEqual(["+DogHouse", "@home", "+PaintHouse", "@weekend"], parse_arguments()[1].filters)
 
     @patch.object(sys, "argv", ["next-action", "home"])
     @patch.object(sys.stderr, "write")

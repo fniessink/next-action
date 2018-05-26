@@ -13,7 +13,7 @@ from .config import read_config_file, write_config_file, validate_config_file
 class NextActionArgumentParser(argparse.ArgumentParser):
     """ Command-line argument parser for Next-action. """
 
-    def __init__(self, default_filenames: List[str]) -> None:
+    def __init__(self) -> None:
         super().__init__(
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
@@ -21,10 +21,11 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "and/or projects the tasks must belong to.",
             usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] "
                   "[<context|project> ...]")
-        self.add_optional_arguments(default_filenames)
+        self.__default_filenames = ["~/todo.txt"]
+        self.add_optional_arguments()
         self.add_positional_arguments()
 
-    def add_optional_arguments(self, default_filenames: List[str]) -> None:
+    def add_optional_arguments(self) -> None:
         """ Add the optional arguments to the parser. """
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
@@ -37,14 +38,15 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         config_file.add_argument(
             "-C", "--no-config-file", help="don't read the configuration file", action="store_true")
         self.add_argument(
-            "-f", "--file", action="append", metavar="<todo.txt>", default=default_filenames[:], type=str,
+            "-f", "--file", action="append", metavar="<todo.txt>", default=self.__default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
                  "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
         number = self.add_mutually_exclusive_group()
         number.add_argument(
             "-n", "--number", metavar="<number>", type=int, default=1,
             help="number of next actions to show (default: %(default)s)")
-        number.add_argument("-a", "--all", help="show all next actions", action="store_true")
+        number.add_argument(
+            "-a", "--all", help="show all next actions", action="store_const", dest="number", const=sys.maxsize)
         self.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
         styles = sorted(list(get_all_styles()))
         self.add_argument(
@@ -82,6 +84,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if namespace.write_config_file:
             write_config_file()
             self.exit()
+        self.fix_filenames(namespace)
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
@@ -110,7 +113,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             if isinstance(filenames, str):
                 filenames = [filenames]
             getattr(namespace, "file").extend(filenames)
-        if self.arguments_not_specified(namespace, "number", "all"):
+        if self.arguments_not_specified(namespace, "number"):
             number = sys.maxsize if config.get("all", False) else config.get("number", 1)
             setattr(namespace, "number", number)
         if self.arguments_not_specified(namespace, "style"):
@@ -120,6 +123,18 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def arguments_not_specified(self, namespace: argparse.Namespace, *arguments: str) -> bool:
         """ Return whether the arguments were not specified on the command line. """
         return all([getattr(namespace, argument) == self.get_default(argument) for argument in arguments])
+
+    def fix_filenames(self, namespace: argparse.Namespace) -> None:
+        """ Fix the filenames. """
+        # Work around the issue that the "append" action doesn't overwrite defaults.
+        # See https://bugs.python.org/issue16399.
+        filenames = namespace.file[:]
+        default_filenames = self.__default_filenames
+        if default_filenames != filenames:
+            for default_filename in default_filenames:
+                filenames.remove(default_filename)
+        # Remove duplicate filenames while maintaining order.
+        namespace.file = list(dict.fromkeys(filenames))
 
 
 def filter_type(value: str) -> str:

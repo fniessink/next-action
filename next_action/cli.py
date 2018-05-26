@@ -17,15 +17,15 @@ def next_action() -> None:
         3) determine the next action(s) and,
         4) display them.
     """
-    parser, arguments = parse_arguments()
+    parser, namespace = parse_arguments()
     try:
-        with fileinput.input(arguments.filenames) as todotxt_file:
+        with fileinput.input(namespace.file) as todotxt_file:
             tasks = read_todotxt_file(todotxt_file)
     except OSError as reason:
         parser.error("can't open file: {0}".format(reason))
-    actions = next_actions(tasks, arguments)
+    actions = next_actions(tasks, namespace)
     if actions:
-        result = colorize("\n".join(action.text for action in actions[:arguments.number]), arguments.style or "")
+        result = colorize("\n".join(action.text for action in actions[:namespace.number]), namespace.style or "")
     else:
         result = "Nothing to do!"
     print(result)

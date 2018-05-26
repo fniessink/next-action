@@ -25,14 +25,14 @@ class ConfigFileTest(ConfigTestCase):
     @patch.object(config, "open", mock_open(read_data=""))
     def test_empty_file(self):
         """ Test that an empty config file doesn't change the filenames. """
-        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
+        self.assertEqual(["~/todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open")
     def test_missing_default_config(self, mock_file_open):
         """ Test that a missing config file at the default location is no problem. """
         mock_file_open.side_effect = FileNotFoundError("some problem")
-        self.assertEqual([os.path.expanduser("~/todo.txt")], parse_arguments()[1].filenames)
+        self.assertEqual(["~/todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="- this_is_invalid"))
@@ -132,19 +132,19 @@ class FilenameTest(ConfigTestCase):
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
     def test_valid_file(self):
         """ Test that a valid filename changes the filenames. """
-        self.assertEqual(["todo.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file:\n- todo.txt\n- tada.txt"))
     def test_valid_files(self):
         """ Test that a list of valid filenames changes the filenames. """
-        self.assertEqual(["todo.txt", "tada.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["todo.txt", "tada.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "--file", "tada.txt"])
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
     def test_cli_takes_precedence(self):
         """ Test that a command line argument overrules the filename in the configuration file. """
-        self.assertEqual(["tada.txt"], parse_arguments()[1].filenames)
+        self.assertEqual(["tada.txt"], parse_arguments()[1].file)
 
 
 class NumberTest(ConfigTestCase):
