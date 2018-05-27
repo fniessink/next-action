@@ -30,6 +30,15 @@ class Task(object):
         match = re.match(r"\(([A-Z])\) ", self.text)
         return match.group(1) if match else None
 
+    def priority_at_least(self, min_priority: Optional[str]) -> bool:
+        """ Return whether the priority of task is at least the given priority. """
+        if not min_priority:
+            return True
+        priority = self.priority()
+        if not priority:
+            return False
+        return priority <= min_priority
+
     def creation_date(self) -> Optional[datetime.date]:
         """ Return the creation date of the task. """
         match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)

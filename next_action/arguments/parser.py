@@ -1,6 +1,7 @@
 """ Parser for the command line arguments. """
 
 import argparse
+import string
 import sys
 from typing import List
 
@@ -20,7 +21,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] "
-                  "[<context|project> ...]")
+                  "[-p <priority>] [<context|project> ...]")
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
         self.add_positional_arguments()
@@ -48,6 +49,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         number.add_argument(
             "-a", "--all", help="show all next actions", action="store_const", dest="number", const=sys.maxsize)
         self.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
+        self.add_argument(
+            "-p", "--priority", metavar="<priority>", choices=string.ascii_uppercase,
+            help="minimum priority (A-Z) of next actions to show (default: %(default)s)")
         styles = sorted(list(get_all_styles()))
         self.add_argument(
             "-s", "--style", metavar="<style>", choices=styles, default=None,
