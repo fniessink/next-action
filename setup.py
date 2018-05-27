@@ -16,7 +16,7 @@ setup(
     url="https://github.com/fniessink/next-action",
     license="Apache License, Version 2.0",
     python_requires=">=3.6",
-    install_requires=["Cerberus", "PyYAML"],
+    install_requires=["Cerberus", "PyYAML", "Pygments"],
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -25,7 +25,7 @@ setup(
     },
     test_suite="tests",
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: Apache Software License",
