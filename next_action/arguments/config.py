@@ -2,7 +2,7 @@
 
 import os
 import sys
-from typing import Callable
+from typing import Callable, Dict, List, Union
 
 from pygments.styles import get_all_styles
 import yaml
@@ -40,7 +40,7 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
             "schema": {
                 "type": "string"}},
         "number": {
-            "type": ["integer"],
+            "type": "integer",
             "min": 1,
             "excludes": "all"
         },
@@ -49,7 +49,7 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
             "allowed": [True]
         },
         "style": {
-            "type": ["string"],
+            "type": "string",
             "allowed": sorted(list(get_all_styles()))
         }
     }
@@ -59,4 +59,22 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
     except cerberus.validator.DocumentError as reason:
         error("{0} is invalid: {1}".format(config_filename, reason))
     if not valid:
-        error("{0} is invalid: {1}".format(config_filename, validator.errors))
+        error("{0} is invalid: {1}".format(config_filename, flatten_errors(validator.errors)))
+
+
+def flatten_errors(error_message: Union[Dict, List, str]) -> str:
+    """ Flatten Cerberus' error messages. """
+
+    def flatten_dict(error_dict: Dict) -> str:
+        """ Return a string version of the dict. """
+        return ", ".join(["{0}: {1}".format(key, flatten_errors(value)) for key, value in error_dict.items()])
+
+    def flatten_list(error_list: List) -> str:
+        """ Return a string version of the list. """
+        return ", ".join([flatten_errors(item) for item in error_list])
+
+    if isinstance(error_message, dict):
+        return flatten_dict(error_message)
+    elif isinstance(error_message, list):
+        return flatten_list(error_message)
+    return error_message

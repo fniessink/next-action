@@ -52,7 +52,7 @@ class ConfigFileTest(ConfigTestCase):
         """ Test that a config file without file key doesn't change the filenames. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: ~/.next-action.cfg is invalid: {'foo': ['unknown field']}\n")],
+                          call("next-action: error: ~/.next-action.cfg is invalid: foo: unknown field\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -114,7 +114,7 @@ class FilenameTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: "
-                                       "{'file': [\"must be of ['string', 'list'] type\"]}\n")],
+                                       "file: must be of ['string', 'list'] type\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -125,7 +125,7 @@ class FilenameTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: {'file': [{1: ['must be of string type']}]}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: file: 1: must be of string type\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -157,8 +157,8 @@ class NumberTest(ConfigTestCase):
         """ Test a config file with an invalid number. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: "
-                                       "{'number': [\"must be of ['integer'] type\"]}\n")],
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: number: must be of integer type\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -169,7 +169,7 @@ class NumberTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: {'number': ['min value is 1']}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: number: min value is 1\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -198,7 +198,7 @@ class NumberTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: {'all': ['unallowed value False']}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: all: unallowed value False\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -209,8 +209,8 @@ class NumberTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: {'number': "
-                  "[\"'all' must not be present with 'number'\"]}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: number: "
+                  "'all' must not be present with 'number'\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--number", "3"])
@@ -248,5 +248,5 @@ class ConfigStyleTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual(
             [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: {'style': ['unallowed value invalid_style']}\n")],
+             call("next-action: error: ~/.next-action.cfg is invalid: style: unallowed value invalid_style\n")],
             mock_stderr_write.call_args_list)
