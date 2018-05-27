@@ -75,10 +75,10 @@ specifying contexts the tasks must have and/or projects the tasks must belong to
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
+  --write-config-file   generate a sample configuration file and exit
   -c <config.cfg>, --config-file <config.cfg>
                         filename of configuration file to read (default: ~/.next-action.cfg)
   -C, --no-config-file  don't read the configuration file
-  --write-config-file   generate a sample configuration file and exit
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
@@ -86,6 +86,11 @@ optional arguments:
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
   -o, --overdue         show only overdue next actions
+  -s <style>, --style <style>
+                        colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
+                        colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
+                        paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, tango, trac, vim, vs, xcode
+                        (default: None)
 
 optional context and project arguments; these can be repeated:
   @<context>            context the next action must have
@@ -117,6 +122,15 @@ optional context and project arguments; these can be repeated:
         """ Test that empty lines in the todo.txt file are ignored. """
         next_action()
         self.assertEqual([call("(B) Call mom\nWalk the dog @home"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--all"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\nBuy beer\n(B) Call mom\n"))
+    @patch.object(sys.stdout, "write")
+    def test_show_all_actions(self, mock_stdout_write):
+        """ Test that all actions in the todo.txt file are shown. """
+        next_action()
+        self.assertEqual([call("(B) Call mom\nWalk the dog @home\nBuy beer"), call("\n")],
+                         mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--file", "-"])
     @patch.object(sys.stdin, "readline")

@@ -56,7 +56,8 @@ class Task(object):
 
     def is_overdue(self) -> bool:
         """ Return whether the taks is overdue, i.e. whether it has a due date in the past. """
-        return self.due_date() < datetime.date.today() if self.due_date() else False
+        due_date = self.due_date()
+        return due_date < datetime.date.today() if due_date else False
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """

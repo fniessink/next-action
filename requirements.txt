@@ -1,3 +1,4 @@
 # Dependencies
-PyYAML==3.12
 Cerberus==1.2
+Pygments==2.2.0
+PyYAML==3.12

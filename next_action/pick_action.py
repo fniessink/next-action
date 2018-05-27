@@ -1,10 +1,10 @@
 """ Algorithm for deciding the next action(s). """
 
+import argparse
 import datetime
-from typing import Sequence, Tuple
+from typing import List, Sequence, Set, Tuple
 
 from .todotxt import Task
-from .arguments import Arguments
 
 
 def sort_key(task: Task) -> Tuple[str, datetime.date, datetime.date, int]:
@@ -13,9 +13,17 @@ def sort_key(task: Task) -> Tuple[str, datetime.date, datetime.date, int]:
             -len(task.projects()))
 
 
-def next_actions(tasks: Sequence[Task], arguments: Arguments) -> Sequence[Task]:
+def subset(filters: List[str], prefix: str) -> Set[str]:
+    """ Return a subset of the filters based on prefix. """
+    return set([f.strip(prefix) for f in filters if f.startswith(prefix)])
+
+
+def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequence[Task]:
     """ Return the next action(s) from the collection of tasks. """
-    contexts, projects, excluded_contexts, excluded_projects = arguments.filters
+    contexts = subset(arguments.filters, "@")
+    projects = subset(arguments.filters, "+")
+    excluded_contexts = subset(arguments.filters, "-@")
+    excluded_projects = subset(arguments.filters, "-+")
     # First, get the potential next actions by filtering out completed tasks and tasks with a future creation date
     actionable_tasks = [task for task in tasks if task.is_actionable()]
     # Then, exclude tasks that have an excluded context

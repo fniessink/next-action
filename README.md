@@ -36,10 +36,10 @@ specifying contexts the tasks must have and/or projects the tasks must belong to
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
+  --write-config-file   generate a sample configuration file and exit
   -c <config.cfg>, --config-file <config.cfg>
                         filename of configuration file to read (default: ~/.next-action.cfg)
   -C, --no-config-file  don't read the configuration file
-  --write-config-file   generate a sample configuration file and exit
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
@@ -47,6 +47,11 @@ optional arguments:
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
   -o, --overdue         show only overdue next actions
+  -s <style>, --style <style>
+                        colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
+                        colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
+                        paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, tango, trac, vim, vs, xcode
+                        (default: None)
 
 optional context and project arguments; these can be repeated:
   @<context>            context the next action must have
@@ -128,6 +133,12 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
+### Styling the output
+
+The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible styles.
+
+When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the section below on how to configure *Next-action*.
+
 ### Configuring *Next-action*
 
 In addition to specifying options on the command-line, you can also configure options in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder.
@@ -139,6 +150,7 @@ $ next-action --write-config-file
 # Configuration file for Next-action. Edit the settings below as you like.
 file: ~/todo.txt
 number: 1
+style: default
 ```
 
 To make this the configuration that *Next-action* reads by default, redirect the output to `~/.next-action.cfg` like this: `next-action --write-config-file > ~/.next-action.cfg`.
@@ -150,7 +162,7 @@ $ next-action --config-file docs/.next-action.cfg
 (A) Call mom @phone
 ```
 
-The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read and how many next actions should be shown.
+The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, and the styling.
 
 #### Configuring a default todo.txt
 
@@ -183,6 +195,16 @@ Or you can have *Next-action* show all next actions:
 all: True
 ```
 
+#### Configuring the style to use
+
+The style can be configured using the style keyword:
+
+```yaml:
+style: colorful
+```
+
+Run `next-action --help` to see the list of possible styles.
+
 #### Precedence of options
 
 Options in the configuration file override the default options. Command-line options in turn override options in the configuration file.
@@ -197,9 +219,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-...........................................................................................................................
+...............................................................................................................................
 ----------------------------------------------------------------------
-Ran 123 tests in 0.187s
+Ran 127 tests in 0.389s
 
 OK
 ```
