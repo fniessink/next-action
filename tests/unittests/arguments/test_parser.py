@@ -9,7 +9,7 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] " \
-                "[-p <priority>] [<context|project> ...]\n"
+                "[-p [<priority>]] [<context|project> ...]\n"
 
 
 class ParserTestCase(unittest.TestCase):

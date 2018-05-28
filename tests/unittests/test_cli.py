@@ -65,7 +65,7 @@ class CLITest(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
-usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [-p <priority>] \
+usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]] \
 [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
@@ -86,7 +86,7 @@ optional arguments:
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
   -o, --overdue         show only overdue next actions
-  -p <priority>, --priority <priority>
+  -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
   -s <style>, --style <style>
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,

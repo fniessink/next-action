@@ -267,6 +267,12 @@ class PriorityTest(ConfigTestCase):
         """ Test that a command line style overrides the priority in the config file. """
         self.assertEqual("M", parse_arguments()[1].priority)
 
+    @patch.object(sys, "argv", ["next-action", "--priority"])
+    @patch.object(config, "open", mock_open(read_data="priority: Z"))
+    def test_cancel_priority(self):
+        """ Test that a command line style overrides the priority in the config file. """
+        self.assertEqual(None, parse_arguments()[1].priority)
+
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="priority: ZZZ"))
     @patch.object(sys.stderr, "write")
