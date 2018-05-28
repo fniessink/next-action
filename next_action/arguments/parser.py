@@ -123,6 +123,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified(namespace, "style"):
             style = config.get("style", self.get_default("style"))
             setattr(namespace, "style", style)
+        if self.arguments_not_specified(namespace, "priority"):
+            priority = config.get("priority", self.get_default("priority"))
+            setattr(namespace, "priority", priority)
 
     def arguments_not_specified(self, namespace: argparse.Namespace, *arguments: str) -> bool:
         """ Return whether the arguments were not specified on the command line. """
