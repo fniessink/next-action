@@ -1,8 +1,10 @@
 """ Parser for the command line arguments. """
 
 import argparse
+import shutil
 import string
 import sys
+import textwrap
 from typing import List
 
 from pygments.styles import get_all_styles
@@ -20,8 +22,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
-            usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] "
-                  "[-p [<priority>]] [<context|project> ...]")
+            usage=textwrap.fill("next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] "
+                                "[-n <number> | -a] [-o] [-p [<priority>]] [<context|project> ...]",
+                                width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
         self.add_positional_arguments()

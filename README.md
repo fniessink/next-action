@@ -27,7 +27,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]] [<context|project> ...]
+usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]]
+[<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -242,7 +243,7 @@ To run the unit tests:
 $ python -m unittest
 ...............................................................................................................................................
 ----------------------------------------------------------------------
-Ran 143 tests in 0.428s
+Ran 143 tests in 0.433s
 
 OK
 ```

@@ -2,14 +2,16 @@
 
 import os
 import sys
+import textwrap
 import unittest
 from unittest.mock import call, mock_open, patch
 
 from next_action.arguments import config, parse_arguments
 
 
-USAGE_MESSAGE = "usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] " \
-                "[-p [<priority>]] [<context|project> ...]\n"
+USAGE_MESSAGE = textwrap.fill(
+    "usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] "
+    "[-p [<priority>]] [<context|project> ...]", 120) + "\n"
 
 
 class ParserTestCase(unittest.TestCase):

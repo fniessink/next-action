@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Option to limit the next action to tasks with a minimum priority. Closes #80.
 
+### Fixed
+
+- Properly wrap the usage line of the help information. Fixes #81.
+
 ## [0.11.0] - 2018-05-27
 
 ### Changed
