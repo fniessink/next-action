@@ -33,10 +33,12 @@ def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequen
     eligible_tasks = filter(lambda task: not excluded_projects & task.projects() if excluded_projects else True,
                             eligible_tasks)
     # Then, select the tasks that belong to all given contexts, if any
-    tasks_in_context = filter(lambda task: contexts <= task.contexts() if contexts else True, eligible_tasks)
+    eligible_tasks = filter(lambda task: contexts <= task.contexts() if contexts else True, eligible_tasks)
     # Next, select the tasks that belong to at least one of the given projects, if any
-    tasks_in_project = filter(lambda task: projects & task.projects() if projects else True, tasks_in_context)
+    eligible_tasks = filter(lambda task: projects & task.projects() if projects else True, eligible_tasks)
     # If the user only wants to see overdue tasks, filter out non-overdue tasks
-    tasks_in_project = filter(lambda task: task.is_overdue() if arguments.overdue else True, tasks_in_project)
+    eligible_tasks = filter(lambda task: task.is_overdue() if arguments.overdue else True, eligible_tasks)
+    # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
+    eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
     # Finally, sort by priority, due date and creation date
-    return sorted(tasks_in_project, key=sort_key)
+    return sorted(eligible_tasks, key=sort_key)

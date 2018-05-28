@@ -1,6 +1,7 @@
 """ Parser for the command line arguments. """
 
 import argparse
+import string
 import sys
 from typing import List
 
@@ -20,7 +21,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             usage="next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] "
-                  "[<context|project> ...]")
+                  "[-p [<priority>]] [<context|project> ...]")
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
         self.add_positional_arguments()
@@ -48,6 +49,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         number.add_argument(
             "-a", "--all", help="show all next actions", action="store_const", dest="number", const=sys.maxsize)
         self.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
+        self.add_argument(
+            "-p", "--priority", metavar="<priority>", choices=string.ascii_uppercase, nargs="?",
+            help="minimum priority (A-Z) of next actions to show (default: %(default)s)")
         styles = sorted(list(get_all_styles()))
         self.add_argument(
             "-s", "--style", metavar="<style>", choices=styles, default=None,
@@ -108,21 +112,25 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if not config:
             return
         validate_config_file(config, config_filename, self.error)
-        if self.arguments_not_specified(namespace, "file"):
+        if self.arguments_not_specified("-f", "--file"):
             filenames = config.get("file", [])
             if isinstance(filenames, str):
                 filenames = [filenames]
             getattr(namespace, "file").extend(filenames)
-        if self.arguments_not_specified(namespace, "number"):
+        if self.arguments_not_specified("-n", "--number", "-a", "--all"):
             number = sys.maxsize if config.get("all", False) else config.get("number", 1)
             setattr(namespace, "number", number)
-        if self.arguments_not_specified(namespace, "style"):
+        if self.arguments_not_specified("-s", "--style"):
             style = config.get("style", self.get_default("style"))
             setattr(namespace, "style", style)
+        if self.arguments_not_specified("-p", "--priority"):
+            priority = config.get("priority", self.get_default("priority"))
+            setattr(namespace, "priority", priority)
 
-    def arguments_not_specified(self, namespace: argparse.Namespace, *arguments: str) -> bool:
-        """ Return whether the arguments were not specified on the command line. """
-        return all([getattr(namespace, argument) == self.get_default(argument) for argument in arguments])
+    @staticmethod
+    def arguments_not_specified(*arguments: str) -> bool:
+        """ Return whether any of the arguments was specified on the command line. """
+        return all([argument not in sys.argv for argument in arguments])
 
     def fix_filenames(self, namespace: argparse.Namespace) -> None:
         """ Fix the filenames. """

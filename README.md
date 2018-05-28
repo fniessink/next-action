@@ -27,7 +27,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [<context|project> ...]
+usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -47,6 +47,8 @@ optional arguments:
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
   -o, --overdue         show only overdue next actions
+  -p [<priority>], --priority [<priority>]
+                        minimum priority (A-Z) of next actions to show (default: None)
   -s <style>, --style <style>
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
                         colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
@@ -110,6 +112,13 @@ To make sure you have no overdue actions, or work on overdue actions first, limi
 ```console
 $ next-action --overdue
 Buy flowers due:2018-02-14
+```
+
+To make sure you work on important tasks rather than urgent tasks, you can make sure the tasks from which the next action is selected have at least a minimum priority:
+
+```console
+$ next-action @work --priority C
+(C) Finish proposal for important client @work
 ```
 
 ### Showing more than one next action
@@ -195,6 +204,18 @@ Or you can have *Next-action* show all next actions:
 all: True
 ```
 
+#### Configuring the minimum priority to show
+
+The minimum priority of next action to show can be specified as well:
+
+```yaml
+priority: Z
+```
+
+This could be useful if you, for example, keep a backlog of ideas without priority in your todo.txt file and prioritize only the tasks that are actionable.
+
+Specifying a value on the command line overrides the priority in the configuration file, e.g. `next-action --priority C`. To override the priority set in the configuration but not set another minimum priority, use the priority option without argument: `next-action --priority`.
+
 #### Configuring the style to use
 
 The style can be configured using the style keyword:
@@ -219,9 +240,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-...............................................................................................................................
+...............................................................................................................................................
 ----------------------------------------------------------------------
-Ran 127 tests in 0.389s
+Ran 143 tests in 0.428s
 
 OK
 ```

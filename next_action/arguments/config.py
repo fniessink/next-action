@@ -1,6 +1,7 @@
 """ Methods for reading, parsing, and validating Next-action configuration files. """
 
 import os
+import string
 import sys
 from typing import Callable, Dict, List, Union
 
@@ -47,6 +48,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "all": {
             "type": "boolean",
             "allowed": [True]
+        },
+        "priority": {
+            "type": "string",
+            "allowed": [letter for letter in string.ascii_uppercase]
         },
         "style": {
             "type": "string",

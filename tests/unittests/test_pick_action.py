@@ -13,6 +13,7 @@ class PickActionTestCase(unittest.TestCase):
         self.namespace = argparse.Namespace()
         self.namespace.filters = []
         self.namespace.overdue = False
+        self.namespace.priority = None
 
 
 class PickActionTest(PickActionTestCase):
@@ -190,3 +191,15 @@ class OverdueTasks(PickActionTestCase):
         overdue = todotxt.Task("Task due:2000-01-01")
         self.namespace.overdue = True
         self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
+
+
+class MinimimPriorityTest(PickActionTest):
+    """ Unit test for the mininum priority filter. """
+    def test_priority(self):
+        """ Test that tasks without priority are filtered. """
+        no_priority = todotxt.Task("Task")
+        high_priority = todotxt.Task("(A) Task")
+        low_priority = todotxt.Task("(Z) Task")
+        self.namespace.priority = "K"
+        self.assertEqual(
+            [high_priority], pick_action.next_actions([no_priority, low_priority, high_priority], self.namespace))

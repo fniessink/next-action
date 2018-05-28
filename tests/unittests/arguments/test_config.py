@@ -250,3 +250,36 @@ class ConfigStyleTest(ConfigTestCase):
             [call(USAGE_MESSAGE),
              call("next-action: error: ~/.next-action.cfg is invalid: style: unallowed value invalid_style\n")],
             mock_stderr_write.call_args_list)
+
+
+class PriorityTest(ConfigTestCase):
+    """ Unit tests for the priority parameter. """
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="priority: Z"))
+    def test_valid_priority(self):
+        """ Test that a valid priority changes the priority argument. """
+        self.assertEqual("Z", parse_arguments()[1].priority)
+
+    @patch.object(sys, "argv", ["next-action", "--priority", "M"])
+    @patch.object(config, "open", mock_open(read_data="priority: Z"))
+    def test_override_priority(self):
+        """ Test that a command line style overrides the priority in the config file. """
+        self.assertEqual("M", parse_arguments()[1].priority)
+
+    @patch.object(sys, "argv", ["next-action", "--priority"])
+    @patch.object(config, "open", mock_open(read_data="priority: Z"))
+    def test_cancel_priority(self):
+        """ Test that a command line style overrides the priority in the config file. """
+        self.assertEqual(None, parse_arguments()[1].priority)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="priority: ZZZ"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_priority(self, mock_stderr_write):
+        """ Test that an invalid priority raises an error. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: priority: unallowed value ZZZ\n")],
+            mock_stderr_write.call_args_list)

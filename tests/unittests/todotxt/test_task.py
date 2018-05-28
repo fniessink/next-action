@@ -75,6 +75,15 @@ class TaskPriorityTest(unittest.TestCase):
         for todo_txt in ("(a) Todo", " (a) Todo", "(A1) Todo", "(A Todo", "Todo (A)", "(A)Todo"):
             self.assertEqual(None, todotxt.Task(todo_txt).priority())
 
+    def test_priority_at_least(self):
+        """ Test that the task has a minimum priority. """
+        self.assertTrue(todotxt.Task("(A) Task").priority_at_least("A"))
+        self.assertTrue(todotxt.Task("(A) Task").priority_at_least("B"))
+        self.assertFalse(todotxt.Task("(B) Task").priority_at_least("A"))
+        self.assertFalse(todotxt.Task("Task").priority_at_least("Z"))
+        self.assertTrue(todotxt.Task("(Z) Task").priority_at_least(None))
+        self.assertTrue(todotxt.Task("Task").priority_at_least(None))
+
 
 class CreationDateTest(unittest.TestCase):
     """ Unit tests for task creation dates. """
