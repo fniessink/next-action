@@ -112,24 +112,25 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if not config:
             return
         validate_config_file(config, config_filename, self.error)
-        if not self.arguments_specified("-f", "--file"):
+        if self.arguments_not_specified("-f", "--file"):
             filenames = config.get("file", [])
             if isinstance(filenames, str):
                 filenames = [filenames]
             getattr(namespace, "file").extend(filenames)
-        if not self.arguments_specified("-n", "--number") and not self.arguments_specified("-a", "--all"):
+        if self.arguments_not_specified("-n", "--number", "-a", "--all"):
             number = sys.maxsize if config.get("all", False) else config.get("number", 1)
             setattr(namespace, "number", number)
-        if not self.arguments_specified("-s", "--style"):
+        if self.arguments_not_specified("-s", "--style"):
             style = config.get("style", self.get_default("style"))
             setattr(namespace, "style", style)
-        if not self.arguments_specified("-p", "--priority"):
+        if self.arguments_not_specified("-p", "--priority"):
             priority = config.get("priority", self.get_default("priority"))
             setattr(namespace, "priority", priority)
 
-    def arguments_specified(self, *arguments: str) -> bool:
+    @staticmethod
+    def arguments_not_specified(*arguments: str) -> bool:
         """ Return whether any of the arguments was specified on the command line. """
-        return any([argument in sys.argv for argument in arguments])
+        return all([argument not in sys.argv for argument in arguments])
 
     def fix_filenames(self, namespace: argparse.Namespace) -> None:
         """ Fix the filenames. """
