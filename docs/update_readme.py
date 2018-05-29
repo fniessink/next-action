@@ -20,9 +20,10 @@ def create_toc(lines, toc_header):
     for line in lines:
         if line.startswith("##") and not line.startswith(toc_header):
             indent = line.count("#") * 2 - 2
-            title = line.split(" ", 1)[1]
-            result.append("{0}- {1}".format(" " * indent, title))
-    return "".join(result)
+            title = line.split(" ", 1)[1].rstrip()
+            slug = title.lower().replace(" ", "-").replace("*", "")
+            result.append("{0}- [{1}](#{2})".format(" " * indent, title, slug))
+    return "\n".join(result)
 
 
 class StateMachine(object):
