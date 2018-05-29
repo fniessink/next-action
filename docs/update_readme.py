@@ -14,15 +14,17 @@ def do_command(line):
     return command_output.stdout.strip(), command_output.stderr.strip()
 
 
-def create_toc(lines, toc_header):
+def create_toc(lines, toc_header, min_level=2, max_level=3):
     """ Create the table of contents. """
     result = []
     for line in lines:
-        if line.startswith("##") and not line.startswith(toc_header):
-            indent = line.count("#") * 2 - 2
-            title = line.split(" ", 1)[1].rstrip()
-            slug = title.lower().replace(" ", "-").replace("*", "")
-            result.append("{0}- [{1}](#{2})".format(" " * indent, title, slug))
+        level = line.count("#", 0, 6)
+        if level < min_level or level > max_level or line.startswith(toc_header):
+            continue
+        indent = (level - 1) * 2
+        title = line.split(" ", 1)[1].rstrip()
+        slug = title.lower().replace(" ", "-").replace("*", "").replace(".", "")
+        result.append("{0}- [{1}](#{2})".format(" " * indent, title, slug))
     return "\n".join(result)
 
 

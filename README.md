@@ -22,11 +22,6 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
     - [Showing more than one next action](#showing-more-than-one-next-action)
     - [Styling the output](#styling-the-output)
     - [Configuring *Next-action*](#configuring-next-action)
-      - [Configuring a default todo.txt](#configuring-a-default-todo.txt)
-      - [Configuring the number of next actions to show](#configuring-the-number-of-next-actions-to-show)
-      - [Configuring the minimum priority to show](#configuring-the-minimum-priority-to-show)
-      - [Configuring the style to use](#configuring-the-style-to-use)
-      - [Precedence of options](#precedence-of-options)
   - [Develop](#develop)
 ## Demo
 
@@ -258,7 +253,7 @@ To run the unit tests:
 $ python -m unittest
 ...............................................................................................................................................
 ----------------------------------------------------------------------
-Ran 143 tests in 0.421s
+Ran 143 tests in 0.461s
 
 OK
 ```
