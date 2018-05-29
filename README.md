@@ -13,6 +13,22 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 *Next-action* is not a tool for editing todo.txt files, see <http://todotxt.org> for available options.
 
+## Table of contents
+
+  - Demo
+  - Installation
+  - Usage
+    - Limiting the tasks from which next actions are selected
+    - Showing more than one next action
+    - Styling the output
+    - Configuring *Next-action*
+      - Configuring a default todo.txt
+      - Configuring the number of next actions to show
+      - Configuring the minimum priority to show
+      - Configuring the style to use
+      - Precedence of options
+  - Develop
+
 ## Demo
 
 ![gif](https://raw.githubusercontent.com/fniessink/next-action/master/docs/demo.gif)
@@ -243,7 +259,7 @@ To run the unit tests:
 $ python -m unittest
 ...............................................................................................................................................
 ----------------------------------------------------------------------
-Ran 143 tests in 0.433s
+Ran 143 tests in 0.419s
 
 OK
 ```
