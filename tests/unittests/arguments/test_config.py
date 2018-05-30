@@ -85,7 +85,7 @@ class ConfigFileTest(ConfigTestCase):
         self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
                          mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--no-config-file"])
+    @patch.object(sys, "argv", ["next-action", "--config-file"])
     @patch.object(config, "open")
     def test_skip_config(self, mock_file_open):
         """ Test that the config file is not read if the user doesn't want to. """

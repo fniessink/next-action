@@ -21,7 +21,7 @@ def create_toc(lines, toc_header, min_level=2, max_level=3):
         level = line.count("#", 0, 6)
         if level < min_level or level > max_level or line.startswith(toc_header):
             continue
-        indent = (level - 1) * 2
+        indent = (level - min_level) * 2
         title = line.split(" ", 1)[1].rstrip()
         slug = title.lower().replace(" ", "-").replace("*", "").replace(".", "")
         result.append("{0}- [{1}](#{2})".format(" " * indent, title, slug))
@@ -68,17 +68,16 @@ class StateMachine(object):
     def print_toc(self, line):
         """ Print the table of contents. """
         print(self.toc)
-        if line.startswith("  "):
+        if "- [" in line:
             return self.in_old_toc
         print(line)
         return self.default
 
     def in_old_toc(self, line):
         """ Skip the old table of contents. """
-        if line.startswith("  "):
+        if "- [" in line:
             return self.in_old_toc
-        if line:
-            print(line)
+        print(line)
         return self.default
 
 

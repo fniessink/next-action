@@ -22,7 +22,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
-            usage=textwrap.fill("next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] "
+            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] "
                                 "[-n <number> | -a] [-o] [-p [<priority>]] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
@@ -37,10 +37,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         config_file.add_argument(
             "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
         config_file.add_argument(
-            "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg",
-            help="filename of configuration file to read (default: %(default)s)")
-        config_file.add_argument(
-            "-C", "--no-config-file", help="don't read the configuration file", action="store_true")
+            "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg", nargs="?",
+            help="filename of configuration file to read (default: %(default)s); omit filename to not read any "
+                 "configuration file")
         self.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=self.__default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
@@ -86,7 +85,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Parse the command-line arguments. """
         namespace, remaining = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining, namespace)
-        if not namespace.no_config_file:
+        if getattr(namespace, "config_file", self.get_default("config_file")) is not None:
             self.process_config_file(namespace)
         if namespace.write_config_file:
             write_config_file()

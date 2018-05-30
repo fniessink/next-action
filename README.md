@@ -15,14 +15,15 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Table of contents
 
-  - [Demo](#demo)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
-    - [Showing more than one next action](#showing-more-than-one-next-action)
-    - [Styling the output](#styling-the-output)
-    - [Configuring *Next-action*](#configuring-next-action)
-  - [Develop](#develop)
+- [Demo](#demo)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
+  - [Showing more than one next action](#showing-more-than-one-next-action)
+  - [Styling the output](#styling-the-output)
+  - [Configuring *Next-action*](#configuring-next-action)
+- [Develop](#develop)
+
 ## Demo
 
 ![gif](https://raw.githubusercontent.com/fniessink/next-action/master/docs/demo.gif)
@@ -37,7 +38,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c <config.cfg> | -C] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]]
+usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]]
 [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
@@ -48,9 +49,9 @@ optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --write-config-file   generate a sample configuration file and exit
-  -c <config.cfg>, --config-file <config.cfg>
-                        filename of configuration file to read (default: ~/.next-action.cfg)
-  -C, --no-config-file  don't read the configuration file
+  -c [<config.cfg>], --config-file [<config.cfg>]
+                        filename of configuration file to read (default: ~/.next-action.cfg); omit filename to not
+                        read any configuration file
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument can be
                         repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
@@ -175,12 +176,14 @@ style: default
 
 To make this the configuration that *Next-action* reads by default, redirect the output to `~/.next-action.cfg` like this: `next-action --write-config-file > ~/.next-action.cfg`.
 
-If you want to use a configuration file that is not in the default location (`~/.next-action.cfg`), you'll need to explicitly tell *Next-action* its location:
+If you want to use a configuration file that is not in the default location (`~/.next-action.cfg`), you'll need to explicitly specify its location:
 
 ```console
 $ next-action --config-file docs/.next-action.cfg
 (A) Call mom @phone
 ```
+
+To skip reading the default configuration file, and also not read an alternative configuration file, use the `--config-file` option without arguments.
 
 The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, and the styling.
 
@@ -253,7 +256,7 @@ To run the unit tests:
 $ python -m unittest
 ...............................................................................................................................................
 ----------------------------------------------------------------------
-Ran 143 tests in 0.461s
+Ran 143 tests in 0.420s
 
 OK
 ```
