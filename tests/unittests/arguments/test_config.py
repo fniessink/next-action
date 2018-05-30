@@ -240,6 +240,12 @@ class ConfigStyleTest(ConfigTestCase):
         """ Test that a command line style overrides the style in the config file. """
         self.assertEqual("vim", parse_arguments()[1].style)
 
+    @patch.object(sys, "argv", ["next-action", "--style"])
+    @patch.object(config, "open", mock_open(read_data="style: default"))
+    def test_cancel_style(self):
+        """ Test that --style without style cancels the style in the config file. """
+        self.assertEqual(None, parse_arguments()[1].style)
+
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="style: invalid_style"))
     @patch.object(sys.stderr, "write")

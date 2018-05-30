@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Removed
+### Added
 
-- The `--no-config-file` option was removed. To not read any configuration file, use the `--config-file` option without specifying a configuration filename.
+- Using the `--style` option without arguments ignores the style specified in the configuration file, if any. Closes #83.
+
+### Changed
+
+- The `--no-config-file` option was removed. To not read any configuration file, use the `--config-file` option without specifying a configuration filename. Closes #82.
 
 ## [0.12.0] - 2018-05-28
 
