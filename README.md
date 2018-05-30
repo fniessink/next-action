@@ -38,8 +38,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]]
-[<context|project> ...]
+usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]] [-s
+[<style>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -61,7 +61,7 @@ optional arguments:
   -o, --overdue         show only overdue next actions
   -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
-  -s <style>, --style <style>
+  -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
                         colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
                         paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, tango, trac, vim, vs, xcode
@@ -160,6 +160,8 @@ The next actions can be colorized using the `--style` argument. Run `next-action
 
 When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the section below on how to configure *Next-action*.
 
+Not passing an argument to `--style` cancels the style that is configured in the configuration file, if any.
+
 ### Configuring *Next-action*
 
 In addition to specifying options on the command-line, you can also configure options in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder.
@@ -254,9 +256,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-...............................................................................................................................................
+................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 143 tests in 0.420s
+Ran 144 tests in 0.426s
 
 OK
 ```

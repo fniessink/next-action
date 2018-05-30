@@ -23,7 +23,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] "
-                                "[-n <number> | -a] [-o] [-p [<priority>]] [<context|project> ...]",
+                                "[-n <number> | -a] [-o] [-p [<priority>]] [-s [<style>]] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
@@ -56,7 +56,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="minimum priority (A-Z) of next actions to show (default: %(default)s)")
         styles = sorted(list(get_all_styles()))
         self.add_argument(
-            "-s", "--style", metavar="<style>", choices=styles, default=None,
+            "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
             help="colorize the output; available styles: {0} (default: %(default)s)".format(", ".join(styles)))
 
     def add_positional_arguments(self) -> None:
