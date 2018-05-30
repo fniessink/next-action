@@ -251,7 +251,7 @@ If you have a configuration file with default options that you occasionally want
 
 ## Recent changes
 
-See the [change log](https://raw.githubusercontent.com/fniessink/next-action/master/CHANGELOG.md).
+See the [change log](https://github.com/fniessink/next-action/blob/master/CHANGELOG.md).
 
 ## Develop
 
