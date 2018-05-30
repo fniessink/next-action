@@ -22,6 +22,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Showing more than one next action](#showing-more-than-one-next-action)
   - [Styling the output](#styling-the-output)
   - [Configuring *Next-action*](#configuring-next-action)
+- [Recent changes](#recent-changes)
 - [Develop](#develop)
 
 ## Demo
@@ -248,6 +249,10 @@ Options in the configuration file override the default options. Command-line opt
 
 If you have a configuration file with default options that you occasionally want to ignore, you can skip reading the configuration file entirely with the `--no-config-file` option.
 
+## Recent changes
+
+See the [change log](https://raw.githubusercontent.com/fniessink/next-action/master/CHANGELOG.md).
+
 ## Develop
 
 Clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`, and install *Next-action* in development mode using `python setup.py develop`.
@@ -258,7 +263,7 @@ To run the unit tests:
 $ python -m unittest
 ................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 144 tests in 0.426s
+Ran 144 tests in 0.465s
 
 OK
 ```
