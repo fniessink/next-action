@@ -39,23 +39,23 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] [-p [<priority>]] [-s
-[<style>]] [<context|project> ...]
+usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] [-p
+[<priority>]] [-s [<style>]] [<context|project> ...]
 
-Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
-properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
-specifying contexts the tasks must have and/or projects the tasks must belong to.
+Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
+on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
+is selected by specifying contexts the tasks must have and/or projects the tasks must belong to.
 
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
   --write-config-file   generate a sample configuration file and exit
   -c [<config.cfg>], --config-file [<config.cfg>]
-                        filename of configuration file to read (default: ~/.next-action.cfg); omit filename to not
-                        read any configuration file
+                        filename of configuration file to read (default: ~/.next-action.cfg); omit filename
+                        to not read any configuration file
   -f <todo.txt>, --file <todo.txt>
-                        filename of todo.txt file to read; can be '-' to read from standard input; argument can be
-                        repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
+                        filename of todo.txt file to read; can be '-' to read from standard input; argument
+                        can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
@@ -63,10 +63,10 @@ optional arguments:
   -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
   -s [<style>], --style [<style>]
-                        colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
-                        colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
-                        paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, tango, trac, vim, vs, xcode
-                        (default: None)
+                        colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
+                        borland, bw, colorful, default, emacs, friendly, fruity, igor, lovelace, manni,
+                        monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
+                        rrt, tango, trac, vim, vs, xcode (default: None)
 
 optional context and project arguments; these can be repeated:
   @<context>            context the next action must have
@@ -263,7 +263,7 @@ To run the unit tests:
 $ python -m unittest
 ................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 144 tests in 0.465s
+Ran 144 tests in 0.486s
 
 OK
 ```
