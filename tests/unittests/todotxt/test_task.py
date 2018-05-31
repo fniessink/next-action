@@ -164,6 +164,15 @@ class DueDateTest(unittest.TestCase):
         self.assertEqual(datetime.date(2018, 1, 13), todotxt.Task("(B) due:2018-1-13 Todo").due_date())
         self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task("(B) due:2018-1-1 Todo").due_date())
 
+    def test_is_due(self):
+        """ Test the is_due method. """
+        self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date.today()))
+        self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
+        self.assertFalse(todotxt.Task("due:2018-01-01").is_due(datetime.date(2017, 12, 31)))
+        self.assertFalse(todotxt.Task("Without due date").is_due(datetime.date(2017, 12, 31)))
+        self.assertTrue(todotxt.Task("9999-01-01 due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
+        self.assertTrue(todotxt.Task("x Completed due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
+
 
 class TaskCompletionTest(unittest.TestCase):
     """ Unit tests for the completion status of tasks. """

@@ -1,6 +1,7 @@
 """ Parser for the command line arguments. """
 
 import argparse
+import datetime
 import shutil
 import string
 import sys
@@ -23,7 +24,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] "
-                                "[-n <number> | -a] [-o] [-p [<priority>]] [-s [<style>]] [<context|project> ...]",
+                                "[-n <number> | -a] [-d <due date>] [-o] [-p [<priority>]] [-s [<style>]] "
+                                "[<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
@@ -50,7 +52,11 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="number of next actions to show (default: %(default)s)")
         number.add_argument(
             "-a", "--all", help="show all next actions", action="store_const", dest="number", const=sys.maxsize)
-        self.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
+        date = self.add_mutually_exclusive_group()
+        date.add_argument(
+            "-d", "--due", metavar="<due date>", type=date_type,
+            help="show only next actions due on or before the date")
+        date.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
         self.add_argument(
             "-p", "--priority", metavar="<priority>", choices=string.ascii_uppercase, nargs="?",
             help="minimum priority (A-Z) of next actions to show (default: %(default)s)")
@@ -156,3 +162,11 @@ def filter_type(value: str) -> str:
             value_type = "context" if value.startswith("@") else "project"
             raise argparse.ArgumentTypeError("{0} name missing".format(value_type))
     raise argparse.ArgumentTypeError("unrecognized arguments: {0}".format(value))
+
+
+def date_type(value: str) -> datetime.date:
+    """ Return the date if it's valid, else raise an error. """
+    try:
+        return datetime.date(*[int(part) for part in value.split("-")])
+    except ValueError as reason:
+        raise argparse.ArgumentTypeError("invalid date: {0}".format(reason))
