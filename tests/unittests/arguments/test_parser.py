@@ -1,5 +1,6 @@
 """ Unit tests for the argument parsing classes. """
 
+import datetime
 import os
 import sys
 import textwrap
@@ -10,7 +11,7 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = textwrap.fill(
-    "usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] "
+    "usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d <due date>] [-o] "
     "[-p [<priority>]] [-s [<style>]] [<context|project> ...]", 120) + "\n"
 
 
@@ -208,4 +209,46 @@ class NumberTest(ParserTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument -n/--number: not allowed with argument -a/--all\n")],
+                         mock_stderr_write.call_args_list)
+
+
+@patch.object(config, "open", mock_open(read_data=""))
+class DueDateTest(ParserTestCase):
+    """ Unit tests for the --due option. """
+
+    @patch.object(sys, "argv", ["next-action"])
+    def test_default(self):
+        """ Test that the default value for due date is None. """
+        self.assertEqual(None, parse_arguments()[1].due)
+
+    @patch.object(sys, "argv", ["next-action", "--due", "2018-01-01"])
+    def test_due_date(self):
+        """ Test that the default value for due date is None. """
+        self.assertEqual(datetime.date(2018, 1, 1), parse_arguments()[1].due)
+
+    @patch.object(sys, "argv", ["next-action", "--due", "not_a_date"])
+    @patch.object(sys.stderr, "write")
+    def test_faulty_date(self, mock_stderr_write):
+        """ Test that the argument parser exits if the option is faulty. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: argument -d/--due: invalid date: not_a_date\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--due", "2019-02-30"])
+    @patch.object(sys.stderr, "write")
+    def test_invalid_date(self, mock_stderr_write):
+        """ Test that the argument parser exits if the option is invalid. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: argument -d/--due: invalid date: 2019-02-30\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--due", "2019-02-15-12"])
+    @patch.object(sys.stderr, "write")
+    def test_too_long(self, mock_stderr_write):
+        """ Test that the argument parser exits if the option is invalid. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: argument -d/--due: invalid date: 2019-02-15-12\n")],
                          mock_stderr_write.call_args_list)

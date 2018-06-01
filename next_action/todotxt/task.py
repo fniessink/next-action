@@ -49,6 +49,11 @@ class Task(object):
         match = re.search(r"\bdue:{0}\b".format(self.iso_date_reg_exp), self.text)
         return self.__create_date(match)
 
+    def is_due(self, due_date: datetime.date) -> bool:
+        """ Return whether the task is due on or before the given due date. """
+        task_due_date = self.due_date()
+        return task_due_date <= due_date if task_due_date else False
+
     def is_completed(self) -> bool:
         """ Return whether the task is completed or not. """
         return self.text.startswith("x ")

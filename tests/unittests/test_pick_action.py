@@ -1,6 +1,7 @@
 """ Unit test for the next action algorithm. """
 
 import argparse
+import datetime
 import unittest
 
 from next_action import todotxt, pick_action
@@ -13,6 +14,7 @@ class PickActionTestCase(unittest.TestCase):
         self.namespace = argparse.Namespace()
         self.namespace.filters = []
         self.namespace.overdue = False
+        self.namespace.due = None
         self.namespace.priority = None
 
 
@@ -190,6 +192,17 @@ class OverdueTasks(PickActionTestCase):
         future_duedate = todotxt.Task("Task due:9999-01-01")
         overdue = todotxt.Task("Task due:2000-01-01")
         self.namespace.overdue = True
+        self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
+
+
+class DueTasks(PickActionTestCase):
+    """ Unit tests for the is_due filter. """
+    def test_due_tasks(self):
+        """ Test that tasks that are not due are filtered. """
+        no_duedate = todotxt.Task("Task")
+        future_duedate = todotxt.Task("Task due:9999-01-01")
+        overdue = todotxt.Task("Task due:2000-01-01")
+        self.namespace.due = datetime.date(2000, 1, 1)
         self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
 

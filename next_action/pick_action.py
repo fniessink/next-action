@@ -38,6 +38,8 @@ def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequen
     eligible_tasks = filter(lambda task: projects & task.projects() if projects else True, eligible_tasks)
     # If the user only wants to see overdue tasks, filter out non-overdue tasks
     eligible_tasks = filter(lambda task: task.is_overdue() if arguments.overdue else True, eligible_tasks)
+    # If the user only wants to see tasks due before a due date, filter out non-due tasks
+    eligible_tasks = filter(lambda task: task.is_due(arguments.due) if arguments.due else True, eligible_tasks)
     # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
     eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
     # Finally, sort by priority, due date and creation date
