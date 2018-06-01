@@ -205,6 +205,15 @@ class DueTasks(PickActionTestCase):
         self.namespace.due = datetime.date(2000, 1, 1)
         self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
+    def test_any_due_tasks(self):
+        """ Test that tasks that are not due are filtered. """
+        no_duedate = todotxt.Task("Task")
+        future_duedate = todotxt.Task("Task due:9999-01-01")
+        overdue = todotxt.Task("Task due:2000-01-01")
+        self.namespace.due = datetime.date.max
+        self.assertEqual([overdue, future_duedate],
+                         pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
+
 
 class MinimimPriorityTest(PickActionTest):
     """ Unit test for the mininum priority filter. """

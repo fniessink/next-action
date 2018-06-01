@@ -25,7 +25,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] "
-                                "[-n <number> | -a] [-d <due date>] [-o] [-p [<priority>]] [-s [<style>]] "
+                                "[-n <number> | -a] [-d [<due date>] | -o] [-p [<priority>]] [-s [<style>]] "
                                 "[<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
@@ -55,8 +55,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-a", "--all", help="show all next actions", action="store_const", dest="number", const=sys.maxsize)
         date = self.add_mutually_exclusive_group()
         date.add_argument(
-            "-d", "--due", metavar="<due date>", type=date_type,
-            help="show only next actions due on or before the date")
+            "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,
+            help="show only next actions with a due date; if a date is given, show only next actions due on or "
+                 "before that date")
         date.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
         self.add_argument(
             "-p", "--priority", metavar="<priority>", choices=string.ascii_uppercase, nargs="?",

@@ -40,8 +40,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d <due date>]
-[-o] [-p [<priority>]] [-s [<style>]] [<context|project> ...]
+usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d [<due date>] |
+-o] [-p [<priority>]] [-s [<style>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -60,8 +60,9 @@ optional arguments:
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
-  -d <due date>, --due <due date>
-                        show only next actions due on or before the date
+  -d [<due date>], --due [<due date>]
+                        show only next actions with a due date; if a date is given, show only next actions
+                        due on or before that date
   -o, --overdue         show only overdue next actions
   -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
@@ -90,6 +91,8 @@ The next action is determined using priority. Due date is considered after prior
 Completed tasks (~~`x This is a completed task`~~) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
 
 ### Limiting the tasks from which next actions are selected
+
+#### By contexts and/or projects
 
 You can limit the tasks from which *Next-action* picks the next action by passing contexts and/or projects:
 
@@ -123,11 +126,20 @@ $ next-action -+PaintHouse @store
 (G) Buy wood for new +DogHouse @store
 ```
 
-To limit the the tasks from which the next action is selected to actions with a due date, specify a due date:
+#### By due date
+
+To limit the the tasks from which the next action is selected to actions with a due date, use the `--due` option:
 
 ```console
-$ next-action @home --due june
-Pay invoice @home due:2018-06-28
+$ next-action @home --due
+(K) Pay July invoice @home due:2018-07-28
+```
+
+Add a due date to select a next action from tasks due on or before that date:
+
+```console
+$ next-action @home --due "june 2018"
+(L) Pay June invoice @home due:2018-06-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
@@ -136,6 +148,8 @@ To make sure you have no overdue actions, or work on overdue actions first, limi
 $ next-action --overdue
 Buy flowers due:2018-02-14
 ```
+
+#### By priority
 
 To make sure you work on important tasks rather than urgent tasks, you can make sure the tasks from which the next action is selected have at least a minimum priority:
 
@@ -271,9 +285,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.......................................................................................................................................................
+.........................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 151 tests in 0.587s
+Ran 153 tests in 0.548s
 
 OK
 ```

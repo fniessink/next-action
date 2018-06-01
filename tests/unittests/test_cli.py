@@ -65,7 +65,7 @@ class CLITest(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
-usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d <due date>] [-o] [-p
+usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d [<due date>] | -o] [-p
 [<priority>]] [-s [<style>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
@@ -85,8 +85,9 @@ optional arguments:
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
-  -d <due date>, --due <due date>
-                        show only next actions due on or before the date
+  -d [<due date>], --due [<due date>]
+                        show only next actions with a due date; if a date is given, show only next actions due on or
+                        before that date
   -o, --overdue         show only overdue next actions
   -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
