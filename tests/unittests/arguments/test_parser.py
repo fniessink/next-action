@@ -232,8 +232,7 @@ class DueDateTest(ParserTestCase):
         """ Test that the argument parser exits if the option is faulty. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date: invalid literal for int() with "
-                               "base 10: 'not_a_date'\n")],
+                          call("next-action: error: argument -d/--due: invalid date: not_a_date\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--due", "2019-02-30"])
@@ -242,7 +241,7 @@ class DueDateTest(ParserTestCase):
         """ Test that the argument parser exits if the option is invalid. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date: day is out of range for month\n")],
+                          call("next-action: error: argument -d/--due: invalid date: 2019-02-30\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--due", "2019-02-15-12"])
@@ -251,5 +250,5 @@ class DueDateTest(ParserTestCase):
         """ Test that the argument parser exits if the option is invalid. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date_type value: '2019-02-15-12'\n")],
+                          call("next-action: error: argument -d/--due: invalid date: 2019-02-15-12\n")],
                          mock_stderr_write.call_args_list)

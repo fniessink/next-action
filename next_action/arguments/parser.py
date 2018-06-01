@@ -8,6 +8,7 @@ import sys
 import textwrap
 from typing import List
 
+import dateparser
 from pygments.styles import get_all_styles
 
 import next_action
@@ -166,7 +167,8 @@ def filter_type(value: str) -> str:
 
 def date_type(value: str) -> datetime.date:
     """ Return the date if it's valid, else raise an error. """
-    try:
-        return datetime.date(*[int(part) for part in value.split("-")])
-    except ValueError as reason:
-        raise argparse.ArgumentTypeError("invalid date: {0}".format(reason))
+    date_time = dateparser.parse(value, languages=["en"],
+                                 settings={"PREFER_DAY_OF_MONTH": "last", "PREFER_DATES_FROM": "future"})
+    if date_time:
+        return date_time.date()
+    raise argparse.ArgumentTypeError("invalid date: {0}".format(value))
