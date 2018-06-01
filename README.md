@@ -40,8 +40,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-o] [-p
-[<priority>]] [-s [<style>]] [<context|project> ...]
+usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d <due date>]
+[-o] [-p [<priority>]] [-s [<style>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -60,6 +60,8 @@ optional arguments:
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
   -a, --all             show all next actions
+  -d <due date>, --due <due date>
+                        show only next actions due on or before the date
   -o, --overdue         show only overdue next actions
   -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
@@ -119,6 +121,13 @@ And of course, in a similar vein, projects can be excluded:
 ```console
 $ next-action -+PaintHouse @store
 (G) Buy wood for new +DogHouse @store
+```
+
+To limit the the tasks from which the next action is selected to actions with a due date, specify a due date:
+
+```console
+$ next-action @home --due june
+Pay invoice @home due:2018-06-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
@@ -262,9 +271,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-................................................................................................................................................
+.......................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 144 tests in 0.486s
+Ran 151 tests in 0.587s
 
 OK
 ```

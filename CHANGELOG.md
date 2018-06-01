@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.14.0] - 2018-06-01
+
+### Added
+
+- Option to limit the next action to tasks that have a given due date. Closes #53.
+
 ## [0.13.0] - 2018-05-30
 
 ### Added

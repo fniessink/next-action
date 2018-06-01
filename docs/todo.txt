@@ -5,5 +5,6 @@
 Get rid of old +DogHouse @home
 Borrow ladder from the neighbors +PaintHouse @home
 Buy flowers due:2018-02-14
+Pay invoice @home due:2018-06-28
 x This is a completed task
 9999-01-01 Start preparing for five-digit years
