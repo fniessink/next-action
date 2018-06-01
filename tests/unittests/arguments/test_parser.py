@@ -11,7 +11,7 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = textwrap.fill(
-    "usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d <due date>] [-o] "
+    "usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d [<due date>] | -o] "
     "[-p [<priority>]] [-s [<style>]] [<context|project> ...]", 120) + "\n"
 
 
@@ -220,6 +220,11 @@ class DueDateTest(ParserTestCase):
     def test_default(self):
         """ Test that the default value for due date is None. """
         self.assertEqual(None, parse_arguments()[1].due)
+
+    @patch.object(sys, "argv", ["next-action", "--due"])
+    def test_no_due_date(self):
+        """ Test that the due date is the max date if the user doesn't specify a date. """
+        self.assertEqual(datetime.date.max, parse_arguments()[1].due)
 
     @patch.object(sys, "argv", ["next-action", "--due", "2018-01-01"])
     def test_due_date(self):
