@@ -1,9 +1,11 @@
 """ Unit tests for the todo.txt Task class. """
 
 import datetime
-import unittest
 import string
+import unittest
+
 from next_action import todotxt
+
 
 
 class TodoTest(unittest.TestCase):
@@ -117,6 +119,7 @@ class CreationDateTest(unittest.TestCase):
     def test_is_future_task(self):
         """ Test that a task with a creation date in the future is a future task. """
         self.assertTrue(todotxt.Task("9999-01-01 Prepare for five-digit years").is_future())
+        self.assertFalse(todotxt.Task("{0} Todo".format(datetime.date.today().isoformat())).is_future())
 
 
 class DueDateTest(unittest.TestCase):
@@ -128,8 +131,8 @@ class DueDateTest(unittest.TestCase):
         self.assertEqual(None, task.due_date())
         self.assertFalse(task.is_overdue())
 
-    def test_due_date(self):
-        """ Test a valid due date. """
+    def test_past_due_date(self):
+        """ Test a past due date. """
         task = todotxt.Task("Todo due:2018-01-02")
         self.assertEqual(datetime.date(2018, 1, 2), task.due_date())
         self.assertTrue(task.is_overdue())
@@ -141,7 +144,7 @@ class DueDateTest(unittest.TestCase):
         self.assertFalse(task.is_overdue())
 
     def test_due_today(self):
-        """ Test a future due date. """
+        """ Test a task due today. """
         task = todotxt.Task("Todo due:{0}".format(datetime.date.today().isoformat()))
         self.assertEqual(datetime.date.today(), task.due_date())
         self.assertFalse(task.is_overdue())

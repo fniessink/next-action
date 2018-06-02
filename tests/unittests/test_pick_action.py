@@ -92,7 +92,7 @@ class FilterTasksTest(PickActionTestCase):
 
     def test_context(self):
         """ Test that the next action can be limited to a specific context. """
-        task1 = todotxt.Task("Todo 1 @work")
+        task1 = todotxt.Task("Todo 1 @work @computer")
         task2 = todotxt.Task("(B) Todo 2 @work")
         task3 = todotxt.Task("(A) Todo 3 @home")
         self.namespace.filters = ["@work"]
