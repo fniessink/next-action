@@ -7,7 +7,6 @@ import unittest
 from next_action import todotxt
 
 
-
 class TodoTest(unittest.TestCase):
     """ Unit tests for the Task class that represents one task item. """
 
