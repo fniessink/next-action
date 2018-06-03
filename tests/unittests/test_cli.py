@@ -65,8 +65,8 @@ class CLITest(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
-usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-s [<style>]] [-a | -n <number>] [-d
-[<due date>] | -o] [-p [<priority>]] [<context|project> ...]
+usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a | -n
+<number>] [-d [<due date>] | -o] [-p [<priority>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -89,6 +89,9 @@ input options:
                         repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
 
 output options:
+  -r {always,never,multiple}, --reference {always,never,multiple}
+                        reference next actions with the name of their todo.txt file (default: when reading multiple
+                        todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
                         colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
@@ -155,3 +158,13 @@ limit the tasks from which the next actions are selected:
         mock_stdin_readline.side_effect = ["(B) Call mom\n", "Walk the dog\n", StopIteration]
         next_action()
         self.assertEqual([call("(B) Call mom"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--reference", "always"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\nBuy beer\n(B) Call mom\n"))
+    @patch.object(sys.stdout, "write")
+    def test_reference_filename(self, mock_stdout_write):
+        """ Test that the printed next actions reference their filename. """
+        expected_filename = os.path.expanduser("~/todo.txt")
+        next_action()
+        self.assertEqual([call("(B) Call mom [{0}]".format(expected_filename)),
+                          call("\n")], mock_stdout_write.call_args_list)

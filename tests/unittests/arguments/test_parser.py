@@ -11,7 +11,7 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = textwrap.fill(
-    "usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-s [<style>]] "
+    "usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] "
     "[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [<context|project> ...]", 120) + "\n"
 
 
@@ -256,4 +256,39 @@ class DueDateTest(ParserTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
                           call("next-action: error: argument -d/--due: invalid date: 2019-02-15-12\n")],
+                         mock_stderr_write.call_args_list)
+
+
+@patch.object(config, "open", mock_open(read_data=""))
+class ReferenceTest(ParserTestCase):
+    """ Unit tests for the --reference option. """
+
+    @patch.object(sys, "argv", ["next-action"])
+    def test_default(self):
+        """ Test that the default value for due date is None. """
+        self.assertEqual("multiple", parse_arguments()[1].reference)
+
+    @patch.object(sys, "argv", ["next-action", "--reference", "multiple"])
+    def test_multiple(self):
+        """ Test that the value can be set to multiple, even though it's the default. """
+        self.assertEqual("multiple", parse_arguments()[1].reference)
+
+    @patch.object(sys, "argv", ["next-action", "--reference", "always"])
+    def test_always(self):
+        """ Test that the value can be set to always. """
+        self.assertEqual("always", parse_arguments()[1].reference)
+
+    @patch.object(sys, "argv", ["next-action", "--reference", "never"])
+    def test_never(self):
+        """ Test that the value can be set to never. """
+        self.assertEqual("never", parse_arguments()[1].reference)
+
+    @patch.object(sys, "argv", ["next-action", "--reference", "not_an_option"])
+    @patch.object(sys.stderr, "write")
+    def test_faulty_date(self, mock_stderr_write):
+        """ Test that the argument parser exits if the option is faulty. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: argument -r/--reference: invalid choice: 'not_an_option' "
+                               "(choose from 'always', 'never', 'multiple')\n")],
                          mock_stderr_write.call_args_list)

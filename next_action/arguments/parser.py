@@ -25,8 +25,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
-                                "[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] "
-                                "[<context|project> ...]", width=shutil.get_terminal_size().columns - len("usage: ")))
+                                "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+                                "[-p [<priority>]] [<context|project> ...]",
+                                width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
         self.add_filter_arguments()
@@ -49,6 +50,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
                  "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
         output_group = self.add_argument_group("output options")
+        output_group.add_argument(
+            "-r", "--reference", choices=["always", "never", "multiple"], default="multiple",
+            help="reference next actions with the name of their todo.txt file (default: when reading multiple "
+                 "todo.txt files)")
         styles = sorted(list(get_all_styles()))
         output_group.add_argument(
             "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
@@ -135,6 +140,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-n", "--number", "-a", "--all"):
             number = sys.maxsize if config.get("all", False) else config.get("number", 1)
             setattr(namespace, "number", number)
+        if self.arguments_not_specified("-r", "--reference"):
+            reference = config.get("reference", self.get_default("reference"))
+            setattr(namespace, "reference", reference)
         if self.arguments_not_specified("-s", "--style"):
             style = config.get("style", self.get_default("style"))
             setattr(namespace, "style", style)

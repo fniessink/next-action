@@ -53,6 +53,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
             "type": "string",
             "allowed": [letter for letter in string.ascii_uppercase]
         },
+        "reference": {
+            "type": "string",
+            "allowed": ["always", "never", "multiple"]
+        },
         "style": {
             "type": "string",
             "allowed": sorted(list(get_all_styles()))
