@@ -99,7 +99,7 @@ class ConfigFileTest(ConfigTestCase):
         """ Test that a config file can be written to stdout. """
         self.assertRaises(SystemExit, parse_arguments)
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\nnumber: 1\nstyle: default\n"
+        expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
 

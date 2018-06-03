@@ -29,7 +29,8 @@ def read_config_file(filename: str, default_filename: str, error: Callable[[str]
 def write_config_file() -> None:
     """ Generate a configuration file on standard out. """
     intro = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-    config = yaml.dump(dict(file="~/todo.txt", number=1, style="default"), default_flow_style=False)
+    config = yaml.dump(dict(file="~/todo.txt", number=1, reference="multiple", style="default"),
+                       default_flow_style=False)
     sys.stdout.write(intro + config)
 
 
