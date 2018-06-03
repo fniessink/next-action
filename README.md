@@ -220,6 +220,7 @@ $ next-action --write-config-file
 # Configuration file for Next-action. Edit the settings below as you like.
 file: ~/todo.txt
 number: 1
+reference: multiple
 style: default
 ```
 
@@ -317,7 +318,7 @@ To run the unit tests:
 $ python -m unittest
 ...................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 163 tests in 0.574s
+Ran 163 tests in 0.614s
 
 OK
 ```
