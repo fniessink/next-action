@@ -201,7 +201,7 @@ $ next-action --reference always
 (A) Call mom @phone [docs/todo.txt]
 ```
 
-Use `--reference never` to turn off this behavior. To permantently change this, configure the option in the configuration file. See the section below on how to configure *Next-action*.
+Use `--reference never` to turn off this behavior. To permanently change this, configure the option in the configuration file. See the section below on how to configure *Next-action*.
 
 The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible styles.
 
