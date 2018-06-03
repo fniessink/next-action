@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- Optionally reference the todo.txt filename from which the next actions were read. Closes #38.
 - Reorganized the help information.
 
 ## [0.15.0] - 2018-06-02

@@ -11,8 +11,9 @@ class Task(object):
 
     iso_date_reg_exp = r"(\d{4})-(\d{1,2})-(\d{1,2})"
 
-    def __init__(self, todo_txt: str) -> None:
+    def __init__(self, todo_txt: str, filename: str = "") -> None:
         self.text = todo_txt
+        self.filename = filename
 
     def __repr__(self) -> str:
         return "{0}<{1}>".format(self.__class__.__name__, self.text)

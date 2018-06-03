@@ -6,7 +6,7 @@ import os
 from next_action.arguments import parse_arguments
 from next_action.pick_action import next_actions
 from next_action.todotxt import read_todotxt_file
-from next_action.output import colorize
+from next_action.output import render
 
 
 def next_action() -> None:
@@ -24,9 +24,9 @@ def next_action() -> None:
             tasks = read_todotxt_file(todotxt_file)
     except OSError as reason:
         parser.error("can't open file: {0}".format(reason))
-    actions = next_actions(tasks, namespace)
+    actions = next_actions(tasks, namespace)[:namespace.number]
     if actions:
-        result = colorize("\n".join(action.text for action in actions[:namespace.number]), namespace.style or "")
+        result = render(actions, namespace)
     else:
         result = "Nothing to do!"
     print(result)

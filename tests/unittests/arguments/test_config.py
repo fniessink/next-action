@@ -289,3 +289,30 @@ class PriorityTest(ConfigTestCase):
             [call(USAGE_MESSAGE),
              call("next-action: error: ~/.next-action.cfg is invalid: priority: unallowed value ZZZ\n")],
             mock_stderr_write.call_args_list)
+
+
+class ReferenceTest(ConfigTestCase):
+    """ Unit tests for the reference parameter. """
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="reference: always"))
+    def test_valid_reference(self):
+        """ Test that a valid reference value changes the reference argument. """
+        self.assertEqual("always", parse_arguments()[1].reference)
+
+    @patch.object(sys, "argv", ["next-action", "--reference", "never"])
+    @patch.object(config, "open", mock_open(read_data="reference: always"))
+    def test_override(self):
+        """ Test that a command line argument overrides the configured value. """
+        self.assertEqual("never", parse_arguments()[1].reference)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="reference: invalid"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_priority(self, mock_stderr_write):
+        """ Test that an invalid value raises an error. """
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: reference: unallowed value invalid\n")],
+            mock_stderr_write.call_args_list)

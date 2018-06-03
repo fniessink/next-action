@@ -21,7 +21,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 - [Usage](#usage)
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
-  - [Styling the output](#styling-the-output)
+  - [Output options](#output-options)
   - [Configuring *Next-action*](#configuring-next-action)
 - [Recent changes](#recent-changes)
 - [Develop](#develop)
@@ -40,8 +40,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d [<due date>] |
--o] [-p [<priority>]] [-s [<style>]] [<context|project> ...]
+usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
+| -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -50,33 +50,46 @@ is selected by specifying contexts the tasks must have and/or projects the tasks
 optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
-  --write-config-file   generate a sample configuration file and exit
+
+configuration options:
   -c [<config.cfg>], --config-file [<config.cfg>]
                         filename of configuration file to read (default: ~/.next-action.cfg); omit filename
                         to not read any configuration file
+  -w, --write-config-file
+                        generate a sample configuration file and exit
+
+input options:
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument
                         can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
-  -n <number>, --number <number>
-                        number of next actions to show (default: 1)
-  -a, --all             show all next actions
-  -d [<due date>], --due [<due date>]
-                        show only next actions with a due date; if a date is given, show only next actions
-                        due on or before that date
-  -o, --overdue         show only overdue next actions
-  -p [<priority>], --priority [<priority>]
-                        minimum priority (A-Z) of next actions to show (default: None)
+
+output options:
+  -r {always,never,multiple}, --reference {always,never,multiple}
+                        reference next actions with the name of their todo.txt file (default: when reading
+                        multiple todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
                         borland, bw, colorful, default, emacs, friendly, fruity, igor, lovelace, manni,
                         monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
                         rrt, tango, trac, vim, vs, xcode (default: None)
 
-optional context and project arguments; these can be repeated:
-  @<context>            context the next action must have
-  +<project>            project the next action must be part of
-  -@<context>           context the next action must not have
-  -+<project>           project the next action must not be part of
+show multiple next actions:
+  -a, --all             show all next actions
+  -n <number>, --number <number>
+                        number of next actions to show (default: 1)
+
+limit the tasks from which the next actions are selected:
+  -d [<due date>], --due [<due date>]
+                        show only next actions with a due date; if a date is given, show only next actions
+                        due on or before that date
+  -o, --overdue         show only overdue next actions
+  -p [<priority>], --priority [<priority>]
+                        minimum priority (A-Z) of next actions to show (default: None)
+  @<context> ...        contexts the next action must have
+  +<project> ...        projects the next action must be part of; if repeated the next action must be part
+                        of at least one of the projects
+  -@<context> ...       contexts the next action must not have
+  -+<project> ...       projects the next action must not be part of
 ```
 
 Assuming your todo.txt file is your home folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](https://raw.githubusercontent.com/fniessink/next-action/master/docs/todo.txt), calling mom would be the next action:
@@ -179,7 +192,16 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Styling the output
+### Output options
+
+By default, *Next-action* references the todo.txt file from which actions were read if you read tasks from multiple todo.txt files. The `--reference` option controls this:
+
+```console
+$ next-action --reference always
+(A) Call mom @phone [docs/todo.txt]
+```
+
+Use `--reference never` to turn off this behavior. To permantently change this, configure the option in the configuration file. See the section below on how to configure *Next-action*.
 
 The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible styles.
 
@@ -257,11 +279,19 @@ This could be useful if you, for example, keep a backlog of ideas without priori
 
 Specifying a value on the command line overrides the priority in the configuration file, e.g. `next-action --priority C`. To override the priority set in the configuration but not set another minimum priority, use the priority option without argument: `next-action --priority`.
 
-#### Configuring the style to use
+#### Configuring the output
 
-The style can be configured using the style keyword:
+Whether the next actions should have a reference to the todo.txt file from which they were read can be configured using the reference keyword:
 
-```yaml:
+```yaml
+reference: always
+```
+
+Possible values are `always`, `never`, or `multiple`. The latter means that the filename is only added when you read tasks from multiple todo.txt files. The default value is `multiple`.
+
+The output style can be configured using the style keyword:
+
+```yaml
 style: colorful
 ```
 
@@ -285,9 +315,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.........................................................................................................................................................
+...................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 153 tests in 0.548s
+Ran 163 tests in 0.574s
 
 OK
 ```
