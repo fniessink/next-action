@@ -24,70 +24,75 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
-            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] "
-                                "[-n <number> | -a] [-d [<due date>] | -o] [-p [<priority>]] [-s [<style>]] "
-                                "[<context|project> ...]",
-                                width=shutil.get_terminal_size().columns - len("usage: ")))
+            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
+                                "[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] "
+                                "[<context|project> ...]", width=shutil.get_terminal_size().columns - len("usage: ")))
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
-        self.add_positional_arguments()
+        self.add_filter_arguments()
 
     def add_optional_arguments(self) -> None:
         """ Add the optional arguments to the parser. """
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
-        config_file = self.add_mutually_exclusive_group()
-        config_file.add_argument(
-            "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
+        config_group = self.add_argument_group("configuration options")
+        config_file = config_group.add_mutually_exclusive_group()
         config_file.add_argument(
             "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg", nargs="?",
             help="filename of configuration file to read (default: %(default)s); omit filename to not read any "
                  "configuration file")
-        self.add_argument(
+        config_file.add_argument(
+            "-w", "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
+        input_group = self.add_argument_group("input options")
+        input_group.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=self.__default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
                  "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
-        number = self.add_mutually_exclusive_group()
+        output_group = self.add_argument_group("output options")
+        styles = sorted(list(get_all_styles()))
+        output_group.add_argument(
+            "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
+            help="colorize the output; available styles: {0} (default: %(default)s)".format(", ".join(styles)))
+        number_group = self.add_argument_group("show multiple next actions")
+        number = number_group.add_mutually_exclusive_group()
+        number.add_argument(
+            "-a", "--all", default=1, action="store_const", dest="number", const=sys.maxsize,
+            help="show all next actions")
         number.add_argument(
             "-n", "--number", metavar="<number>", type=int, default=1,
             help="number of next actions to show (default: %(default)s)")
-        number.add_argument(
-            "-a", "--all", help="show all next actions", action="store_const", dest="number", const=sys.maxsize)
-        date = self.add_mutually_exclusive_group()
+
+    def add_filter_arguments(self) -> None:
+        """ Add the filter arguments to the parser. """
+        filters = self.add_argument_group("limit the tasks from which the next actions are selected")
+        date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,
             help="show only next actions with a due date; if a date is given, show only next actions due on or "
                  "before that date")
         date.add_argument("-o", "--overdue", help="show only overdue next actions", action="store_true")
-        self.add_argument(
+        filters.add_argument(
             "-p", "--priority", metavar="<priority>", choices=string.ascii_uppercase, nargs="?",
             help="minimum priority (A-Z) of next actions to show (default: %(default)s)")
-        styles = sorted(list(get_all_styles()))
-        self.add_argument(
-            "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
-            help="colorize the output; available styles: {0} (default: %(default)s)".format(", ".join(styles)))
-
-    def add_positional_arguments(self) -> None:
-        """ Add the positional arguments to the parser. """
-        filters = self.add_argument_group("optional context and project arguments; these can be repeated")
         # Collect all context and project arguments in one list:
         filters.add_argument(
             "filters", metavar="<context|project>", help=argparse.SUPPRESS, nargs="*", type=filter_type)
         # Add two dummy arguments for the help info:
         filters.add_argument(
-            "dummy", metavar="@<context>", help="context the next action must have", nargs="*",
-            default=argparse.SUPPRESS)
+            "dummy", metavar="@<context> ...", nargs="*", default=argparse.SUPPRESS,
+            help="contexts the next action must have")
         filters.add_argument(
-            "dummy", metavar="+<project>", help="project the next action must be part of", nargs="*",
-            default=argparse.SUPPRESS)
+            "dummy", metavar="+<project> ...", nargs="*", default=argparse.SUPPRESS,
+            help="projects the next action must be part of; if repeated the next action must be part of at least one "
+                 "of the projects")
         # These arguments won't be collected because they start with a -. They'll be parsed by parse_remaining_args
         # below
         filters.add_argument(
-            "dummy", metavar="-@<context>", help="context the next action must not have", nargs="*",
-            default=argparse.SUPPRESS)
+            "dummy", metavar="-@<context> ...", nargs="*", default=argparse.SUPPRESS,
+            help="contexts the next action must not have")
         filters.add_argument(
-            "dummy", metavar="-+<project>", help="project the next action must not be part of", nargs="*",
-            default=argparse.SUPPRESS)
+            "dummy", metavar="-+<project> ...", nargs="*", default=argparse.SUPPRESS,
+            help="projects the next action must not be part of")
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """ Parse the command-line arguments. """

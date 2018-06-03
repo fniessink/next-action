@@ -11,8 +11,8 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = textwrap.fill(
-    "usage: next-action [-h] [--version] [-c [<config.cfg>]] [-f <todo.txt>] [-n <number> | -a] [-d [<due date>] | -o] "
-    "[-p [<priority>]] [-s [<style>]] [<context|project> ...]", 120) + "\n"
+    "usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-s [<style>]] "
+    "[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [<context|project> ...]", 120) + "\n"
 
 
 class ParserTestCase(unittest.TestCase):
