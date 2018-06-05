@@ -153,7 +153,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     @staticmethod
     def arguments_not_specified(*arguments: str) -> bool:
         """ Return whether any of the arguments was specified on the command line. """
-        return all([argument not in sys.argv for argument in arguments])
+        return not any([command_line_arg.startswith(argument) for argument in arguments
+                        for command_line_arg in sys.argv])
 
     def fix_filenames(self, namespace: argparse.Namespace) -> None:
         """ Fix the filenames. """
