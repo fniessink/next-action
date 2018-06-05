@@ -9,9 +9,10 @@ def do_command(line):
     """ Run the command on the line and return its stdout and stderr. """
     command = shlex.split(line[2:])
     if command[0] == "next-action" and "--write-config-file" not in command:
-        command.extend(["--config", "docs/.next-action.cfg"])
+        command.insert(1, "--config")
+        command.insert(2, "docs/.next-action.cfg")
     command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                    check=True, universal_newlines=True)
+                                    universal_newlines=True)
     return command_output.stdout.strip(), command_output.stderr.strip()
 
 
