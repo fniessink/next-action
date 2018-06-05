@@ -41,30 +41,30 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
+Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
 | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
 is selected by specifying contexts the tasks must have and/or projects the tasks must belong to.
 
-optional arguments:
+Optional arguments:
   -h, --help            show this help message and exit
   --version             show program's version number and exit
 
-configuration options:
+Configuration options:
   -c [<config.cfg>], --config-file [<config.cfg>]
                         filename of configuration file to read (default: ~/.next-action.cfg); omit filename
                         to not read any configuration file
   -w, --write-config-file
                         generate a sample configuration file and exit
 
-input options:
+Input options:
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument
                         can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
 
-output options:
+Output options:
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
                         multiple todo.txt files)
@@ -74,12 +74,12 @@ output options:
                         monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
                         rrt, tango, trac, vim, vs, xcode (default: None)
 
-show multiple next actions:
+Show multiple next actions:
   -a, --all             show all next actions
   -n <number>, --number <number>
                         number of next actions to show (default: 1)
 
-limit the tasks from which the next actions are selected:
+Limit the tasks from which the next actions are selected:
   -d [<due date>], --due [<due date>]
                         show only next actions with a due date; if a date is given, show only next actions
                         due on or before that date
@@ -316,7 +316,7 @@ When you use an option that takes an optional argument, but have it followed by 
 
 ```console
 $ next-action --due @home
-usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
+Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
 | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
@@ -349,7 +349,7 @@ To run the unit tests:
 $ python -m unittest
 ....................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 164 tests in 0.592s
+Ran 164 tests in 0.598s
 
 OK
 ```
