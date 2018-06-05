@@ -192,7 +192,6 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 class CapitalisedHelpFormatter(argparse.HelpFormatter):
     """ Capitalise the usage string. """
     def add_usage(self, usage, actions, groups, prefix=None):
-        prefix = prefix or 'Usage: '
         return super(CapitalisedHelpFormatter, self).add_usage(usage, actions, groups, prefix or "Usage: ")
 
 
