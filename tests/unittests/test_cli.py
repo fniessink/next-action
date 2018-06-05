@@ -66,7 +66,7 @@ class CLITest(unittest.TestCase):
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
 usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a | -n
-<number>] [-d [<due date>] | -o] [-p [<priority>]] [<context|project> ...]
+<number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -115,6 +115,9 @@ limit the tasks from which the next actions are selected:
                         one of the projects
   -@<context> ...       contexts the next action must not have
   -+<project> ...       projects the next action must not be part of
+
+Use -- to separate options with optional arguments from contexts and projects, in order to handle cases where a
+context or project is mistaken for an argument to an option.
 """),
                          mock_stdout_write.call_args_list[0])
 

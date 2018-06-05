@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- Mention how to deal with options with optional arguments followed by positional arguments in the help information and README. Closes #100.
 - Short options immediately followed by a value weren't parsed correctly. Fixes #84.
 
 ## [0.16.1] - 2018-06-04

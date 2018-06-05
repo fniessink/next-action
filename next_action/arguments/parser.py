@@ -20,14 +20,16 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def __init__(self) -> None:
         super().__init__(
+            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
+                                "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+                                "[-p [<priority>]] [--] [<context|project> ...]",
+                                width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
-            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
-                                "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
-                                "[-p [<priority>]] [<context|project> ...]",
-                                width=shutil.get_terminal_size().columns - len("usage: ")))
+            epilog="Use -- to separate options with optional arguments from contexts and projects, in order to handle "
+                   "cases where a context or project is mistaken for an argument to an option.")
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
         self.add_filter_arguments()

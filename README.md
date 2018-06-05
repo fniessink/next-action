@@ -21,8 +21,9 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 - [Usage](#usage)
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
-  - [Output options](#output-options)
+  - [Styling the output](#styling-the-output)
   - [Configuring *Next-action*](#configuring-next-action)
+  - [Option details](#option-details)
 - [Recent changes](#recent-changes)
 - [Develop](#develop)
 
@@ -41,7 +42,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 ```console
 $ next-action --help
 usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
-| -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [<context|project> ...]
+| -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -90,6 +91,9 @@ limit the tasks from which the next actions are selected:
                         of at least one of the projects
   -@<context> ...       contexts the next action must not have
   -+<project> ...       projects the next action must not be part of
+
+Use -- to separate options with optional arguments from contexts and projects, in order to handle cases
+where a context or project is mistaken for an argument to an option.
 ```
 
 Assuming your todo.txt file is your home folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](https://raw.githubusercontent.com/fniessink/next-action/master/docs/todo.txt), calling mom would be the next action:
@@ -192,7 +196,7 @@ $ next-action --all @store
 
 Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
 
-### Output options
+### Styling the output
 
 By default, *Next-action* references the todo.txt file from which actions were read if you read tasks from multiple todo.txt files. The `--reference` option controls this:
 
@@ -298,11 +302,38 @@ style: colorful
 
 Run `next-action --help` to see the list of possible styles.
 
-#### Precedence of options
+### Option details
+
+#### Precedence
 
 Options in the configuration file override the default options. Command-line options in turn override options in the configuration file.
 
 If you have a configuration file with default options that you occasionally want to ignore, you can skip reading the configuration file entirely with the `--no-config-file` option.
+
+#### Optional arguments followed by positional arguments
+
+When you use an option that takes an optional argument, but have it followed by a positional argument, *Next-action* will interpret the positional argument as the argument to the option and complain, e.g.:
+
+```console
+$ next-action --due @home
+usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
+| -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+next-action: error: argument -d/--due: invalid date: @home
+```
+
+There's two ways to help *Next-action* figure out what you mean. Either reverse the order of the arguments:
+
+```console
+$ next-action @home --due
+(K) Pay July invoice @home due:2018-07-28
+```
+
+Or use `--` to separate the option from the positional argument(s):
+
+```console
+$ next-action --due -- @home
+(K) Pay July invoice @home due:2018-07-28
+```
 
 ## Recent changes
 
@@ -316,9 +347,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-...................................................................................................................................................................
+....................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 163 tests in 0.614s
+Ran 164 tests in 0.592s
 
 OK
 ```
