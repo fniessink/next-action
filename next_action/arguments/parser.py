@@ -29,16 +29,25 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                         "the tasks from which the next action is selected by specifying contexts the tasks must have "
                         "and/or projects the tasks must belong to.",
             epilog="Use -- to separate options with optional arguments from contexts and projects, in order to handle "
-                   "cases where a context or project is mistaken for an argument to an option.")
+                   "cases where a context or project is mistaken for an argument to an option.",
+            formatter_class=CapitalisedHelpFormatter)
         self.__default_filenames = ["~/todo.txt"]
         self.add_optional_arguments()
+        self.add_configuration_options()
+        self.add_input_options()
+        self.add_output_options()
+        self.add_number_options()
         self.add_filter_arguments()
 
     def add_optional_arguments(self) -> None:
         """ Add the optional arguments to the parser. """
+        self._optionals.title = self._optionals.title.capitalize()
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
-        config_group = self.add_argument_group("configuration options")
+
+    def add_configuration_options(self) -> None:
+        """ Add the configuration options to the parser. """
+        config_group = self.add_argument_group("Configuration options")
         config_file = config_group.add_mutually_exclusive_group()
         config_file.add_argument(
             "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg", nargs="?",
@@ -46,12 +55,18 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                  "configuration file")
         config_file.add_argument(
             "-w", "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
-        input_group = self.add_argument_group("input options")
+
+    def add_input_options(self) -> None:
+        """ Add the input options to the parser. """
+        input_group = self.add_argument_group("Input options")
         input_group.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=self.__default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
                  "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
-        output_group = self.add_argument_group("output options")
+
+    def add_output_options(self) -> None:
+        """ Add the output/styling options to the parser. """
+        output_group = self.add_argument_group("Output options")
         output_group.add_argument(
             "-r", "--reference", choices=["always", "never", "multiple"], default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
@@ -60,7 +75,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         output_group.add_argument(
             "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
             help="colorize the output; available styles: {0} (default: %(default)s)".format(", ".join(styles)))
-        number_group = self.add_argument_group("show multiple next actions")
+
+    def add_number_options(self) -> None:
+        """ Add the number options to the parser. """
+        number_group = self.add_argument_group("Show multiple next actions")
         number = number_group.add_mutually_exclusive_group()
         number.add_argument(
             "-a", "--all", default=1, action="store_const", dest="number", const=sys.maxsize,
@@ -71,7 +89,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def add_filter_arguments(self) -> None:
         """ Add the filter arguments to the parser. """
-        filters = self.add_argument_group("limit the tasks from which the next actions are selected")
+        filters = self.add_argument_group("Limit the tasks from which the next actions are selected")
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,
@@ -169,6 +187,13 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                 filenames.remove(default_filename)
         # Remove duplicate filenames while maintaining order.
         namespace.file = list(dict.fromkeys(filenames))
+
+
+class CapitalisedHelpFormatter(argparse.HelpFormatter):
+    """ Capitalise the usage string. """
+    def add_usage(self, usage, actions, groups, prefix=None):
+        prefix = prefix or 'Usage: '
+        return super(CapitalisedHelpFormatter, self).add_usage(usage, actions, groups, prefix or "Usage: ")
 
 
 def filter_type(value: str) -> str:
