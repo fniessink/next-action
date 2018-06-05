@@ -270,13 +270,19 @@ class PriorityTest(ConfigTestCase):
     @patch.object(sys, "argv", ["next-action", "--priority", "M"])
     @patch.object(config, "open", mock_open(read_data="priority: Z"))
     def test_override_priority(self):
-        """ Test that a command line style overrides the priority in the config file. """
+        """ Test that a command line option overrides the priority in the config file. """
+        self.assertEqual("M", parse_arguments()[1].priority)
+
+    @patch.object(sys, "argv", ["next-action", "-pM"])
+    @patch.object(config, "open", mock_open(read_data="priority: Z"))
+    def test_override_short(self):
+        """ Test that a short command line option overrides the priority in the config file. """
         self.assertEqual("M", parse_arguments()[1].priority)
 
     @patch.object(sys, "argv", ["next-action", "--priority"])
     @patch.object(config, "open", mock_open(read_data="priority: Z"))
     def test_cancel_priority(self):
-        """ Test that a command line style overrides the priority in the config file. """
+        """ Test that a command line option overrides the priority in the config file. """
         self.assertEqual(None, parse_arguments()[1].priority)
 
     @patch.object(sys, "argv", ["next-action"])
