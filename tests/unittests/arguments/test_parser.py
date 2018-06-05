@@ -11,7 +11,7 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = textwrap.fill(
-    "usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] "
+    "Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] "
     "[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]", 120) + "\n"
 
 
