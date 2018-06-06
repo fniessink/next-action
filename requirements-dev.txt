@@ -2,6 +2,6 @@
 setuptools==39.2.0
 coverage==4.5.1
 codacy-coverage==1.3.11
-pylint==1.9.1
+pylint==1.9.2
 pycodestyle==2.4.0
 bandit==1.4.0
