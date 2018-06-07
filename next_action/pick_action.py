@@ -24,7 +24,8 @@ def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequen
     projects = subset(arguments.filters, "+")
     excluded_contexts = subset(arguments.filters, "-@")
     excluded_projects = subset(arguments.filters, "-+")
-    # First, get the potential next actions by filtering out completed tasks and tasks with a future creation date
+    # First, get the potential next actions by filtering out completed tasks and tasks with a future creation date or
+    # future threshold date
     actionable_tasks = [task for task in tasks if task.is_actionable()]
     # Then, exclude tasks that have an excluded context
     eligible_tasks = filter(lambda task: not excluded_contexts & task.contexts() if excluded_contexts else True,
