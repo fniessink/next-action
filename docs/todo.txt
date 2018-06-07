@@ -9,3 +9,4 @@ Buy flowers due:2018-02-14
 (K) Pay July invoice @home due:2018-07-28
 x This is a completed task
 9999-01-01 Start preparing for five-digit years
+Start preparing for emigration to Mars t:3000-01-01

@@ -45,10 +45,13 @@ class Task(object):
         match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)
         return self.__create_date(match)
 
+    def threshold_date(self) -> Optional[datetime.date]:
+        """ Return the threshold date of the task. """
+        return self.__find_keyed_date("t")
+
     def due_date(self) -> Optional[datetime.date]:
         """ Return the due date of the task. """
-        match = re.search(r"\bdue:{0}\b".format(self.iso_date_reg_exp), self.text)
-        return self.__create_date(match)
+        return self.__find_keyed_date("due")
 
     def is_due(self, due_date: datetime.date) -> bool:
         """ Return whether the task is due on or before the given due date. """
@@ -60,9 +63,15 @@ class Task(object):
         return self.text.startswith("x ")
 
     def is_future(self) -> bool:
-        """ Return whether the task is a future task, i.e. has a creation date in the future. """
+        """ Return whether the task is a future task, i.e. has a creation or threshold date in the future. """
+        today = datetime.date.today()
         creation_date = self.creation_date()
-        return creation_date > datetime.date.today() if creation_date else False
+        if creation_date:
+            return creation_date > today
+        threshold_date = self.threshold_date()
+        if threshold_date:
+            return threshold_date > today
+        return False
 
     def is_actionable(self) -> bool:
         """ Return whether the task is actionable, i.e. whether it's not completed and doesn't have a future creation
@@ -70,13 +79,18 @@ class Task(object):
         return not self.is_completed() and not self.is_future()
 
     def is_overdue(self) -> bool:
-        """ Return whether the taks is overdue, i.e. whether it has a due date in the past. """
+        """ Return whether the task is overdue, i.e. whether it has a due date in the past. """
         due_date = self.due_date()
         return due_date < datetime.date.today() if due_date else False
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """
         return {match.group(1) for match in re.finditer(" {0}([^ ]+)".format(prefix), self.text)}
+
+    def __find_keyed_date(self, key: str) -> Optional[datetime.date]:
+        """ Find a key:value pair with the supplied key where the value is a date. """
+        match = re.search(r"\b{0}:{1}\b".format(key, self.iso_date_reg_exp), self.text)
+        return self.__create_date(match)
 
     @staticmethod
     def __create_date(match: Optional[typing.Match[str]]) -> Optional[datetime.date]:

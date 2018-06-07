@@ -103,9 +103,9 @@ $ next-action
 (A) Call mom @phone
 ```
 
-The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks. FInally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
+The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks. Finally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
 
-Completed tasks (~~`x This is a completed task`~~) and tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`) are not considered when determining the next action.
+Completed tasks (~~`x This is a completed task`~~), tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`), and tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`) are not considered when determining the next action.
 
 ### Limiting the tasks from which next actions are selected
 
@@ -194,7 +194,7 @@ $ next-action --all @store
 (G) Buy wood for new +DogHouse @store
 ```
 
-Note again that completed tasks and task with a future creation date are never shown since they can't be a next action.
+Note again that completed tasks and task with a future creation or threshold date are never shown since they can't be a next action.
 
 ### Styling the output
 

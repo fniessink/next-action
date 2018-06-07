@@ -87,7 +87,8 @@ class TaskPriorityTest(unittest.TestCase):
 
 
 class CreationDateTest(unittest.TestCase):
-    """ Unit tests for task creation dates. """
+    """ Unit tests for task creation dates. Next-action interprets creation dates in the future as threshold, or
+        start date. """
 
     def test_no_creation_date(self):
         """ Test that tasks have no creation date by default. """
@@ -119,6 +120,35 @@ class CreationDateTest(unittest.TestCase):
         """ Test that a task with a creation date in the future is a future task. """
         self.assertTrue(todotxt.Task("9999-01-01 Prepare for five-digit years").is_future())
         self.assertFalse(todotxt.Task("{0} Todo".format(datetime.date.today().isoformat())).is_future())
+
+
+class ThresholdDateTest(unittest.TestCase):
+    """ Unit tests for the threshold date of a task. The core todo.txt standard only defines creation date, but
+        threshold (t:<date>) seems to be a widely used convention. """
+
+    def test_no_threshold(self):
+        """ Test that tasks have no threshold by default. """
+        task = todotxt.Task("Todo")
+        self.assertEqual(None, task.threshold_date())
+        self.assertFalse(task.is_future())
+
+    def test_past_threshold(self):
+        """ Test a past threshold date. """
+        task = todotxt.Task("Todo t:2018-01-02")
+        self.assertEqual(datetime.date(2018, 1, 2), task.threshold_date())
+        self.assertFalse(task.is_future())
+
+    def test_future_threshold(self):
+        """ Test a future threshold date. """
+        task = todotxt.Task("Todo t:9999-01-01")
+        self.assertEqual(datetime.date(9999, 1, 1), task.threshold_date())
+        self.assertTrue(task.is_future())
+
+    def test_threshold_today(self):
+        """ Test a task with threshold today. """
+        task = todotxt.Task("Todo t:{0}".format(datetime.date.today().isoformat()))
+        self.assertEqual(datetime.date.today(), task.threshold_date())
+        self.assertFalse(task.is_future())
 
 
 class DueDateTest(unittest.TestCase):
