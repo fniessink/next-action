@@ -135,11 +135,12 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Parse the remaining command line arguments. """
         for value in remaining:
             if value.startswith("-@") or value.startswith("-+"):
-                argument_type = "context" if value.startswith("-@") else "project"
-                if len(value) == 2:
+                argument = value[len("-"):]
+                if not argument[len("@"):]:
+                    argument_type = "context" if argument.startswith("@") else "project"
                     self.error("argument <context|project>: {0} name missing".format(argument_type))
-                elif value[1:] in namespace.filters:
-                    self.error("{0} {1} is both included and excluded".format(argument_type, value[2:]))
+                elif argument in namespace.filters:
+                    self.error("{0} is both included and excluded".format(argument))
                 else:
                     namespace.filters.append(value)
             else:
@@ -158,7 +159,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                 filenames = [filenames]
             getattr(namespace, "file").extend(filenames)
         if self.arguments_not_specified("-n", "--number", "-a", "--all"):
-            number = sys.maxsize if config.get("all", False) else config.get("number", 1)
+            number = sys.maxsize if config.get("all", False) else config.get("number", self.get_default("number"))
             setattr(namespace, "number", number)
         if self.arguments_not_specified("-r", "--reference"):
             reference = config.get("reference", self.get_default("reference"))
@@ -198,7 +199,7 @@ class CapitalisedHelpFormatter(argparse.HelpFormatter):
 def filter_type(value: str) -> str:
     """ Return the filter if it's valid, else raise an error. """
     if value.startswith("@") or value.startswith("+"):
-        if len(value) > 1:
+        if value[len("@"):]:
             return value
         else:
             value_type = "context" if value.startswith("@") else "project"

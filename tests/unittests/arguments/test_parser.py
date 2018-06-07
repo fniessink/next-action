@@ -51,15 +51,20 @@ class FilenameTest(ParserTestCase):
         """ Test that the argument parser accepts a filename. """
         self.assertEqual(["my_todo.txt"], parse_arguments()[1].file)
 
+    @patch.object(sys, "argv", ["next-action", "-f", "~/my_todo.txt"])
+    def test_home_folder_argument(self):
+        """ Test that the argument parser accepts a filename with a tilde. """
+        self.assertEqual(["~/my_todo.txt"], parse_arguments()[1].file)
+
     @patch.object(sys, "argv", ["next-action", "--file", "my_other_todo.txt"])
     def test_long_filename_argument(self):
         """ Test that the argument parser accepts a filename. """
         self.assertEqual(["my_other_todo.txt"], parse_arguments()[1].file)
 
-    @patch.object(sys, "argv", ["next-action", "-f", "todo.txt"])
+    @patch.object(sys, "argv", ["next-action", "-f", "~/todo.txt"])
     def test_add_default_filename(self):
         """ Test that adding the default filename doesn't get it included twice. """
-        self.assertEqual(["todo.txt"], parse_arguments()[1].file)
+        self.assertEqual(["~/todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "-f", "todo.txt", "-f", "other.txt"])
     def test_default_and_non_default(self):
@@ -67,7 +72,7 @@ class FilenameTest(ParserTestCase):
         self.assertEqual(["todo.txt", "other.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action", "-f", "other.txt", "-f", "other.txt"])
-    def test__add_filename_twice(self):
+    def test_add_filename_twice(self):
         """ Test that adding the same filename twice includes it only once. """
         self.assertEqual(["other.txt"], parse_arguments()[1].file)
 
@@ -106,7 +111,7 @@ class FilterArgumentTest(ParserTestCase):
         """ Test that contexts cannot be included and excluded. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: context home is both included and excluded\n")],
+                          call("next-action: error: @home is both included and excluded\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "-^"])
@@ -147,7 +152,7 @@ class FilterArgumentTest(ParserTestCase):
         """ Test that projects cannot be included and excluded. """
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: project DogHouse is both included and excluded\n")],
+                          call("next-action: error: +DogHouse is both included and excluded\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "-+"])
