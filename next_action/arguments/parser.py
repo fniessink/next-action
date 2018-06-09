@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+import re
 import shutil
 import string
 import sys
@@ -170,12 +171,25 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-p", "--priority"):
             priority = config.get("priority", self.get_default("priority"))
             setattr(namespace, "priority", priority)
+        filters = config.get("filters", [])
+        if isinstance(filters, str):
+            filters = re.split(r"\s", filters)
+        for configured_filter in filters:
+            if self.filter_not_specified(configured_filter):
+                getattr(namespace, "filters").append(configured_filter)
 
     @staticmethod
     def arguments_not_specified(*arguments: str) -> bool:
         """ Return whether any of the arguments was specified on the command line. """
         return not any([command_line_arg.startswith(argument) for argument in arguments
                         for command_line_arg in sys.argv])
+
+    @staticmethod
+    def filter_not_specified(filtered: str) -> bool:
+        """ Return whether the context or project or its opposite were specified on the command line. """
+        prefix = "-"
+        opposite = filtered[len(prefix):] if filtered.startswith(prefix) else prefix + filtered
+        return not (filtered in sys.argv or opposite in sys.argv)
 
     def fix_filenames(self, namespace: argparse.Namespace) -> None:
         """ Fix the filenames. """

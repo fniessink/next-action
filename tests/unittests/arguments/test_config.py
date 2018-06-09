@@ -322,3 +322,91 @@ class ReferenceTest(ConfigTestCase):
             [call(USAGE_MESSAGE),
              call("next-action: error: ~/.next-action.cfg is invalid: reference: unallowed value invalid\n")],
             mock_stderr_write.call_args_list)
+
+
+class FiltersTest(ConfigTestCase):
+    """ Unit tests for the filters parameter. """
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: +ImportantProject"))
+    def test_project(self):
+        """ Test that a valid project changes the filters argument. """
+        self.assertEqual(["+ImportantProject"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: +ImportantProject +SideProject"))
+    def test_projects(self):
+        """ Test that multiple valid projects change the filters argument. """
+        self.assertEqual(["+ImportantProject", "+SideProject"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: '@work'"))
+    def test_context(self):
+        """ Test that a valid context changes the filters argument. """
+        self.assertEqual(["@work"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: '@work @desk'"))
+    def test_contexts(self):
+        """ Test that valid contexts change the filters argument. """
+        self.assertEqual(["@work", "@desk"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters:\n- '@work'\n- -@waiting\n"))
+    def test_context_list(self):
+        """ Test that a valid context changes the filters argument. """
+        self.assertEqual(["@work", "-@waiting"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: -+SideProject"))
+    def test_excluded_project(self):
+        """ Test that an excluded valid project changes the filters argument. """
+        self.assertEqual(["-+SideProject"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: -@home"))
+    def test_excluded_context(self):
+        """ Test that an excluded valid context changes the filters argument. """
+        self.assertEqual(["-@home"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
+    @patch.object(config, "open", mock_open(read_data="filters: +ImportantProject"))
+    def test_same_project(self):
+        """ Test that the configuration is ignored when the command line specifies the same project. """
+        self.assertEqual(["+ImportantProject"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
+    @patch.object(config, "open", mock_open(read_data="filters: -+ImportantProject"))
+    def test_inverse_project(self):
+        """ Test that the configuration is ignored when the command line specifies the same project. """
+        self.assertEqual(["+ImportantProject"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
+    @patch.object(config, "open", mock_open(read_data="filters: -+ImportantProject @work"))
+    def test_ignore_project_not_context(self):
+        """ Test that the configuration is ignored when the command line specifies the same project. """
+        self.assertEqual(["+ImportantProject", "@work"], parse_arguments()[1].filters)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters:\n- invalid\n"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_filter_list(self, mock_stderr_write):
+        """ Test that an invalid filter raises an error. """
+        self.assertRaises(SystemExit, parse_arguments)
+        regex = r"^\-?[@|\+]\S+"
+        self.assertEqual(
+            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: 0: "
+                                       "value does not match regex '{0}'\n".format(regex))],
+            mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="filters: invalid\n"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_filter_string(self, mock_stderr_write):
+        """ Test that an invalid filter raises an error. """
+        self.assertRaises(SystemExit, parse_arguments)
+        regex = r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*"
+        self.assertEqual(
+            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: "
+                                       "value does not match regex '{0}'\n".format(regex))],
+            mock_stderr_write.call_args_list)
