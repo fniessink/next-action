@@ -239,11 +239,11 @@ $ next-action --config-file docs/.next-action.cfg
 
 To skip reading the default configuration file, and also not read an alternative configuration file, use the `--config-file` option without arguments.
 
-The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, and the styling.
+The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, output styling, and context and/or project filters.
 
 #### Configuring a default todo.txt
 
-A default todo.txt file to use can be specified like this:
+A default todo.txt file to use can be specified like this in the configuration file:
 
 ```yaml
 file: ~/Dropbox/todo.txt
