@@ -8,7 +8,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&utm_medium=referral&utm_content=fniessink/next-action&utm_campaign=Badge_Coverage)
 [![SonarQube Badge](https://sonarcloud.io/api/project_badges/measure?project=fniessink%3Anext-action&metric=alert_status)](https://sonarcloud.io/api/project_badges/measure?project=fniessink%3Anext-action&metric=alert_status)
 
-Determine the next action to work on from a list of actions in a todo.txt file. *Next-action* is currently beta-stage so, although it should work pretty well, it may be a bit rough around the edges.
+Determine the next action to work on from a list of actions in a todo.txt file.
 
 Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the *Todo.txt* specification.
 
@@ -25,7 +25,10 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Configuring *Next-action*](#configuring-next-action)
   - [Option details](#option-details)
 - [Recent changes](#recent-changes)
-- [Develop](#develop)
+- [Developing *Next-action*](#developing-next-action)
+  - [Installing the development environment](#installing-the-development-environment)
+  - [Running unit tests](#running-unit-tests)
+  - [Running quality checks](#running-quality-checks)
 
 ## Demo
 
@@ -362,9 +365,13 @@ $ next-action --due -- @home
 
 See the [change log](https://github.com/fniessink/next-action/blob/master/CHANGELOG.md).
 
-## Develop
+## Developing *Next-action*
 
-Clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`, and install *Next-action* in development mode using `python setup.py develop`.
+### Installing the development environment
+
+To work on the software, clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`, and install *Next-action* in development mode using `python setup.py develop`.
+
+### Running unit tests
 
 To run the unit tests:
 
@@ -372,13 +379,49 @@ To run the unit tests:
 $ python -m unittest
 .....................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 181 tests in 0.709s
+Ran 181 tests in 0.798s
 
 OK
 ```
 
 Running `python setup.py test` should give the same results.
 
-To create the unit test coverage report run the unit tests under coverage with `coverage run --branch -m unittest; coverage html --fail-under=100 --directory=build/htmlcov`.
+To create the unit test coverage report run the unit tests under coverage with:
 
-Quality checks can be run with `pylint next_action` and `pycodestyle next_action`.
+```console
+$ coverage run --branch -m unittest
+.....................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 181 tests in 1.776s
+
+OK
+```
+
+And then check the coverage. It should be 100%.
+
+```console
+$ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
+Name    Stmts   Miss Branch BrPart  Cover
+-----------------------------------------
+-----------------------------------------
+TOTAL    1013      0    126      0   100%
+
+23 files skipped due to complete coverage.
+```
+
+### Running quality checks
+
+We use pylint annd pycodestyle to check for quality issues. Pylint should score 10 out of 10:
+
+```console
+$ pylint next_action
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+```
+
+And pycodestyle should give no warnings or errors:
+
+```console
+$ pycodestyle next_action
+(no findings hence no output)
+```

@@ -13,7 +13,11 @@ def do_command(line):
         command.insert(2, "docs/.next-action.cfg")
     command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                     universal_newlines=True)
-    return command_output.stdout.strip(), command_output.stderr.strip()
+    stdout = command_output.stdout.strip()
+    if command[0] == "pycodestyle" and stdout == "":
+        stdout = "(no findings hence no output)"
+    stderr = "" if command[0] == "pylint" else command_output.stderr.strip()
+    return stdout, stderr
 
 
 def create_toc(lines, toc_header, min_level=2, max_level=3):

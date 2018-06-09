@@ -25,7 +25,7 @@ setup(
     },
     test_suite="tests",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable"
         "Environment :: Console",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: Apache Software License",
