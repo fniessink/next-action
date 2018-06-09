@@ -39,8 +39,8 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
     schema = {
         "file": {
             "type": ["string", "list"],
-            "schema": {
-                "type": "string"}},
+            "schema": {"type": "string"}
+        },
         "number": {
             "type": "integer",
             "min": 1,
@@ -53,6 +53,11 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "priority": {
             "type": "string",
             "allowed": [letter for letter in string.ascii_uppercase]
+        },
+        "filters": {
+            "type": ["string", "list"],
+            "regex": r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*",
+            "schema": {"type": "string", "regex": r"^\-?[@|\+]\S+"}
         },
         "reference": {
             "type": "string",

@@ -272,7 +272,30 @@ Or you can have *Next-action* show all next actions:
 all: True
 ```
 
-#### Configuring the minimum priority to show
+#### Limiting the tasks from which next actions are selected
+
+##### By contexts and/or projects
+
+You can limit the tasks from which the next action is selected by specifying contexts and/or projects to filter on, just like you would do on the command line:
+
+```yaml
+filters: -+FutureProject @work -@waiting
+```
+
+This would make *Next-action* by default select next actions from tasks with a `@work` context and without the `@waiting` context and not belonging to the `+FutureProject`.
+
+An alternative syntax is:
+
+```yaml
+filters:
+  - -+FutureProject
+  - '@work'
+  - -@waiting
+```
+
+Note that filters starting with `@` need to be in quotes. This is a [YAML restriction](http://yaml.org/spec/1.1/current.html#c-directive).
+
+##### By priority
 
 The minimum priority of next action to show can be specified as well:
 
@@ -347,9 +370,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.........................................................................................................................................................................
+.....................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 169 tests in 0.601s
+Ran 181 tests in 0.709s
 
 OK
 ```
