@@ -217,6 +217,7 @@ class DueTasks(PickActionTestCase):
 
 class MinimimPriorityTest(PickActionTest):
     """ Unit test for the mininum priority filter. """
+
     def test_priority(self):
         """ Test that tasks without priority are filtered. """
         no_priority = todotxt.Task("Task")
@@ -225,3 +226,35 @@ class MinimimPriorityTest(PickActionTest):
         self.namespace.priority = "K"
         self.assertEqual(
             [high_priority], pick_action.next_actions([no_priority, low_priority, high_priority], self.namespace))
+
+
+class BlockedTasksTest(PickActionTest):
+    """ Unit tests for blocked tasks. """
+
+    def test_blocked(self):
+        """ Test that a blocked task isn't the next action. """
+        parent = todotxt.Task("(A) Parent id:1")
+        child = todotxt.Task("Child p:1")
+        self.assertEqual([child], pick_action.next_actions([child, parent], self.namespace))
+
+    def test_blocked_chain(self):
+        """ Test that a blocked task isn't the next action. """
+        grandparent = todotxt.Task("(A) Grandparent id:1")
+        parent = todotxt.Task("(B) Parent p:1 id:2")
+        child = todotxt.Task("Child p:2")
+        self.assertEqual([child], pick_action.next_actions([child, parent, grandparent], self.namespace))
+
+    def test_multiple_childs(self):
+        """ Test that a blocked task isn't the next action. """
+        parent = todotxt.Task("(A) Parent id:1")
+        child1 = todotxt.Task("x Child 1 p:1")
+        child2 = todotxt.Task("Child 2 p:1")
+        child3 = todotxt.Task("Child 3 p:1")
+        self.assertEqual([child2, child3], pick_action.next_actions([parent, child1, child2, child3], self.namespace))
+
+    def test_multiple_parents(self):
+        """ Test that a blocked task isn't the next action. """
+        parent1 = todotxt.Task("(A) Parent id:1")
+        parent2 = todotxt.Task("(B) Parent id:2")
+        child = todotxt.Task("Child 1 p:1 p:2")
+        self.assertEqual([child], pick_action.next_actions([parent1, parent2, child], self.namespace))
