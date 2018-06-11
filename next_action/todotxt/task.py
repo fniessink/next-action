@@ -3,7 +3,7 @@
 import datetime
 import re
 import typing
-from typing import Optional, Set
+from typing import Iterable, Optional, Set
 
 
 class Task(object):
@@ -82,6 +82,23 @@ class Task(object):
         """ Return whether the task is overdue, i.e. whether it has a due date in the past. """
         due_date = self.due_date()
         return due_date < datetime.date.today() if due_date else False
+
+    def is_blocked(self, tasks: Iterable["Task"]) -> bool:
+        """ Return whether a task is blocked, i.e. whether it has uncompleted child tasks. """
+        return any([task for task in tasks if not task.is_completed() and self.task_id() in task.parent_ids()])
+
+    def task_id(self) -> str:
+        """ Return the id of the task. """
+        match = re.search(r"\bid:(\S+)\b", self.text)
+        return match.group(1) if match else ""
+
+    def parent_ids(self) -> Set[str]:
+        """ Return the ids of the parent tasks. """
+        return {match.group(1) for match in re.finditer(r"\bp:(\S+)\b", self.text)}
+
+    def parents(self, tasks: Iterable["Task"]) -> Iterable["Task"]:
+        """ Return the parent tasks. """
+        return [task for task in tasks if task.task_id() in self.parent_ids()]
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """

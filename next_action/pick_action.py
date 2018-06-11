@@ -43,5 +43,7 @@ def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequen
     eligible_tasks = filter(lambda task: task.is_due(arguments.due) if arguments.due else True, eligible_tasks)
     # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
     eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
+    # Remove blocked tasks
+    eligible_tasks = filter(lambda task: not task.is_blocked(tasks), eligible_tasks)
     # Finally, sort by priority, due date and creation date
     return sorted(eligible_tasks, key=sort_key)
