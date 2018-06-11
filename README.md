@@ -21,6 +21,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 - [Usage](#usage)
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
+  - [Task dependencies](#task-dependencies)
   - [Styling the output](#styling-the-output)
   - [Configuring *Next-action*](#configuring-next-action)
   - [Option details](#option-details)
@@ -108,7 +109,12 @@ $ next-action
 
 The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks. Finally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
 
-Completed tasks (~~`x This is a completed task`~~), tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`), and tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`) are not considered when determining the next action.
+Several types of tasks are not considered when determining the next action:
+
+- completed tasks (~~`x This is a completed task`~~),
+- tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`),
+- tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`), and
+- blocked tasks (see [task dependencies](#task-dependencies) below).
 
 ### Limiting the tasks from which next actions are selected
 
@@ -197,7 +203,27 @@ $ next-action --all @store
 (G) Buy wood for new +DogHouse @store
 ```
 
-Note again that completed tasks and task with a future creation or threshold date are never shown since they can't be a next action.
+Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never shown since they can't be a next action.
+
+### Task dependencies
+
+*Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries can be specified in the todo.txt file as follows:
+
+```text
+Buy groceries @store +DinnerParty id:groceries
+Cook meal @home +DinnerParty p:groceries
+```
+
+`Cook meal` has `Buy groceries` as its `p`arent task. This means that buying groceries blocks cooking the meal; cooking can't be done until buying the groceries has been completed:
+
+```console
+$ next-action --all +DinnerParty
+Cook meal @home +DinnerParty p:groceries
+```
+
+Note: the ids can be any string without whitespace.
+
+A parent task can have multiple child tasks, meaning that the parent task remains blocked until all children are completed. A child task can block multiple parents by repeating the `p`arent, e.g. `Cook meal p:groceries p:invites`.
 
 ### Styling the output
 
@@ -377,9 +403,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.....................................................................................................................................................................................
+...............................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 181 tests in 0.798s
+Ran 207 tests in 0.697s
 
 OK
 ```
@@ -390,9 +416,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-.....................................................................................................................................................................................
+...............................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 181 tests in 1.776s
+Ran 207 tests in 1.392s
 
 OK
 ```
@@ -404,7 +430,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1013      0    126      0   100%
+TOTAL    1089      0    134      0   100%
 
 23 files skipped due to complete coverage.
 ```
