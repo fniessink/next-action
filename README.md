@@ -201,6 +201,7 @@ Or show all next actions, e.g. for a specific context:
 $ next-action --all @store
 (B) Buy paint to +PaintHouse @store @weekend
 (G) Buy wood for new +DogHouse @store
+Buy groceries @store +DinnerParty p:meal
 ```
 
 Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never shown since they can't be a next action.
@@ -210,20 +211,20 @@ Note again that completed tasks, tasks with a future creation or threshold date,
 *Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries can be specified in the todo.txt file as follows:
 
 ```text
-Buy groceries @store +DinnerParty id:groceries
-Cook meal @home +DinnerParty p:groceries
+Buy groceries @store +DinnerParty p:meal
+Cook meal @home +DinnerParty id:meal
 ```
 
-`Cook meal` has `Buy groceries` as its `p`arent task. This means that buying groceries blocks cooking the meal; cooking can't be done until buying the groceries has been completed:
+`Buy groceries` has `Cook meal` as its `p`-parent task. This means that buying groceries blocks cooking the meal; cooking can't be done until buying the groceries has been completed:
 
 ```console
 $ next-action --all +DinnerParty
-Cook meal @home +DinnerParty p:groceries
+Buy groceries @store +DinnerParty p:meal
 ```
 
 Note: the ids can be any string without whitespace.
 
-A parent task can have multiple child tasks, meaning that the parent task remains blocked until all children are completed. A child task can block multiple parents by repeating the `p`arent, e.g. `Cook meal p:groceries p:invites`.
+A parent task can have multiple child tasks, meaning that the parent task remains blocked until all children are completed. A child task can block multiple parents by repeating the parent, e.g. `Cook meal p:groceries p:invites`.
 
 ### Styling the output
 
@@ -405,7 +406,7 @@ To run the unit tests:
 $ python -m unittest
 ...............................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 207 tests in 0.697s
+Ran 207 tests in 0.716s
 
 OK
 ```
@@ -418,7 +419,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 ...............................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 207 tests in 1.392s
+Ran 207 tests in 1.420s
 
 OK
 ```
