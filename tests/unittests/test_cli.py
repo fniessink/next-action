@@ -162,6 +162,15 @@ context or project is mistaken for an argument to an option.
         next_action()
         self.assertEqual([call("(B) Call mom"), call("\n")], mock_stdout_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next-action", "--all", "--file", "todo.txt", "--file", "other.txt"])
+    @patch("fileinput.open", mock_open(read_data="Call mom\n"))
+    @patch.object(sys.stdout, "write")
+    def test_reading_two_files(self, mock_stdout_write):
+        """ Test that tasks can be read from stdin works. """
+        next_action()
+        self.assertEqual([call("Call mom [todo.txt]\nCall mom [other.txt]"), call("\n")],
+                         mock_stdout_write.call_args_list)
+
     @patch.object(sys, "argv", ["next-action", "--reference", "always"])
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\nBuy beer\n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")

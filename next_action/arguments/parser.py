@@ -42,7 +42,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def add_optional_arguments(self) -> None:
         """ Add the optional arguments to the parser. """
-        self._optionals.title = self._optionals.title.capitalize()
+        self._optionals.title = self._optionals.title.capitalize() if self._optionals.title else None
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
 
