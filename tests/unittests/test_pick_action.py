@@ -3,6 +3,7 @@
 import argparse
 import datetime
 import unittest
+import sys
 
 from next_action import todotxt, pick_action
 
@@ -16,6 +17,7 @@ class PickActionTestCase(unittest.TestCase):
         self.namespace.overdue = False
         self.namespace.due = None
         self.namespace.priority = None
+        self.namespace.number = sys.maxsize
 
 
 class PickActionTest(PickActionTestCase):

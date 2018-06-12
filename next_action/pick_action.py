@@ -2,9 +2,9 @@
 
 import argparse
 import datetime
-from typing import List, Sequence, Set, Tuple
+from typing import List, Set, Tuple
 
-from .todotxt import Task
+from .todotxt import Task, Tasks
 
 
 def sort_key(task: Task) -> Tuple[str, datetime.date, datetime.date, int]:
@@ -18,7 +18,7 @@ def subset(filters: List[str], prefix: str) -> Set[str]:
     return set([f.strip(prefix) for f in filters if f.startswith(prefix)])
 
 
-def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequence[Task]:
+def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
     """ Return the next action(s) from the collection of tasks. """
     contexts = subset(arguments.filters, "@")
     projects = subset(arguments.filters, "+")
@@ -46,4 +46,4 @@ def next_actions(tasks: Sequence[Task], arguments: argparse.Namespace) -> Sequen
     # Remove blocked tasks
     eligible_tasks = filter(lambda task: not task.is_blocked(tasks), eligible_tasks)
     # Finally, sort by priority, due date and creation date
-    return sorted(eligible_tasks, key=sort_key)
+    return Tasks(sorted(eligible_tasks, key=sort_key)[:arguments.number])
