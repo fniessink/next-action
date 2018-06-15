@@ -2,7 +2,7 @@
 
 import argparse
 import datetime
-from typing import List, Set, Tuple
+from typing import Tuple
 
 from .todotxt import Task, Tasks
 
@@ -13,26 +13,21 @@ def sort_key(task: Task) -> Tuple[str, datetime.date, datetime.date, int]:
             -len(task.projects()))
 
 
-def subset(filters: List[str], prefix: str) -> Set[str]:
-    """ Return a subset of the filters based on prefix. """
-    return set([f.strip(prefix) for f in filters if f.startswith(prefix)])
-
-
 def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
     """ Return the next action(s) from the collection of tasks. """
-    contexts = subset(arguments.filters, "@")
-    projects = subset(arguments.filters, "+")
-    excluded_contexts = subset(arguments.filters, "-@")
-    excluded_projects = subset(arguments.filters, "-+")
+    contexts = arguments.contexts
+    projects = arguments.projects
+    excluded_contexts = arguments.excluded_contexts
+    excluded_projects = arguments.excluded_projects
     # First, get the potential next actions by filtering out completed tasks and tasks with a future creation date or
     # future threshold date
     actionable_tasks = [task for task in tasks if task.is_actionable()]
     # Then, exclude tasks that have an excluded context
-    eligible_tasks = filter(lambda task: not excluded_contexts & task.contexts() if excluded_contexts else True,
-                            actionable_tasks)
+    eligible_tasks = filter(
+        lambda task: not excluded_contexts & task.contexts() if excluded_contexts else True, actionable_tasks)
     # And, tasks that have an excluded project
-    eligible_tasks = filter(lambda task: not excluded_projects & task.projects() if excluded_projects else True,
-                            eligible_tasks)
+    eligible_tasks = filter(
+        lambda task: not excluded_projects & task.projects() if excluded_projects else True, eligible_tasks)
     # Then, select the tasks that belong to all given contexts, if any
     eligible_tasks = filter(lambda task: contexts <= task.contexts() if contexts else True, eligible_tasks)
     # Next, select the tasks that belong to at least one of the given projects, if any
