@@ -152,6 +152,20 @@ $ next-action -+PaintHouse @store
 (G) Buy wood for new +DogHouse @store
 ```
 
+If no tasks match the combination of tasks and projects, it's time to get some coffee:
+
+```console
+$ next-action +DogHouse @weekend
+Nothing to do!
+```
+
+But, if there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action* will warn you:
+
+```console
+$ next-action +PaintGarage @freetime
+Nothing to do! (warning: unknown context: freetime; unknown project: PaintGarage)
+```
+
 #### By due date
 
 To limit the the tasks from which the next action is selected to actions with a due date, use the `--due` option:
@@ -404,9 +418,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-...............................................................................................................................................................................................................
+............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 207 tests in 0.716s
+Ran 220 tests in 1.081s
 
 OK
 ```
@@ -417,9 +431,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-...............................................................................................................................................................................................................
+............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 207 tests in 1.420s
+Ran 220 tests in 1.727s
 
 OK
 ```
@@ -431,9 +445,9 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1089      0    134      0   100%
+TOTAL    1174      0    150      0   100%
 
-23 files skipped due to complete coverage.
+25 files skipped due to complete coverage.
 ```
 
 ### Running quality checks

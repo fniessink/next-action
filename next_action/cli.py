@@ -9,17 +9,18 @@ from next_action.todotxt import read_todotxt_files, Tasks
 from next_action.output import render
 
 
-def validate_arguments(parser: argparse.ArgumentParser, namespace: argparse.Namespace, tasks: Tasks) -> None:
+def validate_arguments(namespace: argparse.Namespace, tasks: Tasks) -> str:
     """ Check whether the context and projects given on the command line actually exist in the task file. """
     unknown_contexts = (namespace.contexts | namespace.excluded_contexts) - tasks.contexts()
     unknown_projects = (namespace.projects | namespace.excluded_projects) - tasks.projects()
     error_messages = []
     if unknown_contexts:
-        error_messages.append("unknown contexts: {0}".format(", ".join(unknown_contexts)))
+        plural = "s" if len(unknown_contexts) > 1 else ""
+        error_messages.append("unknown context{0}: {1}".format(plural, ", ".join(sorted(unknown_contexts))))
     if unknown_projects:
-        error_messages.append("unknown projects: {0}".format(", ".join(unknown_projects)))
-    if error_messages:
-        parser.error("; ".join(error_messages))
+        plural = "s" if len(unknown_projects) > 1 else ""
+        error_messages.append("unknown project{0}: {1}".format(plural, ", ".join(sorted(unknown_projects))))
+    return (" (warning: {0})".format("; ".join(error_messages))) if error_messages else ""
 
 
 def next_action() -> None:
@@ -37,6 +38,5 @@ def next_action() -> None:
         tasks = read_todotxt_files(filenames)
     except OSError as reason:
         parser.error("can't open file: {0}".format(reason))
-    validate_arguments(parser, namespace, tasks)
     actions = next_actions(tasks, namespace)
-    print(render(actions, namespace) if actions else "Nothing to do!")
+    print(render(actions, namespace) if actions else "Nothing to do!" + validate_arguments(namespace, tasks))

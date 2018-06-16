@@ -183,18 +183,19 @@ context or project is mistaken for an argument to an option.
 
     @patch.object(sys, "argv", ["next-action", "@home"])
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\n(B) Call mom\n"))
-    @patch.object(sys.stderr, "write")
-    def test_unknown_context(self, mock_stderr_write):
+    @patch.object(sys.stdout, "write")
+    def test_unknown_context(self, mock_stdout_write):
         """ Test the response when the context is unknown. """
-        self.assertRaises(SystemExit, next_action)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unknown contexts: home\n")],
-                         mock_stderr_write.call_args_list)
+        next_action()
+        self.assertEqual([call("Nothing to do! (warning: unknown context: home)"), call("\n")],
+                         mock_stdout_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "+SpringCleaning"])
+    @patch.object(sys, "argv", ["next-action", "+SpringCleaning", "+AutumnCleaning"])
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\n(B) Call mom\n"))
-    @patch.object(sys.stderr, "write")
-    def test_unknown_project(self, mock_stderr_write):
+    @patch.object(sys.stdout, "write")
+    def test_unknown_project(self, mock_stdout_write):
         """ Test the response when the project is unknown. """
-        self.assertRaises(SystemExit, next_action)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unknown projects: SpringCleaning\n")],
-                         mock_stderr_write.call_args_list)
+        next_action()
+        self.assertEqual(
+            [call("Nothing to do! (warning: unknown projects: AutumnCleaning, SpringCleaning)"), call("\n")],
+            mock_stdout_write.call_args_list)
