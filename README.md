@@ -420,7 +420,7 @@ To run the unit tests:
 $ python -m unittest
 ............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 220 tests in 0.813s
+Ran 220 tests in 0.805s
 
 OK
 ```
@@ -433,7 +433,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 ............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 220 tests in 1.426s
+Ran 220 tests in 1.967s
 
 OK
 ```
@@ -452,7 +452,14 @@ TOTAL    1174      0    150      0   100%
 
 ### Running quality checks
 
-We use pylint annd pycodestyle to check for quality issues. Pylint should score 10 out of 10:
+We use mypy, pylint, and  pycodestyle to check for quality issues. Mypy should give no warnings or errors:
+
+```console
+$ mypy --no-incremental --ignore-missing-import next_action
+(no findings hence no output)
+```
+
+Pylint should score 10 out of 10:
 
 ```console
 $ pylint next_action

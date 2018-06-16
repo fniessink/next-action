@@ -14,7 +14,7 @@ def do_command(line):
     command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                     universal_newlines=True)
     stdout = command_output.stdout.strip()
-    if command[0] == "pycodestyle" and stdout == "":
+    if command[0] in ("mypy", "pycodestyle") and stdout == "":
         stdout = "(no findings hence no output)"
     stderr = "" if command[0] == "pylint" else command_output.stderr.strip()
     return stdout, stderr
