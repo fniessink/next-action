@@ -7,7 +7,7 @@ import shutil
 import string
 import sys
 import textwrap
-from typing import List
+from typing import List, Set
 
 import dateparser
 from pygments.styles import get_all_styles
@@ -146,6 +146,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                     namespace.filters.append(value)
             else:
                 self.error("unrecognized arguments: {0}".format(value))
+        namespace.contexts = subset(namespace.filters, "@")
+        namespace.projects = subset(namespace.filters, "+")
+        namespace.excluded_contexts = subset(namespace.filters, "-@")
+        namespace.excluded_projects = subset(namespace.filters, "-+")
 
     def process_config_file(self, namespace: argparse.Namespace) -> None:
         """ Process the configuration file. """
@@ -154,6 +158,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if not config:
             return
         validate_config_file(config, config_filename, self.error)
+        self.insert_config(config, namespace)
+
+    def insert_config(self, config, namespace: argparse.Namespace) -> None:
+        """ Insert the configured parameters in the namespace, if no command line arguments are present. """
         if self.arguments_not_specified("-f", "--file"):
             filenames = config.get("file", [])
             if isinstance(filenames, str):
@@ -171,12 +179,18 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-p", "--priority"):
             priority = config.get("priority", self.get_default("priority"))
             setattr(namespace, "priority", priority)
+        self.insert_configured_filters(config, namespace)
+
+    def insert_configured_filters(self, config, namespace: argparse.Namespace) -> None:
+        """ Insert the configured filters in the namespace, if no matching command line filters are present. """
         filters = config.get("filters", [])
         if isinstance(filters, str):
             filters = re.split(r"\s", filters)
-        for configured_filter in filters:
-            if self.filter_not_specified(configured_filter):
-                getattr(namespace, "filters").append(configured_filter)
+        for prefix, filter_key in (("@", "contexts"), ("+", "projects"),
+                                   ("-@", "excluded_contexts"), ("-+", "excluded_projects")):
+            for configured_filter in subset(filters, prefix):
+                if self.filter_not_specified(prefix + configured_filter):
+                    getattr(namespace, filter_key).add(configured_filter)
 
     @staticmethod
     def arguments_not_specified(*arguments: str) -> bool:
@@ -207,7 +221,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 class CapitalisedHelpFormatter(argparse.HelpFormatter):
     """ Capitalise the usage string. """
     def add_usage(self, usage, actions, groups, prefix=None):
-        return super(CapitalisedHelpFormatter, self).add_usage(usage, actions, groups, prefix or "Usage: ")
+        return super().add_usage(usage, actions, groups, prefix or "Usage: ")
 
 
 def filter_type(value: str) -> str:
@@ -228,3 +242,8 @@ def date_type(value: str) -> datetime.date:
     if date_time:
         return date_time.date()
     raise argparse.ArgumentTypeError("invalid date: {0}".format(value))
+
+
+def subset(filters: List[str], prefix: str) -> Set[str]:
+    """ Return a subset of the filters based on prefix. """
+    return set([f.strip(prefix) for f in filters if f.startswith(prefix)])

@@ -3,6 +3,7 @@
 import argparse
 import datetime
 import unittest
+import sys
 
 from next_action import todotxt, pick_action
 
@@ -12,10 +13,14 @@ class PickActionTestCase(unittest.TestCase):
 
     def setUp(self):
         self.namespace = argparse.Namespace()
-        self.namespace.filters = []
+        self.namespace.contexts = set()
+        self.namespace.projects = set()
+        self.namespace.excluded_contexts = set()
+        self.namespace.excluded_projects = set()
         self.namespace.overdue = False
         self.namespace.due = None
         self.namespace.priority = None
+        self.namespace.number = sys.maxsize
 
 
 class PickActionTest(PickActionTestCase):
@@ -95,7 +100,7 @@ class FilterTasksTest(PickActionTestCase):
         task1 = todotxt.Task("Todo 1 @work @computer")
         task2 = todotxt.Task("(B) Todo 2 @work")
         task3 = todotxt.Task("(A) Todo 3 @home")
-        self.namespace.filters = ["@work"]
+        self.namespace.contexts = {"work"}
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], self.namespace))
 
     def test_contexts(self):
@@ -103,26 +108,26 @@ class FilterTasksTest(PickActionTestCase):
         task1 = todotxt.Task("Todo 1 @work @computer")
         task2 = todotxt.Task("(B) Todo 2 @work @computer")
         task3 = todotxt.Task("(A) Todo 3 @home @computer")
-        self.namespace.filters = ["@work", "@computer"]
+        self.namespace.contexts = {"work", "computer"}
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], self.namespace))
 
     def test_excluded_context(self):
         """ Test that contexts can be excluded. """
         task = todotxt.Task("(A) Todo @computer")
-        self.namespace.filters = ["-@computer"]
+        self.namespace.excluded_contexts = {"computer"}
         self.assertEqual([], pick_action.next_actions([task], self.namespace))
 
     def test_excluded_contexts(self):
         """ Test that contexts can be excluded. """
         task = todotxt.Task("(A) Todo @computer @work")
         task = todotxt.Task("(A) Todo @computer")
-        self.namespace.filters = ["-@computer"]
+        self.namespace.excluded_contexts = {"computer"}
         self.assertEqual([], pick_action.next_actions([task], self.namespace))
 
     def test_not_excluded_context(self):
         """ Test that a task is not excluded if it doesn't belong to the excluded category. """
         task = todotxt.Task("(A) Todo @computer")
-        self.namespace.filters = ["-@phone"]
+        self.namespace.excluded_contexts = {"phone"}
         self.assertEqual([task], pick_action.next_actions([task], self.namespace))
 
     def test_project(self):
@@ -130,25 +135,25 @@ class FilterTasksTest(PickActionTestCase):
         task1 = todotxt.Task("Todo 1 +ProjectX")
         task2 = todotxt.Task("(B) Todo 2 +ProjectX")
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
-        self.namespace.filters = ["+ProjectX"]
+        self.namespace.projects = {"ProjectX"}
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2, task3], self.namespace))
 
     def test_excluded_project(self):
         """ Test that projects can be excluded. """
         task = todotxt.Task("(A) Todo +DogHouse")
-        self.namespace.filters = ["-+DogHouse"]
+        self.namespace.excluded_projects = {"DogHouse"}
         self.assertEqual([], pick_action.next_actions([task], self.namespace))
 
     def test_excluded_projects(self):
         """ Test that projects can be excluded. """
         task = todotxt.Task("(A) Todo +DogHouse +PaintHouse")
-        self.namespace.filters = ["-+DogHouse"]
+        self.namespace.excluded_projects = {"DogHouse"}
         self.assertEqual([], pick_action.next_actions([task], self.namespace))
 
     def test_not_excluded_project(self):
         """ Test that a task is not excluded if it doesn't belong to the excluded project. """
         task = todotxt.Task("(A) Todo +DogHouse")
-        self.namespace.filters = ["-+PaintHouse"]
+        self.namespace.excluded_projects = {"PaintHouse"}
         self.assertEqual([task], pick_action.next_actions([task], self.namespace))
 
     def test_project_and_context(self):
@@ -156,7 +161,8 @@ class FilterTasksTest(PickActionTestCase):
         task1 = todotxt.Task("Todo 1 +ProjectX @office")
         task2 = todotxt.Task("(B) Todo 2 +ProjectX")
         task3 = todotxt.Task("(A) Todo 3 +ProjectY")
-        self.namespace.filters = ["+ProjectX", "@office"]
+        self.namespace.contexts = {"office"}
+        self.namespace.projects = {"ProjectX"}
         self.assertEqual([task1], pick_action.next_actions([task1, task2, task3], self.namespace))
 
 

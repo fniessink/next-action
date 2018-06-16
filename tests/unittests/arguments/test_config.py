@@ -331,61 +331,65 @@ class FiltersTest(ConfigTestCase):
     @patch.object(config, "open", mock_open(read_data="filters: +ImportantProject"))
     def test_project(self):
         """ Test that a valid project changes the filters argument. """
-        self.assertEqual(["+ImportantProject"], parse_arguments()[1].filters)
+        self.assertEqual({"ImportantProject"}, parse_arguments()[1].projects)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters: +ImportantProject +SideProject"))
     def test_projects(self):
         """ Test that multiple valid projects change the filters argument. """
-        self.assertEqual(["+ImportantProject", "+SideProject"], parse_arguments()[1].filters)
+        self.assertEqual({"ImportantProject", "SideProject"}, parse_arguments()[1].projects)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters: '@work'"))
     def test_context(self):
         """ Test that a valid context changes the filters argument. """
-        self.assertEqual(["@work"], parse_arguments()[1].filters)
+        self.assertEqual({"work"}, parse_arguments()[1].contexts)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters: '@work @desk'"))
     def test_contexts(self):
         """ Test that valid contexts change the filters argument. """
-        self.assertEqual(["@work", "@desk"], parse_arguments()[1].filters)
+        self.assertEqual({"work", "desk"}, parse_arguments()[1].contexts)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters:\n- '@work'\n- -@waiting\n"))
     def test_context_list(self):
         """ Test that a valid context changes the filters argument. """
-        self.assertEqual(["@work", "-@waiting"], parse_arguments()[1].filters)
+        self.assertEqual({"work"}, parse_arguments()[1].contexts)
+        self.assertEqual({"waiting"}, parse_arguments()[1].excluded_contexts)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters: -+SideProject"))
     def test_excluded_project(self):
         """ Test that an excluded valid project changes the filters argument. """
-        self.assertEqual(["-+SideProject"], parse_arguments()[1].filters)
+        self.assertEqual({"SideProject"}, parse_arguments()[1].excluded_projects)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters: -@home"))
     def test_excluded_context(self):
         """ Test that an excluded valid context changes the filters argument. """
-        self.assertEqual(["-@home"], parse_arguments()[1].filters)
+        self.assertEqual({"home"}, parse_arguments()[1].excluded_contexts)
 
     @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
     @patch.object(config, "open", mock_open(read_data="filters: +ImportantProject"))
     def test_same_project(self):
         """ Test that the configuration is ignored when the command line specifies the same project. """
-        self.assertEqual(["+ImportantProject"], parse_arguments()[1].filters)
+        self.assertEqual({"ImportantProject"}, parse_arguments()[1].projects)
 
     @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
     @patch.object(config, "open", mock_open(read_data="filters: -+ImportantProject"))
     def test_inverse_project(self):
         """ Test that the configuration is ignored when the command line specifies the same project. """
-        self.assertEqual(["+ImportantProject"], parse_arguments()[1].filters)
+        self.assertEqual(set(), parse_arguments()[1].excluded_projects)
+        self.assertEqual({"ImportantProject"}, parse_arguments()[1].projects)
 
     @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
     @patch.object(config, "open", mock_open(read_data="filters: -+ImportantProject @work"))
     def test_ignore_project_not_context(self):
         """ Test that the configuration is ignored when the command line specifies the same project. """
-        self.assertEqual(["+ImportantProject", "@work"], parse_arguments()[1].filters)
+        self.assertEqual(set(), parse_arguments()[1].excluded_projects)
+        self.assertEqual({"ImportantProject"}, parse_arguments()[1].projects)
+        self.assertEqual({"work"}, parse_arguments()[1].contexts)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters:\n- invalid\n"))
