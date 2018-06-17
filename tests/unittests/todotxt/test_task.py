@@ -4,6 +4,8 @@ import datetime
 import string
 import unittest
 
+from hypothesis import given, strategies
+
 from next_action import todotxt
 
 
@@ -190,20 +192,19 @@ class DueDateTest(unittest.TestCase):
         self.assertEqual(None, task.due_date())
         self.assertFalse(task.is_overdue())
 
-    def test_single_digits(self):
+    @given(strategies.sampled_from(["2018-01-1", "2018-1-01", "2018-1-1"]))
+    def test_single_digits(self, due_date):
         """ Test a due date with single digits for day and/or month. """
-        self.assertEqual(datetime.date(2018, 12, 3), todotxt.Task("(B) due:2018-12-3 Todo").due_date())
-        self.assertEqual(datetime.date(2018, 1, 13), todotxt.Task("(B) due:2018-1-13 Todo").due_date())
-        self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task("(B) due:2018-1-1 Todo").due_date())
+        self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task("(B) due:{0} Todo".format(due_date)).due_date())
 
     def test_is_due(self):
         """ Test the is_due method. """
         self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date.today()))
         self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
-        self.assertFalse(todotxt.Task("due:2018-01-01").is_due(datetime.date(2017, 12, 31)))
-        self.assertFalse(todotxt.Task("Without due date").is_due(datetime.date(2017, 12, 31)))
         self.assertTrue(todotxt.Task("9999-01-01 due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
         self.assertTrue(todotxt.Task("x Completed due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
+        self.assertFalse(todotxt.Task("due:2018-01-01").is_due(datetime.date(2017, 12, 31)))
+        self.assertFalse(todotxt.Task("Without due date").is_due(datetime.date(2017, 12, 31)))
 
 
 class TaskCompletionTest(unittest.TestCase):
@@ -253,6 +254,8 @@ class ActionableTest(unittest.TestCase):
 class ParentTest(unittest.TestCase):
     """ Unit tests for parent/child relations. """
 
+    parent_keys = strategies.sampled_from(["p", "before"])
+
     def test_default(self):
         """ Test that a default task has no parents. """
         default_task = todotxt.Task("Todo")
@@ -261,64 +264,77 @@ class ParentTest(unittest.TestCase):
         self.assertFalse(default_task.is_blocked([]))
         self.assertFalse(default_task.is_blocked([default_task]))
 
-    def test_missing_values(self):
-        """ Test parent and id keys without ids. """
+    def test_missing_id(self):
+        """ Test id key without ids. """
         self.assertEqual("", todotxt.Task("Todo id:").task_id())
-        self.assertEqual(set(), todotxt.Task("Todo p:").parent_ids())
 
-    def test_one_parent(self):
+    @given(parent_keys)
+    def test_missing_values(self, parent_key):
+        """ Test parent key without id. """
+        self.assertEqual(set(), todotxt.Task("Todo {0}:".format(parent_key)).parent_ids())
+
+    @given(parent_keys)
+    def test_one_parent(self, parent_key):
         """ Test that a task with a parent id return the correct id. """
-        self.assertEqual({"1"}, todotxt.Task("Todo p:1").parent_ids())
+        self.assertEqual({"1"}, todotxt.Task("Todo {0}:1".format(parent_key)).parent_ids())
 
-    def test_two_parents(self):
+    @given(parent_keys)
+    def test_two_parents(self, parent_key):
         """ Test that a task with two parent ids return all ids. """
-        self.assertEqual({"1", "123a"}, todotxt.Task("Todo p:1 p:123a").parent_ids())
+        self.assertEqual({"1", "123a"}, todotxt.Task("Todo {0}:1 {0}:123a".format(parent_key)).parent_ids())
 
     def test_task_id(self):
         """ Test a task id. """
         self.assertEqual("foo", todotxt.Task("Todo id:foo").task_id())
 
-    def test_get_parent(self):
+    @given(parent_keys)
+    def test_get_parent(self, parent_key):
         """ Test getting a task's parent. """
         parent = todotxt.Task("Parent id:1")
-        child = todotxt.Task("Child p:1")
+        child = todotxt.Task("Child {0}:1".format(parent_key))
         self.assertEqual([parent], child.parents([child, parent]))
 
-    def test_get_multiple_parents(self):
+    @given(parent_keys)
+    def test_get_multiple_parents(self, parent_key):
         """ Test getting a task's mutiple parents. """
         parent1 = todotxt.Task("Parent 1 id:1")
         parent2 = todotxt.Task("Parent 2 id:2")
-        child = todotxt.Task("Child p:1 p:2")
+        child = todotxt.Task("Child {0}:1 {0}:2".format(parent_key))
         self.assertEqual([parent1, parent2], child.parents([child, parent1, parent2]))
 
-    def test_is_blocked(self):
+    @given(parent_keys)
+    def test_is_blocked(self, parent_key):
         """ Test that a task with children is blocked. """
         parent = todotxt.Task("Parent id:1")
-        child = todotxt.Task("Child p:1")
+        child = todotxt.Task("Child {0}:1".format(parent_key))
         self.assertTrue(parent.is_blocked([child, parent]))
 
-    def test_completed_child(self):
+    @given(parent_keys)
+    def test_completed_child(self, parent_key):
         """ Test that a task with completed children only is not blocked. """
         parent = todotxt.Task("Parent id:1")
-        child = todotxt.Task("x Child p:1")
+        child = todotxt.Task("x Child {0}:1".format(parent_key))
         self.assertFalse(parent.is_blocked([child, parent]))
 
-    def test_is_blocked_by_mix(self):
+    @given(parent_keys)
+    def test_is_blocked_by_mix(self, parent_key):
         """ Test that a task with completed children and uncompleted children is blocked. """
         parent = todotxt.Task("Parent id:1")
-        child1 = todotxt.Task("Child 1 p:1")
-        child2 = todotxt.Task("x Child 2 p:1")
+        child1 = todotxt.Task("Child 1 {0}:1".format(parent_key))
+        child2 = todotxt.Task("x Child 2 {0}:1".format(parent_key))
         self.assertTrue(parent.is_blocked([child1, child2, parent]))
 
-    def test_is_blocked_by_self(self):
+    @given(parent_keys)
+    def test_is_blocked_by_self(self, parent_key):
         """ Test that a task can be blocked by itself. This doesn't make sense, but we're not in the business
             of validating todo.txt files. """
-        parent = todotxt.Task("Parent id:1 p:1")
+        parent = todotxt.Task("Parent id:1 {0}:1".format(parent_key))
         self.assertTrue(parent.is_blocked([parent]))
 
-    def test_block_circle(self):
+    @given(parent_keys)
+    def test_block_circle(self, parent_key):
         """ Test that a task can be blocked by its child who is blocked by the task. This doesn't make sense,
             but we're not in the business of validating todo.txt files. """
-        task1 = todotxt.Task("Task 1 id:1 p:2")
-        task2 = todotxt.Task("Task 2 id:2 p:1")
+        task1 = todotxt.Task("Task 1 id:1 {0}:2".format(parent_key))
+        task2 = todotxt.Task("Task 2 id:2 {0}:1".format(parent_key))
         self.assertTrue(task1.is_blocked([task1, task2]))

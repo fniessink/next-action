@@ -94,7 +94,7 @@ class Task(object):
 
     def parent_ids(self) -> Set[str]:
         """ Return the ids of the parent tasks. """
-        return {match.group(1) for match in re.finditer(r"\bp:(\S+)\b", self.text)}
+        return {match.group(2) for match in re.finditer(r"\b(p|before):(\S+)\b", self.text)}
 
     def parents(self, tasks: Iterable["Task"]) -> Iterable["Task"]:
         """ Return the parent tasks. """
