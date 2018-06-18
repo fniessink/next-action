@@ -235,9 +235,12 @@ $ next-action --all +DinnerParty
 Buy groceries @store +DinnerParty p:meal
 ```
 
-Note: the ids can be any string without whitespace.
+Notes:
 
-A parent task can have multiple child tasks, meaning that the parent task remains blocked until all children are completed. A child task can block multiple parents by repeating the parent, e.g. `Cook meal p:groceries p:invites`.
+- The ids can be any string without whitespace.
+- Instead of `p` you can also use `before` for better readability, e.g. `Do this before:that`.
+- A parent task can have multiple child tasks, meaning that the parent task remains blocked until all children are completed.
+- A child task can block multiple parents by repeating the parent, e.g. `Buy groceries before:cooking and before:invites`.
 
 ### Styling the output
 
@@ -417,9 +420,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-............................................................................................................................................................................................................................
+.............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 220 tests in 0.805s
+Ran 221 tests in 1.758s
 
 OK
 ```
@@ -430,9 +433,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-............................................................................................................................................................................................................................
+.............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 220 tests in 1.967s
+Ran 221 tests in 4.562s
 
 OK
 ```
@@ -444,7 +447,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1174      0    150      0   100%
+TOTAL    1175      0    150      0   100%
 
 25 files skipped due to complete coverage.
 ```

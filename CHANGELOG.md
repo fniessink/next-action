@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Next to `p:parent_task` it's also possible to use `before:parent_task` for better readability.
+
 ## [1.2.0] - 2018-06-16
 
 ### Added
