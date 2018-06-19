@@ -240,8 +240,8 @@ Notes:
 
 - The ids can be any string without whitespace.
 - Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files use that.
-- A task can come before multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
-- A task can come after multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
+- A task can block multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
+- A task can be blocked by multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
 
 ### Styling the output
 
