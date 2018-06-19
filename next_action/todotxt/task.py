@@ -85,20 +85,21 @@ class Task(object):
 
     def is_blocked(self, tasks: Iterable["Task"]) -> bool:
         """ Return whether a task is blocked, i.e. whether it has uncompleted child tasks. """
-        return any([task for task in tasks if not task.is_completed() and self.task_id() in task.parent_ids()])
+        return any([task for task in tasks if not task.is_completed() and
+                    (self.task_id() in task.parent_ids() or task.task_id() in self.child_ids())])
 
-    def task_id(self) -> str:
-        """ Return the id of the task. """
-        match = re.search(r"\bid:(\S+)\b", self.text)
-        return match.group(1) if match else ""
+    def child_ids(self) -> Set[str]:
+        """ Return the ids of the child tasks. """
+        return {match.group(1) for match in re.finditer(r"\bafter:(\S+)\b", self.text)}
 
     def parent_ids(self) -> Set[str]:
         """ Return the ids of the parent tasks. """
         return {match.group(2) for match in re.finditer(r"\b(p|before):(\S+)\b", self.text)}
 
-    def parents(self, tasks: Iterable["Task"]) -> Iterable["Task"]:
-        """ Return the parent tasks. """
-        return [task for task in tasks if task.task_id() in self.parent_ids()]
+    def task_id(self) -> str:
+        """ Return the id of the task. """
+        match = re.search(r"\bid:(\S+)\b", self.text)
+        return match.group(1) if match else ""
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """
