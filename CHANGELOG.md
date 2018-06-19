@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Next to `p:parent_task` it's also possible to use `before:parent_task` for better readability.
+- Next to `p:parent_task` it's also possible to use `before:parent_task` to specifiy task dependencies.
+- In addition to `before:other_task`, it's also possible to use `after:other_task` to specify task dependencies.
 
 ## [1.2.0] - 2018-06-16
 

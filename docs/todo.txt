@@ -7,8 +7,9 @@ Borrow ladder from the neighbors +PaintHouse @home
 Buy flowers due:2018-02-14
 (L) Pay June invoice @home due:2018-06-28
 (K) Pay July invoice @home due:2018-07-28
-Buy groceries @store +DinnerParty p:meal
+Buy groceries @store +DinnerParty before:meal
 Cook meal @home +DinnerParty id:meal
+Do the dishes @home +DinnerParty after:meal
 x This is a completed task
 9999-01-01 Start preparing for five-digit years
 Start preparing for emigration to Mars t:3000-01-01

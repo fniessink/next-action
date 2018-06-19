@@ -214,33 +214,34 @@ Or show all next actions, e.g. for a specific context:
 $ next-action --all @store
 (B) Buy paint to +PaintHouse @store @weekend
 (G) Buy wood for new +DogHouse @store
-Buy groceries @store +DinnerParty p:meal
+Buy groceries @store +DinnerParty before:meal
 ```
 
 Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never shown since they can't be a next action.
 
 ### Task dependencies
 
-*Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries can be specified in the todo.txt file as follows:
+*Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries and that doing the dishes comes after cooking the meal can be specified as follows:
 
 ```text
-Buy groceries @store +DinnerParty p:meal
+Buy groceries @store +DinnerParty before:meal
 Cook meal @home +DinnerParty id:meal
+Do the dishes @home +DinnerParty after:meal
 ```
 
-`Buy groceries` has `Cook meal` as its `p`-parent task. This means that buying groceries blocks cooking the meal; cooking can't be done until buying the groceries has been completed:
+This means that buying groceries blocks cooking the meal; cooking, and thus doing the dishes as well, can't be done until buying the groceries has been completed:
 
 ```console
 $ next-action --all +DinnerParty
-Buy groceries @store +DinnerParty p:meal
+Buy groceries @store +DinnerParty before:meal
 ```
 
 Notes:
 
 - The ids can be any string without whitespace.
-- Instead of `p` you can also use `before` for better readability, e.g. `Do this before:that`.
-- A parent task can have multiple child tasks, meaning that the parent task remains blocked until all children are completed.
-- A child task can block multiple parents by repeating the parent, e.g. `Buy groceries before:cooking and before:invites`.
+- Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files use that.
+- A task can come before multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
+- A task can come after multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
 
 ### Styling the output
 
@@ -422,7 +423,7 @@ To run the unit tests:
 $ python -m unittest
 .............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 221 tests in 1.758s
+Ran 221 tests in 1.637s
 
 OK
 ```
@@ -435,7 +436,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 .............................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 221 tests in 4.562s
+Ran 221 tests in 2.085s
 
 OK
 ```
@@ -447,7 +448,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1175      0    150      0   100%
+TOTAL    1188      0    150      0   100%
 
 25 files skipped due to complete coverage.
 ```

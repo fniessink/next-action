@@ -251,90 +251,103 @@ class ActionableTest(unittest.TestCase):
         self.assertFalse(todotxt.Task("x 2018-01-01 2018-01-01 Todo").is_actionable())
 
 
-class ParentTest(unittest.TestCase):
-    """ Unit tests for parent/child relations. """
+class DependenciesTest(unittest.TestCase):
+    """ Unit tests for dependency relations. """
 
-    parent_keys = strategies.sampled_from(["p", "before"])
+    before_keys = strategies.sampled_from(["p", "before"])
 
-    def test_default(self):
-        """ Test that a default task has no parents. """
-        default_task = todotxt.Task("Todo")
-        self.assertEqual(set(), default_task.parent_ids())
-        self.assertEqual("", default_task.task_id())
-        self.assertFalse(default_task.is_blocked([]))
-        self.assertFalse(default_task.is_blocked([default_task]))
+    @given(strategies.sampled_from(["Todo", "Todo id:", "Todo id:id", "Todo p:", "Todo p:id",
+                                    "Todo before:", "Todo before:id", "Todo after:", "Todo after:id"]))
+    def test_task_without_dependencies(self, todo_text):
+        """ Test that a task without dependencies is not blocked. """
+        task = todotxt.Task(todo_text)
+        self.assertFalse(task.is_blocked([]))
+        self.assertFalse(task.is_blocked([task, todotxt.Task("Another task")]))
 
-    def test_missing_id(self):
-        """ Test id key without ids. """
-        self.assertEqual("", todotxt.Task("Todo id:").task_id())
+    @given(before_keys)
+    def test_one_before_another(self, before_key):
+        """ Test that a task specified to be done before another task blocks the latter. """
+        self.assertTrue(todotxt.Task("After id:1").is_blocked([todotxt.Task("Before {0}:1".format(before_key))]))
 
-    @given(parent_keys)
-    def test_missing_values(self, parent_key):
-        """ Test parent key without id. """
-        self.assertEqual(set(), todotxt.Task("Todo {0}:".format(parent_key)).parent_ids())
+    def test_one_after_another(self):
+        """ Test that a task specified to be done after another task blocks the first. """
+        self.assertTrue(todotxt.Task("After after:1").is_blocked([todotxt.Task("Before id:1")]))
 
-    @given(parent_keys)
-    def test_one_parent(self, parent_key):
-        """ Test that a task with a parent id return the correct id. """
-        self.assertEqual({"1"}, todotxt.Task("Todo {0}:1".format(parent_key)).parent_ids())
+    @given(before_keys)
+    def test_one_before_two(self, before_key):
+        """ Test that a task that is specified to be done before two other tasks blocks both tasks. """
+        before = todotxt.Task("Before {0}:1 {0}:2".format(before_key))
+        self.assertTrue(todotxt.Task("After id:1").is_blocked([before]))
+        self.assertTrue(todotxt.Task("After id:2").is_blocked([before]))
 
-    @given(parent_keys)
-    def test_two_parents(self, parent_key):
-        """ Test that a task with two parent ids return all ids. """
-        self.assertEqual({"1", "123a"}, todotxt.Task("Todo {0}:1 {0}:123a".format(parent_key)).parent_ids())
+    def test_one_after_two(self):
+        """ Test that a task that is specified to be done after two other tasks is blocked by both. """
+        before1 = todotxt.Task("Before 1 id:1")
+        before2 = todotxt.Task("Before 2 id:2")
+        after = todotxt.Task("After after:1 after:2")
+        self.assertTrue(after.is_blocked([before1, before2]))
+        self.assertTrue(after.is_blocked([before1]))
+        self.assertTrue(after.is_blocked([before2]))
 
-    def test_task_id(self):
-        """ Test a task id. """
-        self.assertEqual("foo", todotxt.Task("Todo id:foo").task_id())
+    @given(before_keys)
+    def test_two_before_one(self, before_key):
+        """ Test that a task that is specified to be done after two other tasks is blocked by both. """
+        before1 = todotxt.Task("Before 1 {0}:1".format(before_key))
+        before2 = todotxt.Task("Before 2 {0}:1".format(before_key))
+        after = todotxt.Task("After id:1")
+        self.assertTrue(after.is_blocked([before1, before2]))
+        self.assertTrue(after.is_blocked([before1]))
+        self.assertTrue(after.is_blocked([before2]))
 
-    @given(parent_keys)
-    def test_get_parent(self, parent_key):
-        """ Test getting a task's parent. """
-        parent = todotxt.Task("Parent id:1")
-        child = todotxt.Task("Child {0}:1".format(parent_key))
-        self.assertEqual([parent], child.parents([child, parent]))
+    def test_two_after_one(self):
+        """ Test that two tasks that are specified to be done after one other task are both blocked. """
+        before = todotxt.Task("Before id:before")
+        after1 = todotxt.Task("After 1 after:before")
+        after2 = todotxt.Task("After 2 after:before")
+        self.assertTrue(after1.is_blocked([before]))
+        self.assertTrue(after2.is_blocked([before]))
 
-    @given(parent_keys)
-    def test_get_multiple_parents(self, parent_key):
-        """ Test getting a task's mutiple parents. """
-        parent1 = todotxt.Task("Parent 1 id:1")
-        parent2 = todotxt.Task("Parent 2 id:2")
-        child = todotxt.Task("Child {0}:1 {0}:2".format(parent_key))
-        self.assertEqual([parent1, parent2], child.parents([child, parent1, parent2]))
+    @given(before_keys)
+    def test_completed_before_task(self, before_key):
+        """ Test that a task is not blocked by a completed task. """
+        after = todotxt.Task("After id:1")
+        before = todotxt.Task("Before {0}:1".format(before_key))
+        completed_before = todotxt.Task("x Before {0}:1".format(before_key))
+        self.assertFalse(after.is_blocked([completed_before]))
+        self.assertTrue(after.is_blocked([completed_before, before]))
 
-    @given(parent_keys)
-    def test_is_blocked(self, parent_key):
-        """ Test that a task with children is blocked. """
-        parent = todotxt.Task("Parent id:1")
-        child = todotxt.Task("Child {0}:1".format(parent_key))
-        self.assertTrue(parent.is_blocked([child, parent]))
+    def test_after_completed_task(self):
+        """ Test that a task is not blocked if it is specified to be done after a completed task. """
+        after = todotxt.Task("After after:before after:completed_before")
+        before = todotxt.Task("Before id:before")
+        completed_before = todotxt.Task("x Before id:completed_before")
+        self.assertFalse(after.is_blocked([completed_before]))
+        self.assertTrue(after.is_blocked([completed_before, before]))
 
-    @given(parent_keys)
-    def test_completed_child(self, parent_key):
-        """ Test that a task with completed children only is not blocked. """
-        parent = todotxt.Task("Parent id:1")
-        child = todotxt.Task("x Child {0}:1".format(parent_key))
-        self.assertFalse(parent.is_blocked([child, parent]))
-
-    @given(parent_keys)
-    def test_is_blocked_by_mix(self, parent_key):
-        """ Test that a task with completed children and uncompleted children is blocked. """
-        parent = todotxt.Task("Parent id:1")
-        child1 = todotxt.Task("Child 1 {0}:1".format(parent_key))
-        child2 = todotxt.Task("x Child 2 {0}:1".format(parent_key))
-        self.assertTrue(parent.is_blocked([child1, child2, parent]))
-
-    @given(parent_keys)
-    def test_is_blocked_by_self(self, parent_key):
+    @given(before_keys)
+    def test_self_before_self(self, before_key):
         """ Test that a task can be blocked by itself. This doesn't make sense, but we're not in the business
             of validating todo.txt files. """
-        parent = todotxt.Task("Parent id:1 {0}:1".format(parent_key))
-        self.assertTrue(parent.is_blocked([parent]))
+        task = todotxt.Task("Todo id:1 {0}:1".format(before_key))
+        self.assertTrue(task.is_blocked([task]))
 
-    @given(parent_keys)
-    def test_block_circle(self, parent_key):
-        """ Test that a task can be blocked by its child who is blocked by the task. This doesn't make sense,
+    def test_self_after_self(self):
+        """ Test that a task can be blocked by itself. This doesn't make sense, but we're not in the business
+            of validating todo.txt files. """
+        task = todotxt.Task("Todo id:1 after:1")
+        self.assertTrue(task.is_blocked([task]))
+
+    @given(before_keys)
+    def test_self_before_self_indirect(self, before_key):
+        """ Test that a task can be blocked by a second task that is blocked by the first task. This doesn't make sense,
             but we're not in the business of validating todo.txt files. """
-        task1 = todotxt.Task("Task 1 id:1 {0}:2".format(parent_key))
-        task2 = todotxt.Task("Task 2 id:2 {0}:1".format(parent_key))
+        task1 = todotxt.Task("Task 1 id:1 {0}:2".format(before_key))
+        task2 = todotxt.Task("Task 2 id:2 {0}:1".format(before_key))
+        self.assertTrue(task1.is_blocked([task1, task2]))
+
+    def test_self_after_self_indirect(self):
+        """ Test that a task can be blocked by a second task that is blocked by the first task. This doesn't make sense,
+            but we're not in the business of validating todo.txt files. """
+        task1 = todotxt.Task("Task 1 id:1 after:2")
+        task2 = todotxt.Task("Task 2 id:2 after:1")
         self.assertTrue(task1.is_blocked([task1, task2]))
