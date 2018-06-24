@@ -52,8 +52,9 @@ class Task(object):
 
     def due_date(self) -> Optional[datetime.date]:
         """ Return the due date of the task. """
-        due_dates = [task.due_date() for task in self.__blocking()] + [self.__find_keyed_date("due")]
-        return min([due_date for due_date in due_dates if due_date], default=None)
+        due_dates = [self.__find_keyed_date("due") or datetime.date.max]
+        due_dates.extend([blocking.due_date() or datetime.date.max for blocking in self.__blocking()])
+        return None if min(due_dates) == datetime.date.max else min(due_dates)
 
     def is_due(self, due_date: datetime.date) -> bool:
         """ Return whether the task is due on or before the given due date. """

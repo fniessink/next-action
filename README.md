@@ -225,7 +225,8 @@ Note again that completed tasks, tasks with a future creation or threshold date,
 
 ```text
 Buy groceries @store +DinnerParty before:meal
-Cook meal @home +DinnerParty id:meal
+Cook meal @home +DinnerParty id:meal due:2018-07-01
+Take out the garbage @home +DinnerParty due:2018-07-02
 Do the dishes @home +DinnerParty after:meal
 ```
 
@@ -234,14 +235,18 @@ This means that buying groceries blocks cooking the meal; cooking, and thus doin
 ```console
 $ next-action --all +DinnerParty
 Buy groceries @store +DinnerParty before:meal
+Take out the garbage @home +DinnerParty due:2018-07-02
 ```
 
-Notes:
+Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have a due date, buying groceries takes on the same due date as cooking the meal.
+
+Additional notes:
 
 - The ids can be any string without whitespace.
 - Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files use that.
 - A task can block multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
 - A task can be blocked by multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
+- If a task blocks one or more tasks, the blocking task is considered to have a due date that's the minimum of its own due date and the due dates of the tasks it's blocking.
 
 ### Styling the output
 
@@ -421,9 +426,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.............................................................................................................................................................................................................................
+.................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 221 tests in 1.637s
+Ran 225 tests in 3.044s
 
 OK
 ```
@@ -434,9 +439,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-.............................................................................................................................................................................................................................
+.................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 221 tests in 2.085s
+Ran 225 tests in 3.631s
 
 OK
 ```
@@ -448,7 +453,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1188      0    150      0   100%
+TOTAL    1254      0    154      0   100%
 
 25 files skipped due to complete coverage.
 ```
