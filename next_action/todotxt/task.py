@@ -52,7 +52,8 @@ class Task(object):
 
     def due_date(self) -> Optional[datetime.date]:
         """ Return the due date of the task. """
-        return self.__find_keyed_date("due")
+        due_dates = [task.due_date() for task in self.__blocking()] + [self.__find_keyed_date("due")]
+        return min([due_date for due_date in due_dates if due_date], default=None)
 
     def is_due(self, due_date: datetime.date) -> bool:
         """ Return whether the task is due on or before the given due date. """
@@ -101,6 +102,11 @@ class Task(object):
         """ Return the id of the task. """
         match = re.search(r"\bid:(\S+)\b", self.text)
         return match.group(1) if match else ""
+
+    def __blocking(self) -> Sequence["Task"]:
+        """ Return the tasks this task is blocking. """
+        return [task for task in self.tasks if not task.is_completed() and
+                (task.task_id() in self.parent_ids() or self.task_id() in task.child_ids())]
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """ Return the prefixed items in the task. """

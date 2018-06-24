@@ -206,6 +206,34 @@ class DueDateTest(unittest.TestCase):
         self.assertFalse(todotxt.Task("due:2018-01-01").is_due(datetime.date(2017, 12, 31)))
         self.assertFalse(todotxt.Task("Without due date").is_due(datetime.date(2017, 12, 31)))
 
+    def test_blocking(self):
+        """ Test that the due date of a task without its own due date equals the due date of the task it is
+            blocking. """
+        tasks = todotxt.Tasks()
+        after = todotxt.Task("After id:1 due:2018-01-01", tasks=tasks)
+        before = todotxt.Task("Before before:1", tasks=tasks)
+        tasks.extend([before, after])
+        self.assertEqual(datetime.date(2018, 1, 1), before.due_date())
+
+    def test_blocking_multiple(self):
+        """ Test that the due date of a task without its own due date equals the earliest due date of the tasks it is
+            blocking. """
+        tasks = todotxt.Tasks()
+        after1 = todotxt.Task("After id:1 due:2018-10-01", tasks=tasks)
+        after2 = todotxt.Task("After after:before due:2018-01-01", tasks=tasks)
+        before = todotxt.Task("Before before:1 id:before", tasks=tasks)
+        tasks.extend([before, after1, after2])
+        self.assertEqual(datetime.date(2018, 1, 1), before.due_date())
+
+    def test_blocking_completed(self):
+        """ Test that the due date of a completed blocked task is ignored. """
+        tasks = todotxt.Tasks()
+        after = todotxt.Task("After id:1 due:2018-02-01", tasks=tasks)
+        after_completed = todotxt.Task("x After id:2 due:2018-01-01", tasks=tasks)
+        before = todotxt.Task("Before before:1 before:2", tasks=tasks)
+        tasks.extend([before, after, after_completed])
+        self.assertEqual(datetime.date(2018, 2, 1), before.due_date())
+
 
 class TaskCompletionTest(unittest.TestCase):
     """ Unit tests for the completion status of tasks. """

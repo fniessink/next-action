@@ -220,6 +220,16 @@ class DueTasks(PickActionTestCase):
         self.assertEqual([overdue, future_duedate],
                          pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
+    def test_due_date_of_blocked_task(self):
+        """ Test that a task that blocks a task with an earlier due date takes precendence. """
+        tasks = todotxt.Tasks()
+        due_first_but_blocked = todotxt.Task("Task id:1 due:2018-01-01", tasks=tasks)
+        blocking_task = todotxt.Task("Blocking before:1", tasks=tasks)
+        due_second = todotxt.Task("Task due:2018-02-01", tasks=tasks)
+        tasks.extend([due_first_but_blocked, blocking_task, due_second])
+        self.namespace.due = datetime.date.max
+        self.assertEqual([blocking_task, due_second], pick_action.next_actions(tasks, self.namespace))
+
 
 class MinimimPriorityTest(PickActionTest):
     """ Unit test for the mininum priority filter. """
