@@ -3,7 +3,7 @@
 import datetime
 import re
 import typing
-from typing import Iterable, Optional, Set
+from typing import Optional, Sequence, Set
 
 
 class Task(object):
@@ -11,9 +11,10 @@ class Task(object):
 
     iso_date_reg_exp = r"(\d{4})-(\d{1,2})-(\d{1,2})"
 
-    def __init__(self, todo_txt: str, filename: str = "") -> None:
+    def __init__(self, todo_txt: str, filename: str = "", tasks: Sequence["Task"] = None) -> None:
         self.text = todo_txt
         self.filename = filename
+        self.tasks = tasks if tasks is not None else []
 
     def __repr__(self) -> str:
         return "{0}<{1}>".format(self.__class__.__name__, self.text)
@@ -83,9 +84,9 @@ class Task(object):
         due_date = self.due_date()
         return due_date < datetime.date.today() if due_date else False
 
-    def is_blocked(self, tasks: Iterable["Task"]) -> bool:
+    def is_blocked(self) -> bool:
         """ Return whether a task is blocked, i.e. whether it has uncompleted child tasks. """
-        return any([task for task in tasks if not task.is_completed() and
+        return any([task for task in self.tasks if not task.is_completed() and
                     (self.task_id() in task.parent_ids() or task.task_id() in self.child_ids())])
 
     def child_ids(self) -> Set[str]:

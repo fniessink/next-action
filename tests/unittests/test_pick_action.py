@@ -239,28 +239,36 @@ class BlockedTasksTest(PickActionTest):
 
     def test_blocked(self):
         """ Test that a blocked task isn't the next action. """
-        parent = todotxt.Task("(A) Parent id:1")
-        child = todotxt.Task("Child p:1")
-        self.assertEqual([child], pick_action.next_actions([child, parent], self.namespace))
+        tasks = todotxt.Tasks()
+        parent = todotxt.Task("(A) Parent id:1", tasks=tasks)
+        child = todotxt.Task("Child p:1", tasks=tasks)
+        tasks.extend([child, parent])
+        self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
 
     def test_blocked_chain(self):
         """ Test that a blocked task isn't the next action. """
-        grandparent = todotxt.Task("(A) Grandparent id:1")
-        parent = todotxt.Task("(B) Parent p:1 id:2")
-        child = todotxt.Task("Child p:2")
-        self.assertEqual([child], pick_action.next_actions([child, parent, grandparent], self.namespace))
+        tasks = todotxt.Tasks()
+        grandparent = todotxt.Task("(A) Grandparent id:1", tasks=tasks)
+        parent = todotxt.Task("(B) Parent p:1 id:2", tasks=tasks)
+        child = todotxt.Task("Child p:2", tasks=tasks)
+        tasks.extend([child, parent, grandparent])
+        self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
 
     def test_multiple_childs(self):
         """ Test that a blocked task isn't the next action. """
-        parent = todotxt.Task("(A) Parent id:1")
-        child1 = todotxt.Task("x Child 1 p:1")
-        child2 = todotxt.Task("Child 2 p:1")
-        child3 = todotxt.Task("Child 3 p:1")
-        self.assertEqual([child2, child3], pick_action.next_actions([parent, child1, child2, child3], self.namespace))
+        tasks = todotxt.Tasks()
+        parent = todotxt.Task("(A) Parent id:1", tasks=tasks)
+        child1 = todotxt.Task("x Child 1 p:1", tasks=tasks)
+        child2 = todotxt.Task("Child 2 p:1", tasks=tasks)
+        child3 = todotxt.Task("Child 3 p:1", tasks=tasks)
+        tasks.extend([parent, child1, child2, child3])
+        self.assertEqual([child2, child3], pick_action.next_actions(tasks, self.namespace))
 
     def test_multiple_parents(self):
         """ Test that a blocked task isn't the next action. """
-        parent1 = todotxt.Task("(A) Parent id:1")
-        parent2 = todotxt.Task("(B) Parent id:2")
-        child = todotxt.Task("Child 1 p:1 p:2")
-        self.assertEqual([child], pick_action.next_actions([parent1, parent2, child], self.namespace))
+        tasks = todotxt.Tasks()
+        parent1 = todotxt.Task("(A) Parent id:1", tasks=tasks)
+        parent2 = todotxt.Task("(B) Parent id:2", tasks=tasks)
+        child = todotxt.Task("Child 1 p:1 p:2", tasks=tasks)
+        tasks.extend([parent1, parent2, child])
+        self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
