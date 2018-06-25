@@ -87,6 +87,34 @@ class TaskPriorityTest(unittest.TestCase):
         self.assertTrue(todotxt.Task("(Z) Task").priority_at_least(None))
         self.assertTrue(todotxt.Task("Task").priority_at_least(None))
 
+    def test_blocking(self):
+        """ Test that the priority of a task without its own priority equals the priority of the task it is
+            blocking. """
+        tasks = todotxt.Tasks()
+        after = todotxt.Task("(A) After id:1", tasks=tasks)
+        before = todotxt.Task("Before before:1", tasks=tasks)
+        tasks.extend([before, after])
+        self.assertEqual("A", before.priority())
+
+    def test_blocking_multiple(self):
+        """ Test that the priority of a task without its own priority equals the highest priority of the tasks it is
+            blocking. """
+        tasks = todotxt.Tasks()
+        after1 = todotxt.Task("(A) After id:1", tasks=tasks)
+        after2 = todotxt.Task("(B) After after:before", tasks=tasks)
+        before = todotxt.Task("Before before:1 id:before", tasks=tasks)
+        tasks.extend([before, after1, after2])
+        self.assertEqual("A", before.priority())
+
+    def test_blocking_completed(self):
+        """ Test that the priority of a completed blocked task is ignored. """
+        tasks = todotxt.Tasks()
+        after = todotxt.Task("(B) After id:1", tasks=tasks)
+        after_completed = todotxt.Task("x (A) After id:2", tasks=tasks)
+        before = todotxt.Task("Before before:1 before:2", tasks=tasks)
+        tasks.extend([before, after, after_completed])
+        self.assertEqual("B", before.priority())
+
 
 class CreationDateTest(unittest.TestCase):
     """ Unit tests for task creation dates. Next-action interprets creation dates in the future as threshold, or

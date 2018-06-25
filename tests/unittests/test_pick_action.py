@@ -220,16 +220,6 @@ class DueTasks(PickActionTestCase):
         self.assertEqual([overdue, future_duedate],
                          pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
-    def test_due_date_of_blocked_task(self):
-        """ Test that a task that blocks a task with an earlier due date takes precendence. """
-        tasks = todotxt.Tasks()
-        due_first_but_blocked = todotxt.Task("Task id:1 due:2018-01-01", tasks=tasks)
-        blocking_task = todotxt.Task("Blocking before:1", tasks=tasks)
-        due_second = todotxt.Task("Task due:2018-02-01", tasks=tasks)
-        tasks.extend([due_first_but_blocked, blocking_task, due_second])
-        self.namespace.due = datetime.date.max
-        self.assertEqual([blocking_task, due_second], pick_action.next_actions(tasks, self.namespace))
-
 
 class MinimimPriorityTest(PickActionTest):
     """ Unit test for the mininum priority filter. """
@@ -282,3 +272,21 @@ class BlockedTasksTest(PickActionTest):
         child = todotxt.Task("Child 1 p:1 p:2", tasks=tasks)
         tasks.extend([parent1, parent2, child])
         self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
+
+    def test_due_date_of_blocked_task(self):
+        """ Test that a task that blocks a task with an earlier due date takes precendence. """
+        tasks = todotxt.Tasks()
+        due_first_but_blocked = todotxt.Task("Task id:1 due:2018-01-01", tasks=tasks)
+        blocking_task = todotxt.Task("Blocking before:1", tasks=tasks)
+        due_second = todotxt.Task("Task due:2018-02-01", tasks=tasks)
+        tasks.extend([due_first_but_blocked, blocking_task, due_second])
+        self.assertEqual([blocking_task, due_second], pick_action.next_actions(tasks, self.namespace))
+
+    def test_priority_of_blocked_task(self):
+        """ Test that a task that blocks a task with a higher priority takes precendence. """
+        tasks = todotxt.Tasks()
+        high_prio_but_blocked = todotxt.Task("(A) Task id:1", tasks=tasks)
+        blocking_task = todotxt.Task("Blocking before:1", tasks=tasks)
+        second_prio = todotxt.Task("(B) Task", tasks=tasks)
+        tasks.extend([high_prio_but_blocked, blocking_task, second_prio])
+        self.assertEqual([blocking_task, second_prio], pick_action.next_actions(tasks, self.namespace))
