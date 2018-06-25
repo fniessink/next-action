@@ -108,7 +108,7 @@ $ next-action
 
 The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks. Finally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
 
-Several types of tasks are not considered when determining the next action:
+Several types of tasks can not be a next action:
 
 - completed tasks (~~`x This is a completed task`~~),
 - tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`),
@@ -239,7 +239,7 @@ Buy groceries @store +DinnerParty before:meal
 Take out the garbage @home +DinnerParty due:2018-07-02
 ```
 
-Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have a due date, buying groceries takes on the same due date as cooking the meal.
+Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have a due date, buying groceries takes on the same due date as cooking the meal. Priority is taken into account in a similar way.
 
 Additional notes:
 
@@ -247,7 +247,9 @@ Additional notes:
 - Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files use that.
 - A task can block multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
 - A task can be blocked by multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
-- If a task blocks one or more tasks, the blocking task is considered to have a due date that's the minimum of its own due date and the due dates of the tasks it's blocking.
+- If a task blocks one or more tasks, the blocking task takes on the priority and due date of the tasks it is blocking:
+  - the blocking task is considered to have a priority that is the maximum of its own priority and the priorities of the tasks it is blocking, and
+  - the blocking task is considered to have a due date that is the minimum of its own due date and the due dates of the tasks it is blocking.
 
 ### Styling the output
 
@@ -427,9 +429,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.................................................................................................................................................................................................................................
+.....................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 225 tests in 1.891s
+Ran 229 tests in 2.728s
 
 OK
 ```
@@ -440,9 +442,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-.................................................................................................................................................................................................................................
+.....................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 225 tests in 2.567s
+Ran 229 tests in 3.794s
 
 OK
 ```
@@ -454,7 +456,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1254      0    154      0   100%
+TOTAL    1282      0    160      0   100%
 
 25 files skipped due to complete coverage.
 ```

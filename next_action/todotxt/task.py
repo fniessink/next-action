@@ -3,7 +3,7 @@
 import datetime
 import re
 import typing
-from typing import Optional, Sequence, Set
+from typing import List, Optional, Sequence, Set
 
 
 class Task(object):
@@ -30,7 +30,9 @@ class Task(object):
     def priority(self) -> Optional[str]:
         """ Return the priority of the task """
         match = re.match(r"\(([A-Z])\) ", self.text)
-        return match.group(1) if match else None
+        priorities: List[Optional[str]] = [match.group(1)] if match else []
+        priorities.extend([blocked_task.priority() for blocked_task in self.__blocked_tasks()])
+        return min(priorities, default=None, key=lambda priority: priority or "ZZZ")
 
     def priority_at_least(self, min_priority: Optional[str]) -> bool:
         """ Return whether the priority of task is at least the given priority. """
@@ -52,9 +54,9 @@ class Task(object):
 
     def due_date(self) -> Optional[datetime.date]:
         """ Return the due date of the task. """
-        due_dates = [self.__find_keyed_date("due") or datetime.date.max]
-        due_dates.extend([blocking.due_date() or datetime.date.max for blocking in self.__blocking()])
-        return None if min(due_dates) == datetime.date.max else min(due_dates)
+        due_dates = [self.__find_keyed_date("due")]
+        due_dates.extend([blocked_task.due_date() for blocked_task in self.__blocked_tasks()])
+        return min(due_dates, default=None, key=lambda due_date: due_date or datetime.date.max)
 
     def is_due(self, due_date: datetime.date) -> bool:
         """ Return whether the task is due on or before the given due date. """
@@ -104,7 +106,7 @@ class Task(object):
         match = re.search(r"\bid:(\S+)\b", self.text)
         return match.group(1) if match else ""
 
-    def __blocking(self) -> Sequence["Task"]:
+    def __blocked_tasks(self) -> Sequence["Task"]:
         """ Return the tasks this task is blocking. """
         return [task for task in self.tasks if not task.is_completed() and
                 (task.task_id() in self.parent_ids() or self.task_id() in task.child_ids())]

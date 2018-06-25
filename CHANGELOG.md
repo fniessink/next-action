@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Tasks are considered to have a priority that's the maximum of their own priority and the priorities of the task(s) they block, recursively. Closes #114.
 - Tasks are considered to have a due date that's the minimum of their own due date and the due dates of the task(s) they block, recursively. Closes #115.
 
 ## [1.3.0] - 2018-06-19
