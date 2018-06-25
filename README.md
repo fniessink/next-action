@@ -223,9 +223,11 @@ Note again that completed tasks, tasks with a future creation or threshold date,
 
 *Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries and that doing the dishes comes after cooking the meal can be specified as follows:
 
-```text
+```console
+$ grep +DinnerParty docs/todo.txt
 Buy groceries @store +DinnerParty before:meal
-Cook meal @home +DinnerParty id:meal
+Cook meal @home +DinnerParty id:meal due:2018-07-01
+Take out the garbage @home +DinnerParty due:2018-07-02
 Do the dishes @home +DinnerParty after:meal
 ```
 
@@ -234,14 +236,18 @@ This means that buying groceries blocks cooking the meal; cooking, and thus doin
 ```console
 $ next-action --all +DinnerParty
 Buy groceries @store +DinnerParty before:meal
+Take out the garbage @home +DinnerParty due:2018-07-02
 ```
 
-Notes:
+Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have a due date, buying groceries takes on the same due date as cooking the meal.
+
+Additional notes:
 
 - The ids can be any string without whitespace.
 - Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files use that.
 - A task can block multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
 - A task can be blocked by multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
+- If a task blocks one or more tasks, the blocking task is considered to have a due date that's the minimum of its own due date and the due dates of the tasks it's blocking.
 
 ### Styling the output
 
@@ -321,7 +327,7 @@ all: True
 
 #### Limiting the tasks from which next actions are selected
 
-##### By contexts and/or projects
+##### Limiting by contexts and/or projects
 
 You can limit the tasks from which the next action is selected by specifying contexts and/or projects to filter on, just like you would do on the command line:
 
@@ -342,7 +348,7 @@ filters:
 
 Note that filters starting with `@` need to be in quotes. This is a [YAML restriction](http://yaml.org/spec/1.1/current.html#c-directive).
 
-##### By priority
+##### Limiting by priority
 
 The minimum priority of next action to show can be specified as well:
 
@@ -421,9 +427,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.............................................................................................................................................................................................................................
+.................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 221 tests in 1.637s
+Ran 225 tests in 1.891s
 
 OK
 ```
@@ -434,9 +440,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-.............................................................................................................................................................................................................................
+.................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 221 tests in 2.085s
+Ran 225 tests in 2.567s
 
 OK
 ```
@@ -448,14 +454,14 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1188      0    150      0   100%
+TOTAL    1254      0    154      0   100%
 
 25 files skipped due to complete coverage.
 ```
 
 ### Running quality checks
 
-We use mypy, pylint, and  pycodestyle to check for quality issues. Mypy should give no warnings or errors:
+We use mypy, pylint, and pycodestyle to check for quality issues. Mypy should give no warnings or errors:
 
 ```console
 $ mypy --no-incremental --ignore-missing-import next_action

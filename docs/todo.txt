@@ -8,7 +8,8 @@ Buy flowers due:2018-02-14
 (L) Pay June invoice @home due:2018-06-28
 (K) Pay July invoice @home due:2018-07-28
 Buy groceries @store +DinnerParty before:meal
-Cook meal @home +DinnerParty id:meal
+Cook meal @home +DinnerParty id:meal due:2018-07-01
+Take out the garbage @home +DinnerParty due:2018-07-02
 Do the dishes @home +DinnerParty after:meal
 x This is a completed task
 9999-01-01 Start preparing for five-digit years

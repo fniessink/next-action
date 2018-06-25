@@ -1,8 +1,10 @@
 """ Insert the output of console commands into the README.md file. """
 
+import datetime
 import os
 import shlex
 import subprocess  # nosec
+import sys
 
 
 def do_command(line):
@@ -89,13 +91,18 @@ class StateMachine(object):
 
 def update_readme():
     """ Read the README markdown line by line and update table of contents and console commands. """
+    start = datetime.datetime.now()
     with open("README.md") as readme:
         lines = readme.readlines()
     toc_header = "## Table of contents"
     machine = StateMachine(create_toc(lines, toc_header), toc_header)
     process = machine.default
     for line in lines:
+        sys.stderr.write(".")
+        sys.stderr.flush()
         process = process(line.rstrip())
+    duration = datetime.datetime.now() - start
+    sys.stderr.write("\n" + "-" * 40 + "\nProcessed {0} lines in {1}s.\n".format(len(lines), duration.seconds))
 
 
 if __name__ == "__main__":

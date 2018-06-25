@@ -43,6 +43,6 @@ def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
     # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
     eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
     # Remove blocked tasks
-    eligible_tasks = filter(lambda task: not task.is_blocked(tasks), eligible_tasks)
+    eligible_tasks = filter(lambda task: not task.is_blocked(), eligible_tasks)
     # Finally, sort by priority, due date and creation date
     return Tasks(sorted(eligible_tasks, key=sort_key)[:arguments.number])
