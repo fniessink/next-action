@@ -223,7 +223,8 @@ Note again that completed tasks, tasks with a future creation or threshold date,
 
 *Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries and that doing the dishes comes after cooking the meal can be specified as follows:
 
-```text
+```console
+$ grep +DinnerParty docs/todo.txt
 Buy groceries @store +DinnerParty before:meal
 Cook meal @home +DinnerParty id:meal due:2018-07-01
 Take out the garbage @home +DinnerParty due:2018-07-02
@@ -326,7 +327,7 @@ all: True
 
 #### Limiting the tasks from which next actions are selected
 
-##### By contexts and/or projects
+##### Limiting by contexts and/or projects
 
 You can limit the tasks from which the next action is selected by specifying contexts and/or projects to filter on, just like you would do on the command line:
 
@@ -347,7 +348,7 @@ filters:
 
 Note that filters starting with `@` need to be in quotes. This is a [YAML restriction](http://yaml.org/spec/1.1/current.html#c-directive).
 
-##### By priority
+##### Limiting by priority
 
 The minimum priority of next action to show can be specified as well:
 
@@ -428,7 +429,7 @@ To run the unit tests:
 $ python -m unittest
 .................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 225 tests in 3.044s
+Ran 225 tests in 1.891s
 
 OK
 ```
@@ -441,7 +442,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 .................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 225 tests in 3.631s
+Ran 225 tests in 2.567s
 
 OK
 ```
@@ -460,7 +461,7 @@ TOTAL    1254      0    154      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, and  pycodestyle to check for quality issues. Mypy should give no warnings or errors:
+We use mypy, pylint, and pycodestyle to check for quality issues. Mypy should give no warnings or errors:
 
 ```console
 $ mypy --no-incremental --ignore-missing-import next_action
