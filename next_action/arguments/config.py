@@ -32,11 +32,16 @@ def write_config_file(namespace: argparse.Namespace) -> None:
     intro = "# Configuration file for Next-action. Edit the settings below as you like.\n"
     options = dict(file=namespace.file[0] if len(namespace.file) == 1 else namespace.file,
                    reference=namespace.reference, style=namespace.style or "default")
+    prefixed_filters = []
+    for prefix, filters in (("@", namespace.contexts), ("+", namespace.projects),
+                            ("-@", namespace.excluded_contexts), ("-+", namespace.excluded_projects)):
+        prefixed_filters.extend([prefix + filter_name for filter_name in filters])
+    if prefixed_filters:
+        options["filters"] = prefixed_filters
     if namespace.number == sys.maxsize:
         options["all"] = True
     else:
         options["number"] = namespace.number
-
     config = yaml.dump(options, default_flow_style=False)
     sys.stdout.write(intro + config)
 

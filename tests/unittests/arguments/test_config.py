@@ -107,14 +107,16 @@ class WriteConfigFileTest(ConfigTestCase):
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--number", "3", "--reference", "never",
-                                "--style", "fruity", "--file", "~/tasks.txt"])
+                                "--style", "fruity", "--file", "~/tasks.txt", "@context", "+project",
+                                "-@excluded_context", "-+excluded_project"])
     @patch.object(config, "open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
     def test_with_args(self, mock_stdout_write):
         """ Test that the config file written to stdout includes the other arguments. """
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/tasks.txt\nnumber: 3\nreference: never\nstyle: fruity\n"
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n" \
+            "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- -@excluded_context\n- -+excluded_project\n" \
+            "number: 3\nreference: never\nstyle: fruity\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--file", "~/tasks.txt", "--file", "project.txt"])
