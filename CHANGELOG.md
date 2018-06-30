@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2018-06-30
+## [Unreleased] - 2018-07-01
 
 ### Fixed
 
-- When generating a configuration file with `--write-config-file` also include context and project filters passed on the command-line. Closes #141.
-- When generating a configuration file with `--write-config-file` also include the minimum priority if passed on the command-line. Closes #142.
+- When generating a configuration file with `--write-config-file` also include context and project filters passed on the command-line. Fixes #141.
+- When generating a configuration file with `--write-config-file` also include the minimum priority if passed on the command-line. Fixes #142.
+- Accept other arguments after excluded contexts and projects. Fixes #143.
 
 ## [1.5.0] - 2018-06-30
 

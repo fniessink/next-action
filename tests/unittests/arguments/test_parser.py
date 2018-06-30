@@ -173,6 +173,14 @@ class FilterArgumentTest(ParserTestCase):
         self.assertEqual({"home", "weekend"}, parse_arguments()[1].contexts)
         self.assertEqual({"DogHouse", "PaintHouse"}, parse_arguments()[1].projects)
 
+    @patch.object(sys, "argv", ["next-action", "@home", "-@work", "+PaintHouse"])
+    def test_project_after_excluded(self):
+        """ Test project after excluded context. """
+        namespace = parse_arguments()[1]
+        self.assertEqual({"home"}, namespace.contexts)
+        self.assertEqual({"work"}, namespace.excluded_contexts)
+        self.assertEqual({"PaintHouse"}, namespace.projects)
+
     @patch.object(sys, "argv", ["next-action", "home"])
     @patch.object(sys.stderr, "write")
     def test_faulty_option(self, mock_stderr_write):
