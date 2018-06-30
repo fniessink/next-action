@@ -126,10 +126,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         self.parse_remaining_args(remaining, namespace)
         if getattr(namespace, "config_file", self.get_default("config_file")) is not None:
             self.process_config_file(namespace)
-        if namespace.write_config_file:
-            write_config_file()
-            self.exit()
         self.fix_filenames(namespace)
+        if namespace.write_config_file:
+            write_config_file(namespace)
+            self.exit()
         return namespace
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:

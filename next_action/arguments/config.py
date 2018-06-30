@@ -1,5 +1,6 @@
 """ Methods for reading, parsing, and validating Next-action configuration files. """
 
+import argparse
 import os
 import string
 import sys
@@ -26,11 +27,17 @@ def read_config_file(filename: str, default_filename: str, error: Callable[[str]
         error("can't parse {0}: {1}".format(filename, reason))
 
 
-def write_config_file() -> None:
+def write_config_file(namespace: argparse.Namespace) -> None:
     """ Generate a configuration file on standard out. """
     intro = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-    config = yaml.dump(dict(file="~/todo.txt", number=1, reference="multiple", style="default"),
-                       default_flow_style=False)
+    options = dict(file=namespace.file[0] if len(namespace.file) == 1 else namespace.file,
+                   reference=namespace.reference, style=namespace.style or "default")
+    if namespace.number == sys.maxsize:
+        options["all"] = True
+    else:
+        options["number"] = namespace.number
+
+    config = yaml.dump(options, default_flow_style=False)
     sys.stdout.write(intro + config)
 
 

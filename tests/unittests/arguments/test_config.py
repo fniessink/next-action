@@ -18,8 +18,8 @@ class ConfigTestCase(unittest.TestCase):
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
 
 
-class ConfigFileTest(ConfigTestCase):
-    """ Unit tests for the config file. """
+class ReadConfigFileTest(ConfigTestCase):
+    """ Unit tests for reading the config file. """
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open", mock_open(read_data=""))
@@ -92,14 +92,59 @@ class ConfigFileTest(ConfigTestCase):
         parse_arguments()
         self.assertEqual([], mock_file_open.call_args_list)
 
+
+class WriteConfigFileTest(ConfigTestCase):
+    """ Unit tests for the write-config-file argument. """
+
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])
     @patch.object(config, "open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
-    def test_write_config(self, mock_stdout_write):
+    def test_default_file(self, mock_stdout_write):
         """ Test that a config file can be written to stdout. """
         self.assertRaises(SystemExit, parse_arguments)
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
         expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--number", "3", "--reference", "never",
+                                "--style", "fruity", "--file", "~/tasks.txt"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    @patch.object(sys.stdout, "write")
+    def test_with_args(self, mock_stdout_write):
+        """ Test that the config file written to stdout includes the other arguments. """
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file: ~/tasks.txt\nnumber: 3\nreference: never\nstyle: fruity\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--file", "~/tasks.txt", "--file", "project.txt"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    @patch.object(sys.stdout, "write")
+    def test_multiple_files(self, mock_stdout_write):
+        """ Test that the config file contains a list of files if multiple file arguments are passed. """
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file:\n- ~/tasks.txt\n- project.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--all"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    @patch.object(sys.stdout, "write")
+    def test_show_all(self, mock_stdout_write):
+        """ Test that the config file contains "all" true" instead of a number. """
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "all: true\nfile: ~/todo.txt\nreference: multiple\nstyle: default\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--write-config-file"])
+    @patch.object(config, "open", mock_open(read_data="number: 3"))
+    @patch.object(sys.stdout, "write")
+    def test_read_config(self, mock_stdout_write):
+        """ Test that the written config file contains the read config file. """
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file: ~/todo.txt\nnumber: 3\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
 
