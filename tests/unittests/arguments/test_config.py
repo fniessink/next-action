@@ -107,7 +107,7 @@ class WriteConfigFileTest(ConfigTestCase):
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--number", "3", "--reference", "never",
-                                "--style", "fruity", "--file", "~/tasks.txt", "@context", "+project",
+                                "--style", "fruity", "--file", "~/tasks.txt", "--priority", "Z", "@context", "+project",
                                 "-@excluded_context", "-+excluded_project"])
     @patch.object(config, "open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
@@ -116,7 +116,7 @@ class WriteConfigFileTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n" \
             "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- -@excluded_context\n- -+excluded_project\n" \
-            "number: 3\nreference: never\nstyle: fruity\n"
+            "number: 3\npriority: Z\nreference: never\nstyle: fruity\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--file", "~/tasks.txt", "--file", "project.txt"])
@@ -137,6 +137,16 @@ class WriteConfigFileTest(ConfigTestCase):
         self.assertRaises(SystemExit, parse_arguments)
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
         expected += "all: true\nfile: ~/todo.txt\nreference: multiple\nstyle: default\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--priority"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    @patch.object(sys.stdout, "write")
+    def test_priority(self, mock_stdout_write):
+        """ Test that priority without argument is processed correctly. """
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])

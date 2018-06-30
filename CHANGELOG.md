@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - When generating a configuration file with `--write-config-file` also include context and project filters passed on the command-line. Closes #141.
+- When generating a configuration file with `--write-config-file` also include the minimum priority if passed on the command-line. Closes #142.
 
 ## [1.5.0] - 2018-06-30
 
