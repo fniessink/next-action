@@ -294,6 +294,8 @@ Any additional options specified on the command line are used to generate the co
 $ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 file: ~/tasks.txt
+filters:
+- -@waiting
 number: 3
 reference: multiple
 style: fruity
@@ -447,7 +449,7 @@ To run the unit tests:
 $ python -m unittest
 .........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 233 tests in 2.206s
+Ran 233 tests in 2.089s
 
 OK
 ```
@@ -460,7 +462,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 .........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 233 tests in 2.616s
+Ran 233 tests in 3.098s
 
 OK
 ```
@@ -472,7 +474,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1316      0    162      0   100%
+TOTAL    1320      0    168      0   100%
 
 25 files skipped due to complete coverage.
 ```
