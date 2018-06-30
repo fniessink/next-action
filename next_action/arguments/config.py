@@ -42,6 +42,8 @@ def write_config_file(namespace: argparse.Namespace) -> None:
         options["all"] = True
     else:
         options["number"] = namespace.number
+    if namespace.priority:
+        options["priority"] = namespace.priority
     config = yaml.dump(options, default_flow_style=False)
     sys.stdout.write(intro + config)
 

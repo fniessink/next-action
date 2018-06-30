@@ -291,12 +291,13 @@ To make this the configuration that *Next-action* reads by default, redirect the
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity -@waiting
+$ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 file: ~/tasks.txt
 filters:
 - -@waiting
 number: 3
+priority: Z
 reference: multiple
 style: fruity
 ```
@@ -447,9 +448,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.........................................................................................................................................................................................................................................
+..........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 233 tests in 2.089s
+Ran 234 tests in 2.059s
 
 OK
 ```
@@ -460,9 +461,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-.........................................................................................................................................................................................................................................
+..........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 233 tests in 3.098s
+Ran 234 tests in 2.740s
 
 OK
 ```
@@ -474,7 +475,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1320      0    168      0   100%
+TOTAL    1329      0    170      0   100%
 
 25 files skipped due to complete coverage.
 ```
