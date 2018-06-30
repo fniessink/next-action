@@ -291,7 +291,7 @@ To make this the configuration that *Next-action* reads by default, redirect the
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity
+$ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 file: ~/tasks.txt
 number: 3
