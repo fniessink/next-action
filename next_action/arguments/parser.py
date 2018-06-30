@@ -122,7 +122,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """ Parse the command-line arguments. """
-        namespace, remaining = self.parse_known_args(args, namespace)
+        namespace, remaining = self.parse_known_args(self.sorted_args(args), namespace)
         self.parse_remaining_args(remaining, namespace)
         if getattr(namespace, "config_file", self.get_default("config_file")) is not None:
             self.process_config_file(namespace)
@@ -132,10 +132,18 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             self.exit()
         return namespace
 
+    @classmethod
+    def sorted_args(cls, args: List[str] = None) -> List[str]:
+        """ Sort the arguments so that the excluded contexts and projects are last and can be parsed by
+            parse_remaining_args. """
+        args = args or sys.argv[1:]
+        return [arg for arg in args if not cls.is_excluded_filter(arg)] + \
+               [arg for arg in args if cls.is_excluded_filter(arg)]
+
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
         """ Parse the remaining command line arguments. """
         for value in remaining:
-            if value.startswith("-@") or value.startswith("-+"):
+            if self.is_excluded_filter(value):
                 argument = value[len("-"):]
                 if not argument[len("@"):]:
                     argument_type = "context" if argument.startswith("@") else "project"
@@ -197,6 +205,11 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """ Return whether any of the arguments was specified on the command line. """
         return not any([command_line_arg.startswith(argument) for argument in arguments
                         for command_line_arg in sys.argv])
+
+    @staticmethod
+    def is_excluded_filter(argument: str) -> bool:
+        """ Return whether the argument is an excluded context or project. """
+        return argument.startswith("-@") or argument.startswith("-+")
 
     @staticmethod
     def filter_not_specified(filtered: str) -> bool:
