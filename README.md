@@ -171,14 +171,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay July invoice @home due:2018-07-28
+(K) Pay July invoice @home due:2019-07-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
 $ next-action @home --due "june 2018"
-(L) Pay June invoice @home due:2018-06-28
+Nothing to do!
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
@@ -270,7 +270,10 @@ Not passing an argument to `--style` cancels the style that is configured in the
 
 ### Configuring *Next-action*
 
-In addition to specifying options on the command-line, you can also configure options in a configuration file. By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder.
+In addition to specifying options on the command-line, you can also configure options in a configuration file.
+The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, output styling, and context and/or project filters.
+
+#### Writing the configuration file
 
 To get started, you can tell *Next-action* to generate a configuration file with the default options:
 
@@ -280,10 +283,25 @@ $ next-action --write-config-file
 file: ~/todo.txt
 number: 1
 reference: multiple
-style: default
+style: native
 ```
 
 To make this the configuration that *Next-action* reads by default, redirect the output to `~/.next-action.cfg` like this: `next-action --write-config-file > ~/.next-action.cfg`.
+
+Any additional options specified on the command line are used to generate the configuration file:
+
+```console
+$ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity
+# Configuration file for Next-action. Edit the settings below as you like.
+file: ~/tasks.txt
+number: 3
+reference: multiple
+style: fruity
+```
+
+#### Reading the configuration file
+
+By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder.
 
 If you want to use a configuration file that is not in the default location (`~/.next-action.cfg`), you'll need to explicitly specify its location:
 
@@ -293,8 +311,6 @@ $ next-action --config-file docs/.next-action.cfg
 ```
 
 To skip reading the default configuration file, and also not read an alternative configuration file, use the `--config-file` option without arguments.
-
-The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, output styling, and context and/or project filters.
 
 #### Configuring a default todo.txt
 
@@ -403,14 +419,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay July invoice @home due:2018-07-28
+(K) Pay July invoice @home due:2019-07-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay July invoice @home due:2018-07-28
+(K) Pay July invoice @home due:2019-07-28
 ```
 
 ## Recent changes
@@ -429,9 +445,9 @@ To run the unit tests:
 
 ```console
 $ python -m unittest
-.....................................................................................................................................................................................................................................
+.........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 229 tests in 2.728s
+Ran 233 tests in 2.206s
 
 OK
 ```
@@ -442,9 +458,9 @@ To create the unit test coverage report run the unit tests under coverage with:
 
 ```console
 $ coverage run --branch -m unittest
-.....................................................................................................................................................................................................................................
+.........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 229 tests in 3.794s
+Ran 233 tests in 2.616s
 
 OK
 ```
@@ -456,7 +472,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1282      0    160      0   100%
+TOTAL    1316      0    162      0   100%
 
 25 files skipped due to complete coverage.
 ```
