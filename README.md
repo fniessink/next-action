@@ -179,8 +179,8 @@ $ next-action @home --due
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "june 2018"
-Nothing to do!
+$ next-action @home --due "june 2019"
+(L) Pay June invoice @home due:2019-06-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
@@ -452,7 +452,7 @@ To run the unit tests:
 $ python -m unittest
 ...........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 235 tests in 1.970s
+Ran 235 tests in 4.260s
 
 OK
 ```
@@ -465,7 +465,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 ...........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 235 tests in 3.107s
+Ran 235 tests in 2.947s
 
 OK
 ```
