@@ -373,7 +373,7 @@ Note that filters starting with `@` need to be in quotes. This is a [YAML restri
 
 ##### Limiting by priority
 
-The minimum priority of next action to show can be specified as well:
+The minimum priority of next actions to show can be specified as well:
 
 ```yaml
 priority: Z
