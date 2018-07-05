@@ -6,4 +6,4 @@ pylint==1.9.2
 pycodestyle==2.4.0
 bandit==1.4.0
 mypy==0.610
-hypothesis==3.65.3
+hypothesis==3.66.0
