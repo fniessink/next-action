@@ -10,17 +10,16 @@ matrix:
       sudo: true
 install:
   - pip install -r requirements-dev.txt -r requirements.txt
-  - pip install tox-travis
 script:
   - bandit -r .
   - pycodestyle .
-  - pylint *.py next_action
+  - if: dist = trusty 
+    pylint *.py next_action  # Pylint doesn't work with Python 3.7 yet
   - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
   - coverage xml --fail-under=100
   - python-codacy-coverage -r coverage.xml
   - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
   - sonar-scanner -Dsonar.login=$SONAR_TOKEN
-  - tox
 deploy:
   provider: pypi
   user: fniessink
