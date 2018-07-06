@@ -2,4 +2,4 @@
 Cerberus==1.2
 dateparser==0.7.0
 Pygments==2.2.0
-PyYAML==3.12
+PyYAML==3.13
