@@ -13,7 +13,7 @@ install:
 script:
   - bandit -r .
   - pycodestyle .
-  - test "$TRAVIS_PYTHON_VERSION" = "3.6" && pylint *.py next_action  # Pylint doesn't work with Python 3.7 yet
+  - test "$TRAVIS_PYTHON_VERSION" = "3.6" && pylint *.py next_action || true  # Pylint doesn't work with Python 3.7 yet
   - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
   - coverage xml --fail-under=100
   - python-codacy-coverage -r coverage.xml
