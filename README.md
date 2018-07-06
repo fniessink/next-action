@@ -36,11 +36,9 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Installation
 
-*Next-action* requires Python 3.6.
+*Next-action* requires Python 3.6 or newer.
 
 `pip install next-action`
-
-Python 3.7 isn't supported because [PyYAML does not support Python 3.7 yet](https://github.com/yaml/pyyaml/issues/193).
 
 ## Usage
 
