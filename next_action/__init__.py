@@ -1,4 +1,4 @@
 """ Main Next-action package. """
 
 __title__ = "next-action"
-__version__ = "1.5.1"
+__version__ = "1.5.2"
