@@ -20,7 +20,7 @@ jobs:
       script: 
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
-    - stage: quality
+    - stage: test
       python: 3.6
       dist: trusty
       sudo: false
@@ -28,7 +28,7 @@ jobs:
       - bandit -r .
       - pycodestyle .
       - pylint *.py next_action
-    - stage: quality
+    - stage: test
       python: 3.6
       dist: trusty
       sudo: false
