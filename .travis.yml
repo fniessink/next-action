@@ -34,6 +34,7 @@ jobs:
       python: 3.6
       dist: trusty
       sudo: false
+      script: true
       deploy:
         provider: pypi
         user: fniessink
