@@ -27,6 +27,11 @@ jobs:
       script:
       - bandit -r .
       - pycodestyle .
+    - stage: test
+      python: 3.6
+      dist: trusty
+      sudo: false
+      script:
       - pylint *.py next_action
     - stage: test
       python: 3.6
