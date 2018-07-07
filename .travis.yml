@@ -28,8 +28,16 @@ jobs:
       - bandit -r .
       - pycodestyle .
       - pylint *.py next_action
+    - stage: quality
+      python: 3.6
+      dist: trusty
+      sudo: false
+      script:
       - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
       - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+      addons:
+        sonarcloud:
+          organization: "fniessink-github"
     - stage: deploy
       python: 3.6
       dist: trusty
@@ -41,6 +49,3 @@ jobs:
         distributions: "sdist bdist_wheel"
         on:
           tags: true
-addons:
-  sonarcloud:
-    organization: "fniessink-github"
