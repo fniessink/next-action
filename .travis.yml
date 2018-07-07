@@ -6,20 +6,13 @@ install:
 jobs:
   include:
     - stage: test
-      python: 3.6
-      dist: trusty
-      sudo: false
-      script: 
-      - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
-      - coverage xml --fail-under=100
-      - python-codacy-coverage -r coverage.xml
-    - stage: test
       python: 3.7
       dist: xenial
       sudo: true
       script: 
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
+      - python-codacy-coverage -r coverage.xml
     - stage: test
       python: 3.6
       dist: trusty
@@ -38,6 +31,8 @@ jobs:
       dist: trusty
       sudo: false
       script:
+      - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
+      - coverage xml --fail-under=100
       - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
       - sonar-scanner -Dsonar.login=$SONAR_TOKEN
       addons:
