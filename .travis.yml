@@ -1,30 +1,38 @@
 dist: trusty
 language: python
-matrix:
-  include:
-    - python: 3.6
-      dist: trusty
-      sudo: false
-    - python: 3.7
-      dist: xenial
-      sudo: true
 install:
   - pip install -r requirements-dev.txt -r requirements.txt
-script:
-  - bandit -r .
-  - pycodestyle .
-  - test "$TRAVIS_PYTHON_VERSION" = "3.6" && pylint *.py next_action || true  # Pylint doesn't work with Python 3.7 yet
-  - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
-  - coverage xml --fail-under=100
-  - python-codacy-coverage -r coverage.xml
-  - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
-  - sonar-scanner -Dsonar.login=$SONAR_TOKEN
-deploy:
-  provider: pypi
-  user: fniessink
-  distributions: "sdist bdist_wheel"
-  on:
-    tags: true
+jobs:
+  include:
+    - stage: test
+      python: 3.6
+      dist: trusty
+      sudo: false
+      script: 
+      - bandit -r .
+      - pycodestyle .
+      - pylint *.py next_action
+      - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
+      - coverage xml --fail-under=100
+      - python-codacy-coverage -r coverage.xml
+      - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
+      - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+    - stage: test
+      python: 3.7
+      dist: xenial
+      sudo: true
+      script: 
+      - bandit -r .
+      - pycodestyle .
+      - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
+      - coverage xml --fail-under=100
+    - stage: deploy
+      deploy:
+        provider: pypi
+        user: fniessink
+        distributions: "sdist bdist_wheel"
+        on:
+          tags: true
 addons:
   sonarcloud:
     organization: "fniessink-github"
