@@ -9,24 +9,30 @@ jobs:
       dist: trusty
       sudo: false
       script: 
-      - bandit -r .
-      - pycodestyle .
-      - pylint *.py next_action
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
       - python-codacy-coverage -r coverage.xml
-      - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
-      - sonar-scanner -Dsonar.login=$SONAR_TOKEN
     - stage: test
       python: 3.7
       dist: xenial
       sudo: true
       script: 
-      - bandit -r .
-      - pycodestyle .
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
+    - stage: quality
+      python: 3.6
+      dist: trusty
+      sudo: false
+      script:
+      - bandit -r .
+      - pycodestyle .
+      - pylint *.py next_action
+      - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
+      - sonar-scanner -Dsonar.login=$SONAR_TOKEN
     - stage: deploy
+      python: 3.6
+      dist: trusty
+      sudo: false
       deploy:
         provider: pypi
         user: fniessink
