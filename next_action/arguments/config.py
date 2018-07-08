@@ -1,4 +1,4 @@
-""" Methods for reading, parsing, and validating Next-action configuration files. """
+"""Methods for reading, parsing, and validating Next-action configuration files."""
 
 import argparse
 import os
@@ -12,7 +12,7 @@ import cerberus
 
 
 def read_config_file(filename: str, default_filename: str, error: Callable[[str], None]):
-    """ Read and parse the configuration file. """
+    """Read and parse the configuration file."""
     try:
         with open(os.path.expanduser(filename), "r") as config_file:
             return yaml.safe_load(config_file.read())
@@ -28,7 +28,7 @@ def read_config_file(filename: str, default_filename: str, error: Callable[[str]
 
 
 def write_config_file(namespace: argparse.Namespace) -> None:
-    """ Generate a configuration file on standard out. """
+    """Generate a configuration file on standard out."""
     intro = "# Configuration file for Next-action. Edit the settings below as you like.\n"
     options = dict(file=namespace.file[0] if len(namespace.file) == 1 else namespace.file,
                    reference=namespace.reference, style=namespace.style or "default")
@@ -49,7 +49,7 @@ def write_config_file(namespace: argparse.Namespace) -> None:
 
 
 def validate_config_file(config, config_filename: str, error: Callable[[str], None]) -> None:
-    """ Validate the configuration file contents. """
+    """Validate the configuration file contents."""
     schema = {
         "file": {
             "type": ["string", "list"],
@@ -92,14 +92,13 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
 
 
 def flatten_errors(error_message: Union[Dict, List, str]) -> str:
-    """ Flatten Cerberus' error messages. """
-
+    """Flatten Cerberus' error messages."""
     def flatten_dict(error_dict: Dict) -> str:
-        """ Return a string version of the dict. """
+        """Return a string version of the dict."""
         return ", ".join(["{0}: {1}".format(key, flatten_errors(value)) for key, value in error_dict.items()])
 
     def flatten_list(error_list: List) -> str:
-        """ Return a string version of the list. """
+        """Return a string version of the list."""
         return ", ".join([flatten_errors(item) for item in error_list])
 
     if isinstance(error_message, dict):

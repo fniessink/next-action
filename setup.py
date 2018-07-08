@@ -1,4 +1,4 @@
-""" Setuptools setup script for Next-action. """
+"""Setuptools setup script for Next-action."""
 
 from setuptools import setup, find_packages
 

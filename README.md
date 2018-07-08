@@ -450,7 +450,7 @@ To run the unit tests:
 $ python -m unittest
 ...........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 235 tests in 4.260s
+Ran 235 tests in 2.611s
 
 OK
 ```
@@ -463,7 +463,7 @@ To create the unit test coverage report run the unit tests under coverage with:
 $ coverage run --branch -m unittest
 ...........................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 235 tests in 2.947s
+Ran 235 tests in 2.784s
 
 OK
 ```
@@ -497,9 +497,11 @@ $ pylint next_action
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 ```
 
-And pycodestyle should give no warnings or errors:
+And both pycodestyle and pydocstyle should give no warnings or errors:
 
 ```console
-$ pycodestyle next_action
+$ pycodestyle .
+(no findings hence no output)
+$ pydocstyle .
 (no findings hence no output)
 ```

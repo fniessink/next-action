@@ -1,4 +1,4 @@
-""" Entry point for Next-action's command-line interface. """
+"""Entry point for Next-action's command-line interface."""
 
 import argparse
 import os
@@ -10,7 +10,7 @@ from next_action.output import render
 
 
 def validate_arguments(namespace: argparse.Namespace, tasks: Tasks) -> str:
-    """ Check whether the context and projects given on the command line actually exist in the task file. """
+    """Check whether the context and projects given on the command line actually exist in the task file."""
     unknown_contexts = (namespace.contexts | namespace.excluded_contexts) - tasks.contexts()
     unknown_projects = (namespace.projects | namespace.excluded_projects) - tasks.projects()
     error_messages = []
@@ -24,13 +24,13 @@ def validate_arguments(namespace: argparse.Namespace, tasks: Tasks) -> str:
 
 
 def next_action() -> None:
-    """ Entry point for the command-line interface.
+    """Entry point for the command-line interface.
 
-        Basic recipe:
-        1) parse command-line arguments,
-        2) read todo.txt file(s),
-        3) determine the next action(s) and,
-        4) display them.
+    Basic recipe:
+    1) parse command-line arguments,
+    2) read todo.txt file(s),
+    3) determine the next action(s) and,
+    4) display them.
     """
     parser, namespace = parse_arguments()
     filenames = [os.path.expanduser(filename) for filename in namespace.file]

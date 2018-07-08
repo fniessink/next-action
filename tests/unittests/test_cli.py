@@ -1,4 +1,4 @@
-""" Unit tests for the command-line interface entry point. """
+"""Unit tests for the command-line interface entry point."""
 
 import os
 import sys
@@ -14,13 +14,13 @@ from .arguments.test_parser import USAGE_MESSAGE
 
 @patch.object(config, "open", mock_open(read_data=""))
 class CLITest(unittest.TestCase):
-    """ Unit tests for the command-line interface. """
+    """Unit tests for the command-line interface."""
 
     @patch.object(sys, "argv", ["next-action"])
     @patch("fileinput.open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
     def test_empty_task_file(self, mock_stdout_write):
-        """ Test the response when the task file is empty. """
+        """Test the response when the task file is empty."""
         next_action()
         self.assertEqual([call("Nothing to do!"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -28,7 +28,7 @@ class CLITest(unittest.TestCase):
     @patch("fileinput.open", mock_open(read_data="Todo\n"))
     @patch.object(sys.stdout, "write")
     def test_one_task(self, mock_stdout_write):
-        """ Test the response when the task file has one task. """
+        """Test the response when the task file has one task."""
         next_action()
         self.assertEqual([call("Todo"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -36,7 +36,7 @@ class CLITest(unittest.TestCase):
     @patch("fileinput.open", mock_open(read_data="Todo @home\nTodo @work\n"))
     @patch.object(sys.stdout, "write")
     def test_context(self, mock_stdout_write):
-        """ Test the response when the user passes a context. """
+        """Test the response when the user passes a context."""
         next_action()
         self.assertEqual([call("Todo @work"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -44,7 +44,7 @@ class CLITest(unittest.TestCase):
     @patch("fileinput.open", mock_open(read_data="Walk the dog @home\nBuy wood +DogHouse\n"))
     @patch.object(sys.stdout, "write")
     def test_project(self, mock_stdout_write):
-        """ Test the response when the user passes a project. """
+        """Test the response when the user passes a project."""
         next_action()
         self.assertEqual([call("Buy wood +DogHouse"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -52,7 +52,7 @@ class CLITest(unittest.TestCase):
     @patch("fileinput.open")
     @patch.object(sys.stderr, "write")
     def test_missing_file(self, mock_stderr_write, mock_file_open):
-        """ Test the response when the task file can't be found. """
+        """Test the response when the task file can't be found."""
         mock_file_open.side_effect = OSError("some problem")
         self.assertRaises(SystemExit, next_action)
         self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
@@ -61,7 +61,7 @@ class CLITest(unittest.TestCase):
     @patch.object(sys, "argv", ["next-action", "--help"])
     @patch.object(sys.stdout, "write")
     def test_help(self, mock_stdout_write):
-        """ Test the help message. """
+        """Test the help message."""
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
@@ -124,7 +124,7 @@ context or project is mistaken for an argument to an option.
     @patch.object(sys, "argv", ["next-action", "--version"])
     @patch.object(sys.stdout, "write")
     def test_version(self, mock_stdout_write):
-        """ Test that --version shows the version number. """
+        """Test that --version shows the version number."""
         self.assertRaises(SystemExit, next_action)
         self.assertEqual([call("next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)
 
@@ -132,7 +132,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="Walk the dog @home\n(A) Buy wood +DogHouse\n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_number(self, mock_stdout_write):
-        """ Test that the number of next actions can be specified. """
+        """Test that the number of next actions can be specified."""
         next_action()
         self.assertEqual([call("(A) Buy wood +DogHouse\n(B) Call mom"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -140,7 +140,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\n   \n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_ignore_empty_lines(self, mock_stdout_write):
-        """ Test that empty lines in the todo.txt file are ignored. """
+        """Test that empty lines in the todo.txt file are ignored."""
         next_action()
         self.assertEqual([call("(B) Call mom\nWalk the dog @home"), call("\n")], mock_stdout_write.call_args_list)
 
@@ -148,7 +148,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\nBuy beer\n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_show_all_actions(self, mock_stdout_write):
-        """ Test that all actions in the todo.txt file are shown. """
+        """Test that all actions in the todo.txt file are shown."""
         next_action()
         self.assertEqual([call("(B) Call mom\nWalk the dog @home\nBuy beer"), call("\n")],
                          mock_stdout_write.call_args_list)
@@ -157,7 +157,7 @@ context or project is mistaken for an argument to an option.
     @patch.object(sys.stdin, "readline")
     @patch.object(sys.stdout, "write")
     def test_reading_stdin(self, mock_stdout_write, mock_stdin_readline):
-        """ Test that tasks can be read from stdin works. """
+        """Test that tasks can be read from stdin works."""
         mock_stdin_readline.side_effect = ["(B) Call mom\n", "Walk the dog\n", StopIteration]
         next_action()
         self.assertEqual([call("(B) Call mom"), call("\n")], mock_stdout_write.call_args_list)
@@ -166,7 +166,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_reading_two_files(self, mock_stdout_write):
-        """ Test that tasks can be read from stdin works. """
+        """Test that tasks can be read from stdin works."""
         next_action()
         self.assertEqual([call("Call mom [todo.txt]\nCall mom [other.txt]"), call("\n")],
                          mock_stdout_write.call_args_list)
@@ -175,7 +175,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @home\nBuy beer\n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_reference_filename(self, mock_stdout_write):
-        """ Test that the printed next actions reference their filename. """
+        """Test that the printed next actions reference their filename."""
         expected_filename = os.path.expanduser("~/todo.txt")
         next_action()
         self.assertEqual([call("(B) Call mom [{0}]".format(expected_filename)),
@@ -185,7 +185,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_unknown_context(self, mock_stdout_write):
-        """ Test the response when the context is unknown. """
+        """Test the response when the context is unknown."""
         next_action()
         self.assertEqual([call("Nothing to do! (warning: unknown context: home)"), call("\n")],
                          mock_stdout_write.call_args_list)
@@ -194,7 +194,7 @@ context or project is mistaken for an argument to an option.
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\n(B) Call mom\n"))
     @patch.object(sys.stdout, "write")
     def test_unknown_project(self, mock_stdout_write):
-        """ Test the response when the project is unknown. """
+        """Test the response when the project is unknown."""
         next_action()
         self.assertEqual(
             [call("Nothing to do! (warning: unknown projects: AutumnCleaning, SpringCleaning)"), call("\n")],

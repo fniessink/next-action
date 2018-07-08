@@ -1,4 +1,4 @@
-""" Parser for the command line arguments. """
+"""Parser for the command line arguments."""
 
 import argparse
 import datetime
@@ -17,9 +17,10 @@ from .config import read_config_file, write_config_file, validate_config_file
 
 
 class NextActionArgumentParser(argparse.ArgumentParser):
-    """ Command-line argument parser for Next-action. """
+    """Command-line argument parser for Next-action."""
 
     def __init__(self) -> None:
+        """Initialize the parser."""
         super().__init__(
             usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
                                 "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
@@ -41,13 +42,13 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         self.add_filter_arguments()
 
     def add_optional_arguments(self) -> None:
-        """ Add the optional arguments to the parser. """
+        """Add the optional arguments to the parser."""
         self._optionals.title = self._optionals.title.capitalize() if self._optionals.title else None
         self.add_argument(
             "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
 
     def add_configuration_options(self) -> None:
-        """ Add the configuration options to the parser. """
+        """Add the configuration options to the parser."""
         config_group = self.add_argument_group("Configuration options")
         config_file = config_group.add_mutually_exclusive_group()
         config_file.add_argument(
@@ -58,7 +59,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-w", "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
 
     def add_input_options(self) -> None:
-        """ Add the input options to the parser. """
+        """Add the input options to the parser."""
         input_group = self.add_argument_group("Input options")
         input_group.add_argument(
             "-f", "--file", action="append", metavar="<todo.txt>", default=self.__default_filenames[:], type=str,
@@ -66,7 +67,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                  "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
 
     def add_output_options(self) -> None:
-        """ Add the output/styling options to the parser. """
+        """Add the output/styling options to the parser."""
         output_group = self.add_argument_group("Output options")
         output_group.add_argument(
             "-r", "--reference", choices=["always", "never", "multiple"], default="multiple",
@@ -78,7 +79,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="colorize the output; available styles: {0} (default: %(default)s)".format(", ".join(styles)))
 
     def add_number_options(self) -> None:
-        """ Add the number options to the parser. """
+        """Add the number options to the parser."""
         number_group = self.add_argument_group("Show multiple next actions")
         number = number_group.add_mutually_exclusive_group()
         number.add_argument(
@@ -89,7 +90,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="number of next actions to show (default: %(default)s)")
 
     def add_filter_arguments(self) -> None:
-        """ Add the filter arguments to the parser. """
+        """Add the filter arguments to the parser."""
         filters = self.add_argument_group("Limit the tasks from which the next actions are selected")
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
@@ -121,7 +122,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="projects the next action must not be part of")
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
-        """ Parse the command-line arguments. """
+        """Parse the command-line arguments."""
         namespace, remaining = self.parse_known_args(self.sorted_args(args), namespace)
         self.parse_remaining_args(remaining, namespace)
         if getattr(namespace, "config_file", self.get_default("config_file")) is not None:
@@ -134,14 +135,13 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     @classmethod
     def sorted_args(cls, args: List[str] = None) -> List[str]:
-        """ Sort the arguments so that the excluded contexts and projects are last and can be parsed by
-            parse_remaining_args. """
+        """Sort the arguments so excluded contexts and projects are last and can be parsed by parse_remaining_args."""
         args = args or sys.argv[1:]
         return [arg for arg in args if not cls.is_excluded_filter(arg)] + \
                [arg for arg in args if cls.is_excluded_filter(arg)]
 
     def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
-        """ Parse the remaining command line arguments. """
+        """Parse the remaining command line arguments."""
         for value in remaining:
             if self.is_excluded_filter(value):
                 argument = value[len("-"):]
@@ -160,7 +160,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         namespace.excluded_projects = subset(namespace.filters, "-+")
 
     def process_config_file(self, namespace: argparse.Namespace) -> None:
-        """ Process the configuration file. """
+        """Process the configuration file."""
         config_filename = namespace.config_file
         config = read_config_file(config_filename, self.get_default("config_file"), self.error)
         if not config:
@@ -169,7 +169,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         self.insert_config(config, namespace)
 
     def insert_config(self, config, namespace: argparse.Namespace) -> None:
-        """ Insert the configured parameters in the namespace, if no command line arguments are present. """
+        """Insert the configured parameters in the namespace, if no command line arguments are present."""
         if self.arguments_not_specified("-f", "--file"):
             filenames = config.get("file", [])
             if isinstance(filenames, str):
@@ -190,7 +190,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         self.insert_configured_filters(config, namespace)
 
     def insert_configured_filters(self, config, namespace: argparse.Namespace) -> None:
-        """ Insert the configured filters in the namespace, if no matching command line filters are present. """
+        """Insert the configured filters in the namespace, if no matching command line filters are present."""
         filters = config.get("filters", [])
         if isinstance(filters, str):
             filters = re.split(r"\s", filters)
@@ -202,24 +202,24 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
     @staticmethod
     def arguments_not_specified(*arguments: str) -> bool:
-        """ Return whether any of the arguments was specified on the command line. """
+        """Return whether any of the arguments was specified on the command line."""
         return not any([command_line_arg.startswith(argument) for argument in arguments
                         for command_line_arg in sys.argv])
 
     @staticmethod
     def is_excluded_filter(argument: str) -> bool:
-        """ Return whether the argument is an excluded context or project. """
+        """Return whether the argument is an excluded context or project."""
         return argument.startswith("-@") or argument.startswith("-+")
 
     @staticmethod
     def filter_not_specified(filtered: str) -> bool:
-        """ Return whether the context or project or its opposite were specified on the command line. """
+        """Return whether the context or project or its opposite were specified on the command line."""
         prefix = "-"
         opposite = filtered[len(prefix):] if filtered.startswith(prefix) else prefix + filtered
         return not (filtered in sys.argv or opposite in sys.argv)
 
     def fix_filenames(self, namespace: argparse.Namespace) -> None:
-        """ Fix the filenames. """
+        """Fix the filenames."""
         # Work around the issue that the "append" action doesn't overwrite defaults.
         # See https://bugs.python.org/issue16399.
         filenames = namespace.file[:]
@@ -232,13 +232,15 @@ class NextActionArgumentParser(argparse.ArgumentParser):
 
 
 class CapitalisedHelpFormatter(argparse.HelpFormatter):
-    """ Capitalise the usage string. """
+    """Capitalise the usage string."""
+
     def add_usage(self, usage, actions, groups, prefix=None):
+        """Insert a capitalised usage string."""
         return super().add_usage(usage, actions, groups, prefix or "Usage: ")
 
 
 def filter_type(value: str) -> str:
-    """ Return the filter if it's valid, else raise an error. """
+    """Return the filter if it's valid, else raise an error."""
     if value.startswith("@") or value.startswith("+"):
         if value[len("@"):]:
             return value
@@ -249,7 +251,7 @@ def filter_type(value: str) -> str:
 
 
 def date_type(value: str) -> datetime.date:
-    """ Return the date if it's valid, else raise an error. """
+    """Return the date if it's valid, else raise an error."""
     date_time = dateparser.parse(value, languages=["en"],
                                  settings={"PREFER_DAY_OF_MONTH": "last", "PREFER_DATES_FROM": "future"})
     if date_time:
@@ -258,5 +260,5 @@ def date_type(value: str) -> datetime.date:
 
 
 def subset(filters: List[str], prefix: str) -> Set[str]:
-    """ Return a subset of the filters based on prefix. """
+    """Return a subset of the filters based on prefix."""
     return set([f.strip(prefix) for f in filters if f.startswith(prefix)])

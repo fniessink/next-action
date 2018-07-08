@@ -1,10 +1,10 @@
-""" Colorize the output. """
+"""Colorize the output."""
 
 from pygments import lexers, formatters, highlight
 
 
 def colorize(todotxt: str, style: str) -> str:
-    """ Colorize the todotxt text according to the style. """
+    """Colorize the todotxt text according to the style."""
     if not style:
         return todotxt
     lexer = lexers.get_lexer_by_name("todotxt")

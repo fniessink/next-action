@@ -1,4 +1,4 @@
-""" Insert the output of console commands into the README.md file. """
+"""Insert the output of console commands into the README.md file."""
 
 import datetime
 import os
@@ -8,7 +8,7 @@ import sys
 
 
 def do_command(line):
-    """ Run the command on the line and return its stdout and stderr. """
+    """Run the command on the line and return its stdout and stderr."""
     command = shlex.split(line[2:])
     if command[0] == "next-action" and "--write-config-file" not in command:
         command.insert(1, "--config")
@@ -16,14 +16,14 @@ def do_command(line):
     command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                     universal_newlines=True)
     stdout = command_output.stdout.strip()
-    if command[0] in ("mypy", "pycodestyle") and stdout == "":
+    if command[0] in ("mypy", "pycodestyle", "pydocstyle") and stdout == "":
         stdout = "(no findings hence no output)"
     stderr = "" if command[0] == "pylint" else command_output.stderr.strip()
     return stdout, stderr
 
 
 def create_toc(lines, toc_header, min_level=2, max_level=3):
-    """ Create the table of contents. """
+    """Create the table of contents."""
     result = []
     for line in lines:
         level = line.count("#", 0, 6)
@@ -37,15 +37,19 @@ def create_toc(lines, toc_header, min_level=2, max_level=3):
 
 
 class StateMachine(object):
-    """ State machine for processing the lines in the README.md. Console commands are executed and the output is
-        inserted. The table of contents is inserted and the old table of contents is skipped. """
+    """State machine for processing the lines in the README.md.
+
+    Console commands are executed and the output is inserted. The table of contents is inserted and the old
+    table of contents is skipped.
+    """
 
     def __init__(self, toc, toc_header):
+        """Initialize the state machine with the table of contents to insert and its header."""
         self.toc = toc
         self.toc_header = toc_header
 
     def default(self, line):
-        """ Default action: print the line. """
+        """In the default state: print the line."""
         print(line)
         if line == "```console":
             return self.in_console
@@ -54,7 +58,7 @@ class StateMachine(object):
         return self.default
 
     def in_console(self, line):
-        """ In a console section: execute commands. Skip old output. """
+        """In a console section: execute commands. Skip old output."""
         if line.startswith("$ "):
             print(line)
             stdout, stderr = do_command(line)
@@ -69,12 +73,12 @@ class StateMachine(object):
         return self.in_console
 
     def start_toc(self, line):
-        """ Start of the table of contents. """
+        """Start of the table of contents."""
         print(line)
         return self.print_toc
 
     def print_toc(self, line):
-        """ Print the table of contents. """
+        """Print the table of contents."""
         print(self.toc)
         if "- [" in line:
             return self.in_old_toc
@@ -82,7 +86,7 @@ class StateMachine(object):
         return self.default
 
     def in_old_toc(self, line):
-        """ Skip the old table of contents. """
+        """Skip the old table of contents."""
         if "- [" in line:
             return self.in_old_toc
         print(line)
@@ -90,7 +94,7 @@ class StateMachine(object):
 
 
 def update_readme():
-    """ Read the README markdown line by line and update table of contents and console commands. """
+    """Read the README markdown line by line and update table of contents and console commands."""
     start = datetime.datetime.now()
     with open("README.md") as readme:
         lines = readme.readlines()

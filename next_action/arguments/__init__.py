@@ -1,4 +1,4 @@
-""" Package for parsing command line arguments. """
+"""Package for parsing command line arguments."""
 
 import argparse
 import os
@@ -9,7 +9,7 @@ from .parser import NextActionArgumentParser
 
 
 def parse_arguments() -> Tuple[argparse.ArgumentParser, argparse.Namespace]:
-    """ Build the argument parser and parse the command line arguments. """
+    """Build the argument parser and parse the command line arguments."""
     # Ensure that the help info is printed using all columns available
     os.environ['COLUMNS'] = str(shutil.get_terminal_size().columns)
     parser = NextActionArgumentParser()
