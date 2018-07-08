@@ -482,7 +482,7 @@ TOTAL    1341      0    173      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, and pycodestyle to check for quality issues. Mypy should give no warnings or errors:
+We use mypy, pylint, pycodestyle, and pydocstyle to check for quality issues. Mypy should give no warnings or errors:
 
 ```console
 $ mypy --no-incremental --ignore-missing-import next_action
