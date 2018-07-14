@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased] - 2018-07-14
+
+### Fixed
+
+- Allow for using `--config` when generating a configuration file with `--write-config-file` so it is possible to ignore the existing configuration file when generating a new one. Fixes #161.
+
 ## [1.5.2] - 2018-07-07
 
 ### Fixed

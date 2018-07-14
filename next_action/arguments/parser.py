@@ -50,12 +50,11 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def add_configuration_options(self) -> None:
         """Add the configuration options to the parser."""
         config_group = self.add_argument_group("Configuration options")
-        config_file = config_group.add_mutually_exclusive_group()
-        config_file.add_argument(
+        config_group.add_argument(
             "-c", "--config-file", metavar="<config.cfg>", type=str, default="~/.next-action.cfg", nargs="?",
             help="filename of configuration file to read (default: %(default)s); omit filename to not read any "
                  "configuration file")
-        config_file.add_argument(
+        config_group.add_argument(
             "-w", "--write-config-file", help="generate a sample configuration file and exit", action="store_true")
 
     def add_input_options(self) -> None:
