@@ -161,6 +161,16 @@ class WriteConfigFileTest(ConfigTestCase):
         expected += "file: ~/todo.txt\nnumber: 3\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--config"])
+    @patch.object(config, "open", mock_open(read_data="number: 3"))
+    @patch.object(sys.stdout, "write")
+    def test_ignore_config(self, mock_stdout_write):
+        """Test that the written config file does not contain the read config file."""
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+
 
 class FilenameTest(ConfigTestCase):
     """Unit tests for the config file parameter."""
