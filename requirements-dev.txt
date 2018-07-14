@@ -8,3 +8,5 @@ pycodestyle==2.4.0
 bandit==1.4.0
 mypy==0.620
 hypothesis==3.66.29
+behave==1.2.6
+
