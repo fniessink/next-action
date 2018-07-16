@@ -40,5 +40,5 @@ def ask_next_actions(context, number):
 
 @then("Next-action shows the user {number:d} next actions")
 def show_next_actions(context, number):
-    print(number, context.next_action())
+    print(context.next_action())
     assert context.next_action().strip().count("\n") == number - 1
