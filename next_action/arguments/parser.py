@@ -243,9 +243,8 @@ def filter_type(value: str) -> str:
     if value.startswith("@") or value.startswith("+"):
         if value[len("@"):]:
             return value
-        else:
-            value_type = "context" if value.startswith("@") else "project"
-            raise argparse.ArgumentTypeError("{0} name missing".format(value_type))
+        value_type = "context" if value.startswith("@") else "project"
+        raise argparse.ArgumentTypeError("{0} name missing".format(value_type))
     raise argparse.ArgumentTypeError("unrecognized arguments: {0}".format(value))
 
 
@@ -260,4 +259,4 @@ def date_type(value: str) -> datetime.date:
 
 def subset(filters: List[str], prefix: str) -> Set[str]:
     """Return a subset of the filters based on prefix."""
-    return set([f.strip(prefix) for f in filters if f.startswith(prefix)])
+    return set(f.strip(prefix) for f in filters if f.startswith(prefix))

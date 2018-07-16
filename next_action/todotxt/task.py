@@ -6,7 +6,7 @@ import typing
 from typing import List, Optional, Sequence, Set
 
 
-class Task(object):
+class Task:
     """A task from a line in a todo.txt file."""
 
     iso_date_reg_exp = r"(\d{4})-(\d{1,2})-(\d{1,2})"
