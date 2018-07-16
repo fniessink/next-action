@@ -19,8 +19,7 @@ def read_config_file(filename: str, default_filename: str, error: Callable[[str]
     except FileNotFoundError as reason:
         if filename == default_filename:
             return dict()  # Don't complain if there's no configuration file at the default location
-        else:
-            error("can't open file: {0}".format(reason))
+        error("can't open file: {0}".format(reason))
     except OSError as reason:
         error("can't open file: {0}".format(reason))
     except yaml.YAMLError as reason:
@@ -103,6 +102,6 @@ def flatten_errors(error_message: Union[Dict, List, str]) -> str:
 
     if isinstance(error_message, dict):
         return flatten_dict(error_message)
-    elif isinstance(error_message, list):
+    if isinstance(error_message, list):
         return flatten_list(error_message)
     return error_message
