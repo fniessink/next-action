@@ -10,8 +10,8 @@ class Tasks(List[Task]):
 
     def contexts(self) -> Set[str]:
         """Return the contexts used in the collection of tasks."""
-        return set(context for task in self for context in task.contexts())
+        return set(context for task in self for context in task.contexts())  # pylint: disable=not-an-iterable
 
     def projects(self) -> Set[str]:
         """Return the projects used in the collection of tasks."""
-        return set(project for task in self for project in task.projects())
+        return set(project for task in self for project in task.projects())  # pylint: disable=not-an-iterable
