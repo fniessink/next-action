@@ -1,7 +1,6 @@
 """Code to run before and after certain events during testing."""
 
 import subprocess
-import tempfile
 
 
 def before_all(context):
@@ -10,5 +9,4 @@ def before_all(context):
 
 def before_scenario(context, scenario):  # pylint: disable=unused-argument
     """Create a temporary todo.txt file."""
-    context.file = tempfile.NamedTemporaryFile(mode="w")
     context.arguments = ["next-action"]

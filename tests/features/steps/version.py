@@ -11,10 +11,6 @@ def argument_version(context):
 def argument_help(context):
     context.arguments.append("--help")
 
-@when("the user asks for all next actions")
-def argument_all(context):
-    context.arguments.append("--all")
-
 @then("Next-action shows the version number")
 def check_version_number(context):
     expected = "next-action {0}\n".format(next_action.__version__)
