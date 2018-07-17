@@ -32,10 +32,7 @@ def nothing_todo(context):
 
 @when("the user asks for {number} next actions")
 def ask_next_actions(context, number):
-    if number == "all":
-        context.arguments.append("--all")
-    else:
-        context.arguments.extend(["--number", str(number)])
+    context.arguments.extend(["--all"] if number == "all" else ["--number", str(number)])
 
 @then("Next-action shows the user {number:d} next {action}")
 def show_next_actions(context, number, action):
