@@ -2,6 +2,8 @@
 
 import tempfile
 
+from behave import given, when, then
+
 
 @given("an empty todo.txt")
 def empty_todotxt(context):
@@ -28,6 +30,16 @@ def next_action_at_home(context, contexts):
     contexts = contexts.split(" and not at ")
     context.arguments.extend(["-@{0}".format(c) for c in contexts])
 
+@when("the user asks for the next action for {projects}")
+def next_action_at_home(context, projects):
+    projects = projects.split(" or for ")
+    context.arguments.extend(["+{0}".format(p) for p in projects])
+
+@when("the user asks for the next action not for {projects}")
+def next_action_at_home(context, projects):
+    projects = projects.split(" and not for ")
+    context.arguments.extend(["-+{0}".format(p) for p in projects])
+
 @when("the user asks for the next action with a project")
 def next_action_with_project(context):
     context.arguments.append("+some_project")
@@ -41,19 +53,32 @@ def ask_next_actions(context, number):
     context.arguments.extend(["--all"] if number == "all" else ["--number", str(number)])
 
 @then("Next-action shows the next action at {contexts}")
-def show_next_action_at_home(context, contexts):
+def show_next_action_at_contexts(context, contexts):
     contexts = contexts.split(" and at ")
     for c in contexts:
         assert "@{0}".format(c) in context.next_action()
 
 @then("Next-action shows the next action not at {contexts}")
-def show_next_action_at_home(context, contexts):
-    contexts = contexts.split(" not and at ")
+def show_next_action_not_at_contexts(context, contexts):
+    contexts = contexts.split(" and not at ")
     for c in contexts:
         assert "@{0}".format(c) not in context.next_action()
 
-@then("Next-action shows the user {number:d} next {action}")
+@then("Next-action shows the next action for {projects}")
+def show_next_action_for_projects(context, projects):
+    projects = projects.split(" or for ")
+    assert any(["+{0}".format(p) in context.next_action() for p in projects])
+
+@then("Next-action shows the next action not for {projects}")
+def show_next_action_at_home(context, projects):
+    projects = projects.split(" and not for ")
+    for p in projects:
+        assert "+{0}".format(p) not in context.next_action()
+
+@then("Next-action shows the user {number} next {action}")
 def show_next_actions(context, number, action):
+    if number == "the":
+        number = 1
     assert context.next_action().strip().count("\n") == number - 1
 
 @then("Next-action tells the user the number argument is invalid")

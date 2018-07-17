@@ -18,13 +18,21 @@ Feature: filter next-actions by context
     Then Next-action shows the next action at home and at work
 
   Scenario: non-existing context
-    When the user asks for the next action at the moon
+    When the user asks for the next action at night
     Then Next-action tells the user there's nothing to do
 
   Scenario: mix of existing and non-existing contexts
-    When the user asks for the next action at the moon and at work
+    When the user asks for the next action at night and at work
     Then Next-action tells the user there's nothing to do
 
   Scenario: exclude one context
     When the user asks for the next action not at home
     Then Next-action shows the next action not at home
+
+  Scenario: exclude two contexts
+    When the user asks for the next action not at home and not at work
+    Then Next-action shows the next action not at home and not at work
+
+  Scenario: exclude non-existing context
+    When the user asks for the next action not at night
+    Then Next-action shows the user the next action

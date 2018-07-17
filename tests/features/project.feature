@@ -1,0 +1,38 @@
+Feature: filter next-actions by project
+
+  Background: a todo.txt file with different projects
+    Given a todo.txt with
+      """
+      Task A
+      Task B +GarageSale
+      Task C +PaintHouse
+      Task D +GarageSale +PaintHouse
+      """
+
+  Scenario: one project
+    When the user asks for the next action for GarageSale
+    Then Next-action shows the next action for GarageSale
+
+  Scenario: two projects
+    When the user asks for the next action for GarageSale or for PaintHouse
+    Then Next-action shows the next action for GarageSale or for PaintHouse
+
+  Scenario: non-existing project
+    When the user asks for the next action for DogHouse
+    Then Next-action tells the user there's nothing to do
+
+  Scenario: mix of existing and non-existing projects
+    When the user asks for the next action for DogHouse or for PaintHouse
+    Then Next-action shows the next action for PaintHouse
+
+  Scenario: exclude one project
+    When the user asks for the next action not for GarageSale
+    Then Next-action shows the next action not for GarageSale
+
+  Scenario: exclude two projects
+    When the user asks for the next action not for GarageSale and not for PaintHouse
+    Then Next-action shows the next action not for GarageSale and not for PaintHouse
+
+  Scenario: exclude non-existing project
+    When the user asks for the next action not for DogHouse
+    Then Next-action shows the user the next action
