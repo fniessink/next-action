@@ -43,4 +43,4 @@ def show_next_actions(context, number, action):
 
 @then("Next-action tells the user the number argument is invalid")
 def show_next_actions(context):
-    assert "next-action: error: argument -n/--number: invalid int value:" in context.next_action()
+    assert "next-action: error: argument -n/--number: invalid number:" in context.next_action()
