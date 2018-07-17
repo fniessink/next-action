@@ -1,5 +1,7 @@
 """Test the version feature."""
 
+from asserts import assert_equal
+
 import next_action
 
 
@@ -14,4 +16,4 @@ def argument_help(context):
 @then("Next-action shows the version number")
 def check_version_number(context):
     expected = "next-action {0}\n".format(next_action.__version__)
-    assert expected == context.next_action()
+    assert_equal(expected, context.next_action())

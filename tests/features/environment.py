@@ -1,6 +1,6 @@
 """Code to run before and after certain events during testing."""
 
-import subprocess
+import subprocess  # nosec
 
 
 def before_all(context):

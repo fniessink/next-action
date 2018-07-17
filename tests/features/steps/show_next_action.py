@@ -2,6 +2,7 @@
 
 import tempfile
 
+from asserts import assert_equal, assert_in, assert_true
 from behave import given, when, then
 
 
@@ -42,7 +43,7 @@ def next_action_not_for_project(context, projects):
 
 @then("Next-action tells the user there's nothing to do")
 def nothing_todo(context):
-    assert "Nothing to do!" in context.next_action()
+    assert_in("Nothing to do!", context.next_action())
 
 @when("the user asks for {number} next actions")
 def ask_next_actions(context, number):
@@ -51,28 +52,28 @@ def ask_next_actions(context, number):
 @then("Next-action shows the next action at {contexts}")
 def show_next_action_at_contexts(context, contexts):
     contexts = contexts.split(" and at ")
-    assert all([f"@{c}" in context.next_action() for c in contexts])
+    assert_true(all([f"@{c}" in context.next_action() for c in contexts]))
 
 @then("Next-action shows the next action not at {contexts}")
 def show_next_action_not_at_contexts(context, contexts):
     contexts = contexts.split(" and not at ")
-    assert all([f"@{c}" not in context.next_action() for c in contexts])
+    assert_true(all([f"@{c}" not in context.next_action() for c in contexts]))
 
 @then("Next-action shows the next action for {projects}")
 def show_next_action_for_projects(context, projects):
     projects = projects.split(" or for ")
-    assert any([f"+{p}" in context.next_action() for p in projects])
+    assert_true(any([f"+{p}" in context.next_action() for p in projects]))
 
 @then("Next-action shows the next action not for {projects}")
 def show_next_action_at_home(context, projects):
     projects = projects.split(" and not for ")
-    assert all([f"+{p}" not in context.next_action() for p in projects])
+    assert_true(all([f"+{p}" not in context.next_action() for p in projects]))
 
 @then("Next-action shows the user {number} next {action}")
 def show_next_actions(context, number, action):
     number = 1 if number == "the" else int(number)
-    assert context.next_action().strip().count("\n") == number - 1
+    assert_equal(context.next_action().strip().count("\n"), number - 1)
 
 @then("Next-action tells the user the number argument is invalid")
 def show_next_actions(context):
-    assert "next-action: error: argument -n/--number: invalid number:" in context.next_action()
+    assert_in("next-action: error: argument -n/--number: invalid number:", context.next_action())
