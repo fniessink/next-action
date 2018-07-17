@@ -11,7 +11,13 @@ def before_all(context):
         return result.stdout + result.stderr
 
     context.next_action = run_next_action
+    subprocess.run(["coverage", "erase"])
 
 def before_scenario(context, scenario):  # pylint: disable=unused-argument
-    """Create a temporary todo.txt file."""
-    context.arguments = ["next-action"]
+    """Set up arguments."""
+    context.arguments = ["coverage", "run", "--omit", ".venv/*", "--branch", "--parallel-mode", ".venv/bin/next-action"]
+
+def after_all(context):
+    """Create coverage report."""
+    subprocess.run(["coverage", "combine"])
+    subprocess.run(["coverage", "html", "--directory", "build/htmlcov"])
