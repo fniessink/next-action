@@ -1,6 +1,6 @@
 Feature: show more than one next action
 
-  Background: A simple todo.txt file
+  Background: a simple todo.txt file
     Given a todo.txt with
       """
       Task A
@@ -8,22 +8,26 @@ Feature: show more than one next action
       Task C
       """
 
-  Scenario: show two next actions
+  Scenario: two next actions
     When the user asks for 2 next actions
     Then Next-action shows the user 2 next actions
 
-  Scenario: show all next actions
+  Scenario: all next actions
     When the user asks for all next actions
     Then Next-action shows the user 3 next actions
 
-  Scenario: ask for more next actions than available
+  Scenario: more next actions than available
     When the user asks for 4 next actions
     Then Next-action shows the user 3 next actions
 
-  Scenario: ask for a negative number of next actions
+  Scenario: zero next actions
+    When the user asks for 0 next actions
+    Then Next-action tells the user the number argument is invalid
+
+  Scenario: a negative number of next actions
     When the user asks for -2 next actions
     Then Next-action tells the user the number argument is invalid
 
-  Scenario: ask for a invalid number of next actions
+  Scenario: an invalid number of next actions
     When the user asks for x next actions
     Then Next-action tells the user the number argument is invalid

@@ -4,7 +4,7 @@ import tempfile
 
 
 @given("an empty todo.txt")
-def empty_todotxt(context):  # pylint: disable=unused-argument
+def empty_todotxt(context):
     context.file = tempfile.NamedTemporaryFile(mode="w")
     context.arguments.extend(["--file", context.file.name])
 
