@@ -85,7 +85,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-a", "--all", default=1, action="store_const", dest="number", const=sys.maxsize,
             help="show all next actions")
         number.add_argument(
-            "-n", "--number", metavar="<number>", type=int, default=1,
+            "-n", "--number", metavar="<number>", type=number_type, default=1,
             help="number of next actions to show (default: %(default)s)")
 
     def add_filter_arguments(self) -> None:
@@ -255,6 +255,17 @@ def date_type(value: str) -> datetime.date:
     if date_time:
         return date_time.date()
     raise argparse.ArgumentTypeError("invalid date: {0}".format(value))
+
+
+def number_type(value: str) -> int:
+    """Return the value if it's positive, else raise an error."""
+    try:
+        number = int(value)
+        if number > 0:
+            return number
+    except ValueError:
+        pass
+    raise argparse.ArgumentTypeError("invalid number: {0}".format(value))
 
 
 def subset(filters: List[str], prefix: str) -> Set[str]:

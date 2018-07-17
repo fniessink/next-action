@@ -212,7 +212,16 @@ class NumberTest(ParserTestCase):
         """Test that the argument parser exits if the option is faulty."""
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -n/--number: invalid int value: 'not_a_number'\n")],
+                          call("next-action: error: argument -n/--number: invalid number: not_a_number\n")],
+                         mock_stderr_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--number", "-1"])
+    @patch.object(sys.stderr, "write")
+    def test_negative_number(self, mock_stderr_write):
+        """Test that the argument parser exits if the option is faulty."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: argument -n/--number: invalid number: -1\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--all"])
