@@ -22,6 +22,16 @@ def next_action(context):
 def next_action_with_context(context):
     context.arguments.append("@some_context")
 
+@when("the user asks for the next action at {contexts}")
+def next_action_at_home(context, contexts):
+    contexts = contexts.split(" and at ")
+    context.arguments.extend(["@{0}".format(c) for c in contexts])
+
+@when("the user asks for the next action not at {contexts}")
+def next_action_at_home(context, contexts):
+    contexts = contexts.split(" and not at ")
+    context.arguments.extend(["-@{0}".format(c) for c in contexts])
+
 @when("the user asks for the next action with a project")
 def next_action_with_project(context):
     context.arguments.append("+some_project")
@@ -33,6 +43,18 @@ def nothing_todo(context):
 @when("the user asks for {number} next actions")
 def ask_next_actions(context, number):
     context.arguments.extend(["--all"] if number == "all" else ["--number", str(number)])
+
+@then("Next-action shows the next action at {contexts}")
+def show_next_action_at_home(context, contexts):
+    contexts = contexts.split(" and at ")
+    for c in contexts:
+        assert "@{0}".format(c) in context.next_action()
+
+@then("Next-action shows the next action not at {contexts}")
+def show_next_action_at_home(context, contexts):
+    contexts = contexts.split(" not and at ")
+    for c in contexts:
+        assert "@{0}".format(c) not in context.next_action()
 
 @then("Next-action shows the user {number:d} next {action}")
 def show_next_actions(context, number, action):
