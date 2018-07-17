@@ -21,24 +21,24 @@ def next_action(context):
     pass  # No arguments needed
 
 @when("the user asks for the next action at {contexts}")
-def next_action_at_home(context, contexts):
+def next_action_at_context(context, contexts):
     contexts = contexts.split(" and at ")
-    context.arguments.extend(["@{0}".format(c) for c in contexts])
+    context.arguments.extend([f"@{c}" for c in contexts])
 
 @when("the user asks for the next action not at {contexts}")
-def next_action_at_home(context, contexts):
+def next_action_not_at_context(context, contexts):
     contexts = contexts.split(" and not at ")
-    context.arguments.extend(["-@{0}".format(c) for c in contexts])
+    context.arguments.extend([f"-@{c}" for c in contexts])
 
 @when("the user asks for the next action for {projects}")
-def next_action_at_home(context, projects):
+def next_action_for_project(context, projects):
     projects = projects.split(" or for ")
-    context.arguments.extend(["+{0}".format(p) for p in projects])
+    context.arguments.extend([f"+{p}" for p in projects])
 
 @when("the user asks for the next action not for {projects}")
-def next_action_at_home(context, projects):
+def next_action_not_for_project(context, projects):
     projects = projects.split(" and not for ")
-    context.arguments.extend(["-+{0}".format(p) for p in projects])
+    context.arguments.extend([f"-+{p}" for p in projects])
 
 @then("Next-action tells the user there's nothing to do")
 def nothing_todo(context):
@@ -51,25 +51,22 @@ def ask_next_actions(context, number):
 @then("Next-action shows the next action at {contexts}")
 def show_next_action_at_contexts(context, contexts):
     contexts = contexts.split(" and at ")
-    for c in contexts:
-        assert "@{0}".format(c) in context.next_action()
+    assert all([f"@{c}" in context.next_action() for c in contexts])
 
 @then("Next-action shows the next action not at {contexts}")
 def show_next_action_not_at_contexts(context, contexts):
     contexts = contexts.split(" and not at ")
-    for c in contexts:
-        assert "@{0}".format(c) not in context.next_action()
+    assert all([f"@{c}" not in context.next_action() for c in contexts])
 
 @then("Next-action shows the next action for {projects}")
 def show_next_action_for_projects(context, projects):
     projects = projects.split(" or for ")
-    assert any(["+{0}".format(p) in context.next_action() for p in projects])
+    assert any([f"+{p}" in context.next_action() for p in projects])
 
 @then("Next-action shows the next action not for {projects}")
 def show_next_action_at_home(context, projects):
     projects = projects.split(" and not for ")
-    for p in projects:
-        assert "+{0}".format(p) not in context.next_action()
+    assert all([f"+{p}" not in context.next_action() for p in projects])
 
 @then("Next-action shows the user {number} next {action}")
 def show_next_actions(context, number, action):
