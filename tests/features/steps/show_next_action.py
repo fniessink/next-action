@@ -40,10 +40,6 @@ def next_action_at_home(context, projects):
     projects = projects.split(" and not for ")
     context.arguments.extend(["-+{0}".format(p) for p in projects])
 
-@when("the user asks for the next action with a project")
-def next_action_with_project(context):
-    context.arguments.append("+some_project")
-
 @then("Next-action tells the user there's nothing to do")
 def nothing_todo(context):
     assert "Nothing to do!" in context.next_action()
@@ -77,8 +73,7 @@ def show_next_action_at_home(context, projects):
 
 @then("Next-action shows the user {number} next {action}")
 def show_next_actions(context, number, action):
-    if number == "the":
-        number = 1
+    number = 1 if number == "the" else int(number)
     assert context.next_action().strip().count("\n") == number - 1
 
 @then("Next-action tells the user the number argument is invalid")

@@ -29,10 +29,10 @@ Feature: showing there's nothing to do
     When the user asks for the next action at home
     Then Next-action tells the user there's nothing to do
 
-  Scenario: nothing to do when there are no tasks with the given project
+  Scenario: nothing to do when there are no tasks for the given project
     Given a todo.txt with
       """
       Task without project
       """
-    When the user asks for the next action with a project
+    When the user asks for the next action for Project
     Then Next-action tells the user there's nothing to do
