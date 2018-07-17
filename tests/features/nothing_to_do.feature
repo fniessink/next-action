@@ -26,7 +26,7 @@ Feature: showing there's nothing to do
       """
       Task without context
       """
-    When the user asks for the next action with a context
+    When the user asks for the next action at home
     Then Next-action tells the user there's nothing to do
 
   Scenario: nothing to do when there are no tasks with the given project

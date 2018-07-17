@@ -18,10 +18,6 @@ def todotxt(context):
 def next_action(context):
     pass  # No arguments needed
 
-@when("the user asks for the next action with a context")
-def next_action_with_context(context):
-    context.arguments.append("@some_context")
-
 @when("the user asks for the next action at {contexts}")
 def next_action_at_home(context, contexts):
     contexts = contexts.split(" and at ")
