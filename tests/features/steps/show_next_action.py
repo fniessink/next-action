@@ -1,9 +1,20 @@
 """Test the next action feature."""
 
+import datetime
 import tempfile
 
 from asserts import assert_equal, assert_in, assert_true
 from behave import given, when, then
+
+
+def tomorrow() -> str:
+    """Return the date of tomorrow as an ISO-formatted string."""
+    return (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+
+
+def yesterday() -> str:
+    """Return the date of yesterday as an ISO-formatted string."""
+    return (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
 
 
 @given("an empty todo.txt")
@@ -17,7 +28,7 @@ def empty_todotxt(context):
 def todotxt(context):
     """Add the contents to the temporary todo.txt file."""
     context.execute_steps("given an empty todo.txt")
-    context.file.write(context.text)
+    context.file.write(context.text.format(tomorrow=tomorrow(), yesterday=yesterday()))
     context.file.seek(0)
 
 
@@ -25,6 +36,18 @@ def todotxt(context):
 def next_action(context):
     """Next-action shows the next action by default, so no arguments needed."""
     pass
+
+
+@when("the user asks for the next action due tomorrow")
+def next_action_due(context):
+    """Add the due argument."""
+    context.arguments.extend(["--due", tomorrow()])
+
+
+@when("the user asks for the next action that's over due")
+def next_action_over_due(context):
+    """Add the over due argument."""
+    context.arguments.extend(["--overdue"])
 
 
 @when("the user asks for the next action at {contexts}")
@@ -93,6 +116,18 @@ def show_next_action_at_home(context, projects):
     """Check that the next action doesn't have the excluded projects."""
     projects = projects.split(" and not for ")
     assert_true(all([f"+{p}" not in context.next_action() for p in projects]))
+
+
+@then("Next-action shows the user the next action due tomorrow")
+def show_next_action_due_tomorrow(context):
+    """Check that the next action is due tomorrow."""
+    assert_in(tomorrow(), context.next_action())
+
+
+@then("Next-action shows the user the next action that's over due")
+def show_next_action_over_due(context):
+    """Check that the next action was due yesterday."""
+    assert_in(yesterday(), context.next_action())
 
 
 @then("Next-action shows the user {number} next {action}")
