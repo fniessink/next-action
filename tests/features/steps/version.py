@@ -1,6 +1,7 @@
 """Test the version feature."""
 
 from asserts import assert_equal
+from behave import when, then
 
 import next_action
 

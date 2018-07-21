@@ -98,7 +98,7 @@ def show_next_action_at_contexts(context, contexts):
 
 
 @then("Next-action shows the next action not at {contexts}")
-def show_next_action_not_at_contexts(context, contexts):
+def show_next_not_at_contexts(context, contexts):
     """Check that the next action doesn't have the excluded contexts."""
     contexts = contexts.split(" and not at ")
     assert_true(all([f"@{c}" not in context.next_action() for c in contexts]))
@@ -138,6 +138,6 @@ def show_next_actions(context, number, action):
 
 
 @then("Next-action tells the user the number argument is invalid")
-def show_next_actions(context):
+def check_eror_messge(context):
     """Check the error message."""
     assert_in("next-action: error: argument -n/--number: invalid number:", context.next_action())
