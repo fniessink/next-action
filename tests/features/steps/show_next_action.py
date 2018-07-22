@@ -7,14 +7,19 @@ from asserts import assert_equal, assert_in, assert_true
 from behave import given, when, then
 
 
+def relative_date(days: int) -> str:
+    """Return a relative date as ISO-formatted string."""
+    return (datetime.date.today() + datetime.timedelta(days=days)).isoformat()
+
+
 def tomorrow() -> str:
     """Return the date of tomorrow as an ISO-formatted string."""
-    return (datetime.date.today() + datetime.timedelta(days=1)).isoformat()
+    return relative_date(1)
 
 
 def yesterday() -> str:
     """Return the date of yesterday as an ISO-formatted string."""
-    return (datetime.date.today() - datetime.timedelta(days=1)).isoformat()
+    return relative_date(-1)
 
 
 @given("an empty todo.txt")
