@@ -36,3 +36,19 @@ Feature: filter next-actions by project
   Scenario: exclude non-existing project
     When the user asks for the next action not for DogHouse
     Then Next-action shows the user the next action
+
+  Scenario: project in configuration file
+    Given a configuration file with
+      """
+      filters: +PaintHouse
+      """
+    When the user asks for the next action
+    Then Next-action shows the user the next action for PaintHouse
+
+  Scenario: override project in configuration file
+    Given a configuration file with
+      """
+      filters: +PaintHouse
+      """
+    When the user asks for the next action at GarageSale
+    Then Next-action shows the user the next action for GarageSale

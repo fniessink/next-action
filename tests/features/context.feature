@@ -36,3 +36,19 @@ Feature: filter next-actions by context
   Scenario: exclude non-existing context
     When the user asks for the next action not at night
     Then Next-action shows the user the next action
+
+  Scenario: context in configuration file
+    Given a configuration file with
+      """
+      filters: '@work'
+      """
+    When the user asks for the next action
+    Then Next-action shows the user the next action at work
+
+  Scenario: override context in configuration file
+    Given a configuration file with
+      """
+      filters: '@work'
+      """
+    When the user asks for the next action at home
+    Then Next-action shows the user the next action at home
