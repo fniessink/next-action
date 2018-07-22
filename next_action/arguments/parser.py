@@ -2,14 +2,12 @@
 
 import argparse
 import datetime
-import re
 import shutil
 import string
 import sys
 import textwrap
 from typing import List, Set
 
-import dateparser
 from pygments.styles import get_all_styles
 
 import next_action
@@ -192,6 +190,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """Insert the configured filters in the namespace, if no matching command line filters are present."""
         filters = config.get("filters", [])
         if isinstance(filters, str):
+            import re
             filters = re.split(r"\s", filters)
         for prefix, filter_key in (("@", "contexts"), ("+", "projects"),
                                    ("-@", "excluded_contexts"), ("-+", "excluded_projects")):
@@ -250,6 +249,7 @@ def filter_type(value: str) -> str:
 
 def date_type(value: str) -> datetime.date:
     """Return the date if it's valid, else raise an error."""
+    import dateparser
     date_time = dateparser.parse(value, languages=["en"],
                                  settings={"PREFER_DAY_OF_MONTH": "last", "PREFER_DATES_FROM": "future"})
     if date_time:
