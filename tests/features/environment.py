@@ -16,6 +16,7 @@ def before_all(context):
 
 def before_scenario(context, scenario):  # pylint: disable=unused-argument
     """Set up arguments."""
+    context.files = []
     context.arguments = ["coverage", "run", "--omit", ".venv/*", "--branch", "--parallel-mode", ".venv/bin/next-action"]
 
 

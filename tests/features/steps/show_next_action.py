@@ -3,7 +3,7 @@
 import datetime
 import tempfile
 
-from asserts import assert_equal, assert_in, assert_true
+from asserts import assert_equal, assert_in, assert_not_in, assert_true
 from behave import given, when, then
 
 
@@ -25,16 +25,16 @@ def yesterday() -> str:
 @given("an empty todo.txt")
 def empty_todotxt(context):
     """Create an empty temporary todo.txt file that can be read by Next-action."""
-    context.file = tempfile.NamedTemporaryFile(mode="w")
-    context.arguments.extend(["--file", context.file.name])
+    context.files.append(tempfile.NamedTemporaryFile(mode="w"))
+    context.arguments.extend(["--file", context.files[-1].name])
 
 
 @given("a todo.txt with")
 def todotxt(context):
     """Add the contents to the temporary todo.txt file."""
     context.execute_steps("given an empty todo.txt")
-    context.file.write(context.text.format(tomorrow=tomorrow(), yesterday=yesterday()))
-    context.file.seek(0)
+    context.files[-1].write(context.text.format(tomorrow=tomorrow(), yesterday=yesterday()))
+    context.files[-1].seek(0)
 
 
 @when("the user asks for the next action")
@@ -53,6 +53,12 @@ def next_action_due(context):
 def next_action_over_due(context):
     """Add the over due argument."""
     context.arguments.extend(["--overdue"])
+
+
+@when("the user asks for the next action to be referenced {reference}")
+def next_action_ref_always(context, reference):
+    """Add the reference argument."""
+    context.arguments.extend(["--reference", reference])
 
 
 @when("the user asks for the next action at {contexts}")
@@ -93,6 +99,18 @@ def nothing_todo(context):
 def ask_next_actions(context, number):
     """Add either the number of the all command line option to the command line arguments."""
     context.arguments.extend(["--all"] if number == "all" else ["--number", str(number)])
+
+
+@then("Next-action references the source file of the next action")
+def check_reference(context):
+    """Check the filename reference."""
+    assert_in("/", context.next_action())
+
+
+@then("Next-action doesn't reference the source file of the next action")
+def check_does_not_reference(context):
+    """Check the filename reference."""
+    assert_not_in("/", context.next_action())
 
 
 @then("Next-action shows the next action at {contexts}")

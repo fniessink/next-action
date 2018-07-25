@@ -1,5 +1,10 @@
 Feature: filter next-actions by project
 
+  1. Specify projects
+  2. Read result
+  1a. Project doesn't exist
+
+
   Background: a todo.txt file with different projects
     Given a todo.txt with
       """
