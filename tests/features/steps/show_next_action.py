@@ -29,6 +29,14 @@ def empty_todotxt(context):
     context.arguments.extend(["--file", context.files[-1].name])
 
 
+@given("an unreadable todo.txt")
+def unreadable_todotxt(context):
+    """Create an empty temporary todo.txt file, but remove it before we Next-action can open it."""
+    context.files.append(tempfile.NamedTemporaryFile(mode="w"))
+    context.arguments.extend(["--file", context.files[-1].name])
+    context.files[-1].close()
+
+
 @given("a todo.txt with")
 def todotxt(context):
     """Add the contents to the temporary todo.txt file."""
@@ -161,6 +169,12 @@ def show_next_actions(context, number, action):
 
 
 @then("Next-action tells the user the number argument is invalid")
-def check_eror_messge(context):
+def invalid_number_eror_message(context):
     """Check the error message."""
     assert_in("next-action: error: argument -n/--number: invalid number:", context.next_action())
+
+
+@then("Next-action tells the user the todo.txt can't be read")
+def unreadable_file_eror_messge(context):
+    """Check the error message."""
+    assert_in("next-action: error: can't open file: ", context.next_action())
