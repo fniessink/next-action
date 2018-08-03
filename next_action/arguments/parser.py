@@ -150,7 +150,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                 else:
                     namespace.filters.append(value)
             else:
-                self.error("unrecognized arguments: {0}".format(value))
+                self.error("unrecognized argument: {0}".format(value))
         namespace.contexts = subset(namespace.filters, "@")
         namespace.projects = subset(namespace.filters, "+")
         namespace.excluded_contexts = subset(namespace.filters, "-@")

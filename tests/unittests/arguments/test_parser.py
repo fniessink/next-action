@@ -123,7 +123,7 @@ class FilterArgumentTest(ParserTestCase):
     def test_invalid_extra_argument(self, mock_stderr_write):
         """Test that the argument parser exits if the extra argument is invalid."""
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unrecognized arguments: -^\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unrecognized argument: -^\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])
