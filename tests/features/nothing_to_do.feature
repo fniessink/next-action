@@ -21,6 +21,14 @@ Feature: showing there's nothing to do
     When the user asks for the next action
     Then Next-action tells the user there's nothing to do
 
+  Scenario: nothing to do when all tasks have future creation dates
+    Given a todo.txt with
+      """
+      9999-01-01 A future task
+      """
+    When the user asks for the next action
+    Then Next-action tells the user there's nothing to do
+
   Scenario: nothing to do when there are no tasks with the given context
     Given a todo.txt with
       """

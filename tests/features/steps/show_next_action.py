@@ -3,7 +3,7 @@
 import datetime
 import tempfile
 
-from asserts import assert_equal, assert_in, assert_not_in, assert_true
+from asserts import assert_equal, assert_in, assert_regex, assert_not_in, assert_true
 from behave import given, when, then
 
 
@@ -61,6 +61,24 @@ def next_action_due(context):
 def next_action_over_due(context):
     """Add the over due argument."""
     context.arguments.extend(["--overdue"])
+
+
+@when("the user asks for all next actions with at least priority A")
+def next_action_with_min_prio(context):
+    """Add the priority argument with a minimum priority."""
+    context.arguments.extend(["--all", "--priority", "A"])
+
+
+@when("the user asks for all next actions with a priority")
+def next_action_with_a_prio(context):
+    """Add the priority argument."""
+    context.arguments.extend(["--all", "--priority"])
+
+
+@when("the user asks for all next actions with an invalid priority")
+def next_action_with_invalid_prio(context):
+    """Add an invalid priority argument."""
+    context.arguments.extend(["--all", "--priority", "1"])
 
 
 @when("the user asks for the next action to be referenced {reference}")
@@ -161,8 +179,22 @@ def show_next_action_over_due(context):
     assert_in(yesterday(), context.next_action())
 
 
-@then("Next-action shows the user {number} next {action}")
-def show_next_actions(context, number, action):
+@then("Next-action shows the user all next actions with at least priority A")
+def show_next_action_with_min_prio(context):
+    """Check that the next actions have the minimum priority."""
+    for line in context.next_action().strip().split("\n"):
+        assert_in("(A)", line)
+
+
+@then("Next-action shows the user all next actions with a priority")
+def show_next_action_with_a_prio(context):
+    """Check that the next actions have a priority."""
+    for line in context.next_action().strip().split("\n"):
+        assert_regex(line, "([A-Z])")
+
+
+@then("Next-action shows the user {number} next {actions}")
+def show_next_actions(context, number, actions):
     """Check the number of next actions shown."""
     number = 1 if number == "the" else int(number)
     assert_equal(context.next_action().strip().count("\n"), number - 1)
@@ -172,6 +204,12 @@ def show_next_actions(context, number, action):
 def invalid_number_eror_message(context):
     """Check the error message."""
     assert_in("next-action: error: argument -n/--number: invalid number:", context.next_action())
+
+
+@then("Next-action tells the user the priority argument is invalid")
+def invalid_priority_eror_message(context):
+    """Check the error message."""
+    assert_in("next-action: error: argument -p/--priority: invalid choice:", context.next_action())
 
 
 @then("Next-action tells the user the todo.txt can't be read")
