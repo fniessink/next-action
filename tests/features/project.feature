@@ -3,6 +3,7 @@ Feature: filter next-actions by project
   1. Specify projects
   2. Read result
   1a. Project doesn't exist
+  1b. Project name is empty
 
 
   Background: a todo.txt file with different projects
@@ -57,3 +58,15 @@ Feature: filter next-actions by project
       """
     When the user asks for the next action at GarageSale
     Then Next-action shows the user the next action for GarageSale
+
+  Scenario: invalid project
+    When the user asks for the next action with an invalid project
+    Then Next-action tells the user the project is invalid
+
+  Scenario: invalid excluded project
+    When the user asks for the next action with an invalid excluded project
+    Then Next-action tells the user the project is invalid
+
+  Scenario: project both included and excluded
+    When the user asks for the next action with a project that is both included and excluded
+    Then Next-action tells the user the project is both included and excluded

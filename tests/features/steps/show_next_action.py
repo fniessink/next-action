@@ -94,6 +94,21 @@ def next_action_at_context(context, contexts):
     context.arguments.extend([f"@{c}" for c in contexts])
 
 
+@when("the user asks for the next action with an invalid {context_or_project}")
+def next_action_invalid_c_or_p(context, context_or_project):
+    """Add an invalid context or project to the command line arguments."""
+    argument = "@" if "context" in context_or_project else "+"
+    argument = ("-" + argument) if "excluded" in context_or_project else argument
+    context.arguments.append(argument)
+
+
+@when("the user asks for the next action with a {context_or_project} that is both included and excluded")
+def next_action_c_or_p_in_and_ex(context, context_or_project):
+    """Both include and exclude an context or project."""
+    argument_type = "@" if "context" in context_or_project else "+"
+    context.arguments.extend([f"{argument_type}name", f"-{argument_type}name"])
+
+
 @when("the user asks for the next action not at {contexts}")
 def next_action_not_at_context(context, contexts):
     """Add the excluded contexts to the command line arguments."""
@@ -201,18 +216,32 @@ def show_next_actions(context, number, actions):
 
 
 @then("Next-action tells the user the number argument is invalid")
-def invalid_number_eror_message(context):
+def invalid_number_error_message(context):
     """Check the error message."""
     assert_in("next-action: error: argument -n/--number: invalid number:", context.next_action())
 
 
 @then("Next-action tells the user the priority argument is invalid")
-def invalid_priority_eror_message(context):
+def invalid_priority_error_message(context):
     """Check the error message."""
     assert_in("next-action: error: argument -p/--priority: invalid choice:", context.next_action())
 
 
+@then("Next-action tells the user the {context_or_project} is invalid")
+def invalid_c_or_p_error_message(context, context_or_project):
+    """Check the error message."""
+    assert_in(f"next-action: error: argument <context|project>: {context_or_project} name missing",
+              context.next_action())
+
+@then("Next-action tells the user the {context_or_project} is both included and excluded")
+def c_or_p_in_and_ex_error_message(context, context_or_project):
+    """Check the error message."""
+    argument_type = "@" if "context" in context_or_project else "+"
+    assert_in(f"next-action: error: {argument_type}name is both included and excluded",
+              context.next_action())
+
+
 @then("Next-action tells the user the todo.txt can't be read")
-def unreadable_file_eror_messge(context):
+def unreadable_file_error_messge(context):
     """Check the error message."""
     assert_in("next-action: error: can't open file: ", context.next_action())

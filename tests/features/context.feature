@@ -52,3 +52,15 @@ Feature: filter next-actions by context
       """
     When the user asks for the next action at home
     Then Next-action shows the user the next action at home
+
+  Scenario: invalid context
+    When the user asks for the next action with an invalid context
+    Then Next-action tells the user the context is invalid
+
+  Scenario: invalid excluded context
+    When the user asks for the next action with an invalid excluded context
+    Then Next-action tells the user the context is invalid
+
+  Scenario: context both included and excluded
+    When the user asks for the next action with a context that is both included and excluded
+    Then Next-action tells the user the context is both included and excluded
