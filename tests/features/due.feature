@@ -17,3 +17,7 @@ Feature: limit the next actions by due date
       """
     When the user asks for the next action that's over due
     Then Next-action shows the user the next action that's over due
+
+  Scenario: invalid date
+    When the user asks for the next action with an invalid due date
+    Then Next-action tells the user the due date is invalid

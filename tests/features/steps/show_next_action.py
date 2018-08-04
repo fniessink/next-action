@@ -81,6 +81,12 @@ def next_action_with_invalid_prio(context):
     context.arguments.extend(["--all", "--priority", "1"])
 
 
+@when("the user asks for the next action with an unrecognized argument")
+def next_action_with_invalid_argument(context):
+    """Add an invalid argument."""
+    context.arguments.append("-!")
+
+
 @when("the user asks for the next action to be referenced {reference}")
 def next_action_ref_always(context, reference):
     """Add the reference argument."""
@@ -94,12 +100,15 @@ def next_action_at_context(context, contexts):
     context.arguments.extend([f"@{c}" for c in contexts])
 
 
-@when("the user asks for the next action with an invalid {context_or_project}")
-def next_action_invalid_c_or_p(context, context_or_project):
-    """Add an invalid context or project to the command line arguments."""
-    argument = "@" if "context" in context_or_project else "+"
-    argument = ("-" + argument) if "excluded" in context_or_project else argument
-    context.arguments.append(argument)
+@when("the user asks for the next action with an invalid {argument_type}")
+def next_action_invalid_argument(context, argument_type):
+    """Add an invalid context, project or due date to the command line arguments."""
+    if "due date" in argument_type:
+        arguments = ["--due", "2018-02-30"]
+    else:
+        argument = "@" if "context" in argument_type else "+"
+        arguments = [("-" + argument) if "excluded" in argument_type else argument]
+    context.arguments.extend(arguments)
 
 
 @when("the user asks for the next action with a {context_or_project} that is both included and excluded")
@@ -227,11 +236,21 @@ def invalid_priority_error_message(context):
     assert_in("next-action: error: argument -p/--priority: invalid choice:", context.next_action())
 
 
-@then("Next-action tells the user the {context_or_project} is invalid")
-def invalid_c_or_p_error_message(context, context_or_project):
+@then("Next-action tells the user the argument is unrecognized")
+def unrecognized_argument_error_message(context):
     """Check the error message."""
-    assert_in(f"next-action: error: argument <context|project>: {context_or_project} name missing",
-              context.next_action())
+    assert_in("next-action: error: unrecognized argument: -!", context.next_action())
+
+
+@then("Next-action tells the user the {argument} is invalid")
+def invalid_argument_error_message(context, argument):
+    """Check the error message."""
+    if "context" in argument or "project" in argument:
+        message = f"argument <context|project>: {argument} name missing"
+    else:
+        message = "argument -d/--due: invalid date: 2018-02-30"
+    assert_in(f"next-action: error: {message}", context.next_action())
+
 
 @then("Next-action tells the user the {context_or_project} is both included and excluded")
 def c_or_p_in_and_ex_error_message(context, context_or_project):
