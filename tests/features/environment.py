@@ -20,7 +20,7 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     context.arguments = ["coverage", "run", "--omit", ".venv/*", "--branch", "--parallel-mode", ".venv/bin/next-action"]
 
 
-def after_all(context):
+def after_all(context):  # pylint: disable=unused-argument
     """Create coverage report."""
     subprocess.run(["coverage", "combine"])
     subprocess.run(["coverage", "html", "--directory", "build/htmlcov"])
