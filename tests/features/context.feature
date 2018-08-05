@@ -53,6 +53,14 @@ Feature: filter next-actions by context
     When the user asks for the next action at home
     Then Next-action shows the user the next action at home
 
+  Scenario: override context in configuration file with opposite context
+    Given a configuration file with
+      """
+      filters: '@work'
+      """
+    When the user asks for the next action not at work
+    Then Next-action shows the user the next action not at work
+
   Scenario: invalid context
     When the user asks for the next action with an invalid context
     Then Next-action tells the user the context is invalid

@@ -18,7 +18,8 @@ def read_config_file(filename: str, default_filename: str, error: Callable[[str]
             return yaml.safe_load(config_file.read())
     except FileNotFoundError as reason:
         if filename == default_filename:
-            return dict()  # Don't complain if there's no configuration file at the default location
+            # Don't complain if there's no configuration file at the default location
+            return dict()  # pragma: no cover-behave
         error("can't open file: {0}".format(reason))
     except OSError as reason:
         error("can't open file: {0}".format(reason))
