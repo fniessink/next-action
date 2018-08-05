@@ -28,6 +28,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 - [Developing *Next-action*](#developing-next-action)
   - [Installing the development environment](#installing-the-development-environment)
   - [Running unit tests](#running-unit-tests)
+  - [Running feature tests](#running-feature-tests)
   - [Running quality checks](#running-quality-checks)
 
 ## Demo
@@ -444,40 +445,55 @@ To work on the software, clone the repository, create a virtual environment, ins
 
 ### Running unit tests
 
-To run the unit tests:
+To run the unit tests while generating coverage information:
 
 ```console
-$ python -m unittest
+$ python -Wignore -m coverage run --branch -m unittest
 .............................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 237 tests in 2.303s
+Ran 237 tests in 3.659s
 
 OK
 ```
 
-Running `python setup.py test` should give the same results.
-
-To create the unit test coverage report run the unit tests under coverage with:
-
-```console
-$ coverage run --branch -m unittest
-.............................................................................................................................................................................................................................................
-----------------------------------------------------------------------
-Ran 237 tests in 3.159s
-
-OK
-```
-
-And then check the coverage. It should be 100%.
+The unit tests should have 100% coverage:
 
 ```console
 $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1360      0    177      0   100%
+TOTAL    1358      0    173      0   100%
 
 25 files skipped due to complete coverage.
+```
+
+We use `-Wignore` to ignore the depreciation warnings caused by the current version of the dateparser module.
+
+Running `python -m unittest` and `python setup.py test` should give the same results, without generating the coverage information.
+
+### Running feature tests
+
+To run the feature tests:
+
+```console
+$ behave --format null tests/features
+13 features passed, 0 failed, 0 skipped
+78 scenarios passed, 0 failed, 0 skipped
+250 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m26.962s
+```
+
+The feature tests should have 100% coverage:
+
+```console
+$ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" --skip-covered
+Name    Stmts   Miss Branch BrPart  Cover
+-----------------------------------------
+-----------------------------------------
+TOTAL     391      0    155      0   100%
+
+12 files skipped due to complete coverage.
 ```
 
 ### Running quality checks
