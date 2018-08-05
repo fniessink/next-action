@@ -12,7 +12,17 @@ from behave import given, when, then
 def config_file(context):
     """Add the contents to the temporary configuration file."""
     context.config_file = tempfile.NamedTemporaryFile(mode="w")
-    context.config_file.write(context.text)
+    text = []
+    for line in context.text.split("\n"):
+        if line.startswith("file: "):
+            filename = line[len("file: "):]
+            for file in context.files:
+                if file.given_filename == filename:
+                    text.append("file: " + file.name)
+                    break
+        else:
+            text.append(line)
+    context.config_file.write("\n".join(text))
     context.config_file.seek(0)
     context.arguments.extend(["--config-file", context.config_file.name])
 

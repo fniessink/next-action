@@ -32,8 +32,7 @@ def empty_todotxt(context):
 @given("an unreadable todo.txt")
 def unreadable_todotxt(context):
     """Create an empty temporary todo.txt file, but remove it before we Next-action can open it."""
-    context.files.append(tempfile.NamedTemporaryFile(mode="w"))
-    context.arguments.extend(["--file", context.files[-1].name])
+    context.execute_steps("given an empty todo.txt")
     context.files[-1].close()
 
 
@@ -45,10 +44,25 @@ def todotxt(context):
     context.files[-1].seek(0)
 
 
+@given("a todo.txt named {filename} with")
+def named_todotxt(context, filename):
+    """Add the contents to the temporary todo.txt file and remember its filename."""
+    context.execute_steps('given a todo.txt with\n"""\n{0}\n"""'.format(context.text))
+    del context.arguments[-2:]  # Remove the --file argument that was automatically added
+    context.files[-1].given_filename = filename
+
+
 @when("the user asks for the next action")
-def next_action(context):
+def next_action(context):  # pylint: disable=unused-argument
     """Next-action shows the next action by default, so no arguments needed."""
     pass
+
+
+@when("the user asks for the next action from {filename}")
+def next_action_from_file(context, filename):
+    """Remove the other file arguments."""
+    real_filename = [file.name for file in context.files if file.given_filename == filename][0]
+    context.arguments.extend(["--file", real_filename])
 
 
 @when("the user asks for the next action due tomorrow")
@@ -161,6 +175,12 @@ def check_reference(context):
 def check_does_not_reference(context):
     """Check the filename reference."""
     assert_not_in("/", context.next_action())
+
+
+@then('Next-action shows the next action "{action}"')
+def show_named_next_action(context, action):
+    """Check that the named next action is shown."""
+    assert_in(action, context.next_action())
 
 
 @then("Next-action shows the next action at {contexts}")
