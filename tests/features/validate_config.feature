@@ -10,6 +10,12 @@ Feature: validate a Next-action configuration file
     And the user specifies a configuration file that can't be read
     Then Next-action tells the user it can't read the configuration file
 
+  Scenario: empty configuration file
+    Given an empty todo.txt
+    When the user asks for the next action
+    And the user specifies a configuration file that is empty
+    Then Next-action tells the user there's nothing to do
+
   Scenario: configuration file invalid YAML
     Given a configuration file with
       """

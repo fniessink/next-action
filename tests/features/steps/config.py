@@ -47,6 +47,13 @@ def unreadable_config_file(context):
     context.arguments.extend(["--config", context.config_file.name])
 
 
+@when("the user specifies a configuration file that is empty")
+def empty_config_file(context):
+    """Specify an empty configuration file."""
+    context.config_file = tempfile.NamedTemporaryFile(mode="w")
+    context.arguments.extend(["--config", context.config_file.name])
+
+
 @when("the user specifies the {argument}-argument with value {value}")
 def cli_argument(context, argument, value):
     """Add command line argument."""
