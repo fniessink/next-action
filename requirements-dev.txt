@@ -7,4 +7,4 @@ pydocstyle==2.1.1
 pycodestyle==2.4.0
 bandit==1.4.0
 mypy==0.620
-hypothesis==3.66.24
+hypothesis==3.66.27
