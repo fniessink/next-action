@@ -104,7 +104,7 @@ def next_action_with_a_style(context, style):
 
 
 @when("the user asks for the next action with an unrecognized argument")
-def next_action_with_invalid_argument(context):
+def next_action_with_invalid_arg(context):
     """Add an invalid argument."""
     context.arguments.append("-!")
 
@@ -246,7 +246,7 @@ def show_next_action_with_a_prio(context):
 
 
 @then("Next-action shows the user {number} next {actions}")
-def show_next_actions(context, number, actions):
+def show_next_actions(context, number, actions):  # pylint: disable=unused-argument
     """Check the number of next actions shown."""
     number = 1 if number == "the" else int(number)
     assert_equal(context.next_action().strip().count("\n"), number - 1)
@@ -271,7 +271,7 @@ def show_next_action_with_style(context, style):
 
 
 @then("Next-action tells the user the argument is unrecognized")
-def unrecognized_argument_error_message(context):
+def unrecognized_arg_error_message(context):
     """Check the error message."""
     assert_in("next-action: error: unrecognized argument: -!", context.next_action())
 
