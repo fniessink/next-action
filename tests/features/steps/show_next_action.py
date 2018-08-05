@@ -6,6 +6,8 @@ import tempfile
 from asserts import assert_equal, assert_in, assert_regex, assert_not_in, assert_true
 from behave import given, when, then
 
+from next_action.output import colorize
+
 
 def relative_date(days: int) -> str:
     """Return a relative date as ISO-formatted string."""
@@ -93,6 +95,12 @@ def next_action_with_a_prio(context):
 def next_action_with_invalid_prio(context):
     """Add an invalid priority argument."""
     context.arguments.extend(["--all", "--priority", "1"])
+
+
+@when("the user asks for the next action with the style {style}")
+def next_action_with_a_style(context, style):
+    """Add the style argument."""
+    context.arguments.extend(["--style", style])
 
 
 @when("the user asks for the next action with an unrecognized argument")
@@ -254,6 +262,12 @@ def invalid_number_error_message(context):
 def invalid_priority_error_message(context):
     """Check the error message."""
     assert_in("next-action: error: argument -p/--priority: invalid choice:", context.next_action())
+
+
+@then("Next-action shows the next action with the style {style}")
+def show_next_action_with_style(context, style):
+    """Check the style."""
+    assert_equal(colorize("A task", style), context.next_action().strip())
 
 
 @then("Next-action tells the user the argument is unrecognized")
