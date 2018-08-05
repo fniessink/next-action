@@ -103,10 +103,10 @@ def next_action_with_a_style(context, style):
     context.arguments.extend(["--style", style])
 
 
-@when("the user asks for the next action with an unrecognized argument")
-def next_action_with_invalid_arg(context):
+@when('the user asks for the next action with argument "{argument}"')
+def next_action_with_invalid_arg(context, argument):
     """Add an invalid argument."""
-    context.arguments.append("-!")
+    context.arguments.append(argument)
 
 
 @when("the user asks for the next action to be referenced {reference}")
@@ -270,10 +270,10 @@ def show_next_action_with_style(context, style):
     assert_equal(colorize("A task", style), context.next_action().strip())
 
 
-@then("Next-action tells the user the argument is unrecognized")
-def unrecognized_arg_error_message(context):
+@then('Next-action tells the user the argument "{argument}" is unrecognized')
+def unrecognized_arg_error_message(context, argument):
     """Check the error message."""
-    assert_in("next-action: error: unrecognized argument: -!", context.next_action())
+    assert_in("unrecognized argument: " + argument, context.next_action())
 
 
 @then("Next-action tells the user the {argument} is invalid")

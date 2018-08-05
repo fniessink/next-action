@@ -244,7 +244,7 @@ def filter_type(value: str) -> str:
             return value
         value_type = "context" if value.startswith("@") else "project"
         raise argparse.ArgumentTypeError("{0} name missing".format(value_type))
-    raise argparse.ArgumentTypeError("unrecognized arguments: {0}".format(value))
+    raise argparse.ArgumentTypeError("unrecognized argument: {0}".format(value))
 
 
 def date_type(value: str) -> datetime.date:

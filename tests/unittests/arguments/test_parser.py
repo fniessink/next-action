@@ -188,7 +188,7 @@ class FilterArgumentTest(ParserTestCase):
         """Test that the argument parser exits if the option is faulty."""
         self.assertRaises(SystemExit, parse_arguments)
         self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument <context|project>: unrecognized arguments: home\n")],
+                          call("next-action: error: argument <context|project>: unrecognized argument: home\n")],
                          mock_stderr_write.call_args_list)
 
 
