@@ -22,6 +22,14 @@ Feature: limit the next actions by due date
     When the user asks for the next action with an invalid due date
     Then Next-action tells the user the due date is invalid
 
+  Scenario: invalid date in todo.txt is ignored
+    Given a todo.txt with
+      """
+      Task A due:1313-13-13
+      """
+    When the user asks for the next action that's over due
+    Then Next-action tells the user there's nothing to do
+
   Scenario: number in configuration file
     Given a configuration file with
       """
