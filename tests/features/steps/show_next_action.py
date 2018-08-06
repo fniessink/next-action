@@ -106,6 +106,8 @@ def next_action_with_a_style(context, style):
 @when('the user asks for the next action with argument "{argument}"')
 def next_action_with_invalid_arg(context, argument):
     """Add an invalid argument."""
+    if not argument.startswith("-"):
+        context.arguments.append("--")
     context.arguments.append(argument)
 
 
