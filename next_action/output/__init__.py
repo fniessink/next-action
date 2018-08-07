@@ -8,8 +8,20 @@ from .color import colorize
 from .reference import reference
 
 
+def render_task(task: Task, namespace: argparse.Namespace, level: int = 0) -> str:
+    """Render one task."""
+    indent = (level - 1) * "  " + "- " if level else ""
+    rendered_task = reference(task, namespace)
+    rendered_task = indent + colorize(rendered_task, namespace.style or "")
+    if namespace.blocked:
+        blocked_tasks = task.blocked_tasks()
+        if blocked_tasks:
+            rendered_task += "\n" + level * "  " + "blocks:"
+            for task in blocked_tasks:
+                rendered_task += "\n" + render_task(task, namespace, level + 1)
+    return rendered_task
+
+
 def render(tasks: Tasks, namespace: argparse.Namespace) -> str:
     """Render the tasks using the options in the namespace."""
-    reference_task = namespace.reference == "always" or namespace.reference == "multiple" and len(namespace.file) > 1
-    render_task = reference if reference_task else lambda task: task.text
-    return colorize("\n".join(render_task(task) for task in tasks), namespace.style or "")
+    return "\n".join(render_task(task, namespace) for task in tasks)

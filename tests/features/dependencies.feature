@@ -47,3 +47,14 @@ Feature: task dependencies
       """
     When the user asks for the next action
     Then Next-action shows the next action "Task 3 id:task3"
+
+  Scenario: show blocked task
+    Given a todo.txt with
+      """
+      Task 1 after:task2
+      Task 2 id:task2
+      """
+    When the user asks for the next action
+    And the user asks for the blocked tasks
+    Then Next-action shows the next action "Task 2 id:task2"
+    And Next-action shows the blocked task "Task 1 after:task2"

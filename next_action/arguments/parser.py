@@ -20,7 +20,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def __init__(self) -> None:
         """Initialize the parser."""
         super().__init__(
-            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
+            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] "
                                 "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
                                 "[-p [<priority>]] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
@@ -66,6 +66,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def add_output_options(self) -> None:
         """Add the output/styling options to the parser."""
         output_group = self.add_argument_group("Output options")
+        output_group.add_argument(
+            "-b", "--blocked", help="show the tasks blocked by the next action, if any (default: %(default)s)",
+            action="store_true")
         output_group.add_argument(
             "-r", "--reference", choices=["always", "never", "multiple"], default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
