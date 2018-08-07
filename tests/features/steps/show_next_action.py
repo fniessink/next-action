@@ -97,6 +97,12 @@ def next_action_with_invalid_prio(context):
     context.arguments.extend(["--all", "--priority", "1"])
 
 
+@when("the user asks for the blocked tasks")
+def next_action_with_blocked_tasks(context):
+    """Add the blocked option."""
+    context.arguments.append("--blocked")
+
+
 @when("the user asks for the next action with the style {style}")
 def next_action_with_a_style(context, style):
     """Add the style argument."""
@@ -219,6 +225,12 @@ def show_next_action_at_home(context, projects):
     """Check that the next action doesn't have the excluded projects."""
     projects = projects.split(" and not for ")
     assert_true(all([f"+{p}" not in context.next_action() for p in projects]))
+
+
+@then('Next-action shows the blocked task "{task}"')
+def show_blocked_task(context, task):
+    """Check that the task is shown as blocked task."""
+    assert_in(task, context.next_action())
 
 
 @then("Next-action shows the user the next action due tomorrow")
