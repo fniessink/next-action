@@ -17,8 +17,8 @@ def render_task(task: Task, namespace: argparse.Namespace, level: int = 0) -> st
         blocked_tasks = task.blocked_tasks()
         if blocked_tasks:
             rendered_task += "\n" + level * "  " + "blocks:"
-            for task in blocked_tasks:
-                rendered_task += "\n" + render_task(task, namespace, level + 1)
+            for blocked_task in blocked_tasks:
+                rendered_task += "\n" + render_task(blocked_task, namespace, level + 1)
     return rendered_task
 
 
