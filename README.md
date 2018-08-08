@@ -243,6 +243,18 @@ Take out the garbage @home +DinnerParty due:2018-07-02
 
 Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have a due date, buying groceries takes on the same due date as cooking the meal. Priority is taken into account in a similar way.
 
+To show which tasks are blocked by the next action, use the `--blocked` option:
+
+```console
+$ next-action --blocked --all +DinnerParty
+Buy groceries @store +DinnerParty before:meal
+blocks:
+- Cook meal @home +DinnerParty id:meal due:2018-07-01
+  blocks:
+  - Do the dishes @home +DinnerParty after:meal
+Take out the garbage @home +DinnerParty due:2018-07-02
+```
+
 Additional notes:
 
 - The ids can be any string without whitespace.
@@ -452,7 +464,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .....................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 245 tests in 3.472s
+Ran 245 tests in 3.641s
 
 OK
 ```
@@ -482,7 +494,7 @@ $ behave --format null tests/features
 14 features passed, 0 failed, 0 skipped
 84 scenarios passed, 0 failed, 0 skipped
 270 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m6.857s
+Took 1m9.570s
 ```
 
 The feature tests should have 100% coverage:
