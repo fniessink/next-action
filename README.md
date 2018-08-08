@@ -45,8 +45,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
-| -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -69,6 +69,7 @@ Input options:
                         can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
 
 Output options:
+  -b, --blocked         show the tasks blocked by the next action, if any (default: False)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
                         multiple todo.txt files)
@@ -414,8 +415,8 @@ When you use an option that takes an optional argument, but have it followed by 
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-r <ref>] [-s [<style>]] [-a
-| -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 
@@ -449,9 +450,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -Wignore -m coverage run --branch -m unittest
-.............................................................................................................................................................................................................................................
+.....................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 237 tests in 3.659s
+Ran 245 tests in 3.472s
 
 OK
 ```
@@ -463,9 +464,9 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1358      0    173      0   100%
+TOTAL    1413      0    179      0   100%
 
-25 files skipped due to complete coverage.
+26 files skipped due to complete coverage.
 ```
 
 We use `-Wignore` to ignore the depreciation warnings caused by the current version of the dateparser module.
@@ -478,10 +479,10 @@ To run the feature tests:
 
 ```console
 $ behave --format null tests/features
-13 features passed, 0 failed, 0 skipped
-78 scenarios passed, 0 failed, 0 skipped
-250 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m26.962s
+14 features passed, 0 failed, 0 skipped
+84 scenarios passed, 0 failed, 0 skipped
+270 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m6.857s
 ```
 
 The feature tests should have 100% coverage:
@@ -491,7 +492,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     391      0    155      0   100%
+TOTAL     405      0    161      0   100%
 
 12 files skipped due to complete coverage.
 ```
