@@ -473,7 +473,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 249 tests in 4.563s
+Ran 249 tests in 3.481s
 
 OK
 ```
@@ -503,7 +503,7 @@ $ behave --format null tests/features
 14 features passed, 0 failed, 0 skipped
 87 scenarios passed, 0 failed, 0 skipped
 284 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m25.915s
+Took 1m21.743s
 ```
 
 The feature tests should have 100% coverage:
