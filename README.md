@@ -307,8 +307,9 @@ To make this the configuration that *Next-action* reads by default, redirect the
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
+$ next-action --write-config-file --blocked --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
+blocked: true
 file: ~/tasks.txt
 filters:
 - -@waiting
@@ -470,9 +471,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -Wignore -m coverage run --branch -m unittest
-........................................................................................................................................................................................................................................................
+.........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 248 tests in 3.600s
+Ran 249 tests in 4.563s
 
 OK
 ```
@@ -484,7 +485,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1428      0    181      0   100%
+TOTAL    1437      0    183      0   100%
 
 26 files skipped due to complete coverage.
 ```
@@ -500,9 +501,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 14 features passed, 0 failed, 0 skipped
-86 scenarios passed, 0 failed, 0 skipped
-281 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m16.498s
+87 scenarios passed, 0 failed, 0 skipped
+284 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m25.915s
 ```
 
 The feature tests should have 100% coverage:
@@ -512,7 +513,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     408      0    163      0   100%
+TOTAL     410      0    165      0   100%
 
 12 files skipped due to complete coverage.
 ```

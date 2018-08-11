@@ -74,7 +74,7 @@ Feature: task dependencies
     And Next-action shows the blocked task "Task 1 after:task2"
 
   Scenario: override blocked task configuration
-    Given a configuration file with
+    Given a configuration file witH
       """
       blocked: true
       """

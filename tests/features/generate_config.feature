@@ -33,3 +33,8 @@ Feature: generate a Next-action configuration file
     When the user asks for a configuration file
     And the user specifies a project-filter
     Then Next-action includes the project-filter in the configuration file
+
+  Scenario: add blocked-option
+    When the user asks for a configuration file
+    And the user specifies the blocked-option
+    Then Next-action includes the blocked-option in the configuration file
