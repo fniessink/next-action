@@ -44,6 +44,8 @@ def write_config_file(namespace: argparse.Namespace) -> None:
         options["number"] = namespace.number
     if namespace.priority:
         options["priority"] = namespace.priority
+    if namespace.blocked:
+        options["blocked"] = True
     config = yaml.dump(options, default_flow_style=False)
     sys.stdout.write(intro + config)
 
@@ -80,6 +82,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "style": {
             "type": "string",
             "allowed": sorted(list(get_all_styles()))
+        },
+        "blocked": {
+            "type": "boolean",
+            "allowed": [True]
         }
     }
     validator = cerberus.Validator(schema)
