@@ -484,3 +484,30 @@ class FiltersTest(ConfigTestCase):
             [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: "
                                        "value does not match regex '{0}'\n".format(regex))],
             mock_stderr_write.call_args_list)
+
+
+class BlockedTest(ConfigTestCase):
+    """Unit tests for the blocked parameter."""
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="blocked: true"))
+    def test_blocked(self):
+        """Test that the configured value changes the blocked argument."""
+        self.assertEqual(True, parse_arguments()[1].blocked)
+
+    @patch.object(sys, "argv", ["next-action", "--blocked"])
+    @patch.object(config, "open", mock_open(read_data="blocked: true"))
+    def test_override(self):
+        """Test that a command line argument overrides the configured value."""
+        self.assertEqual(True, parse_arguments()[1].blocked)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="blocked: false"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_blocked_value(self, mock_stderr_write):
+        """Test that an invalid value raises an error."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: blocked: unallowed value False\n")],
+            mock_stderr_write.call_args_list)

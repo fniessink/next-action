@@ -219,7 +219,7 @@ $ next-action --all @store
 Buy groceries @store +DinnerParty before:meal
 ```
 
-Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never shown since they can't be a next action.
+Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never the next action.
 
 ### Task dependencies
 
@@ -254,6 +254,8 @@ blocks:
   - Do the dishes @home +DinnerParty after:meal
 Take out the garbage @home +DinnerParty due:2018-07-02
 ```
+
+If you always want to see the tasks that are blocked by the next action, you can configure this in the configuration file. See the section below on how to configure *Next-action*.
 
 Additional notes:
 
@@ -413,6 +415,12 @@ style: colorful
 
 Run `next-action --help` to see the list of possible styles.
 
+To always see the tasks blocked by the next action, put this in your configuration file:
+
+```yaml
+blocked: true
+```
+
 ### Option details
 
 #### Precedence
@@ -462,9 +470,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -Wignore -m coverage run --branch -m unittest
-.....................................................................................................................................................................................................................................................
+........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 245 tests in 3.641s
+Ran 248 tests in 3.600s
 
 OK
 ```
@@ -476,7 +484,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1413      0    179      0   100%
+TOTAL    1428      0    181      0   100%
 
 26 files skipped due to complete coverage.
 ```
@@ -492,9 +500,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 14 features passed, 0 failed, 0 skipped
-84 scenarios passed, 0 failed, 0 skipped
-270 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m9.570s
+86 scenarios passed, 0 failed, 0 skipped
+281 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m16.498s
 ```
 
 The feature tests should have 100% coverage:
@@ -504,7 +512,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     405      0    161      0   100%
+TOTAL     408      0    163      0   100%
 
 12 files skipped due to complete coverage.
 ```

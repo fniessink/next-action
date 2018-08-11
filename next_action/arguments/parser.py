@@ -187,6 +187,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-p", "--priority"):
             priority = config.get("priority", self.get_default("priority"))
             setattr(namespace, "priority", priority)
+        if self.arguments_not_specified("-b", "--blocked"):
+            blocked = config.get("blocked", self.get_default("blocked"))
+            setattr(namespace, "blocked", blocked)
         self.insert_configured_filters(config, namespace)
 
     def insert_configured_filters(self, config, namespace: argparse.Namespace) -> None:

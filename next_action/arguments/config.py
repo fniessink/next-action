@@ -80,6 +80,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "style": {
             "type": "string",
             "allowed": sorted(list(get_all_styles()))
+        },
+        "blocked": {
+            "type": "boolean",
+            "allowed": [True]
         }
     }
     validator = cerberus.Validator(schema)
