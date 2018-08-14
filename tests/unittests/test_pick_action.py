@@ -21,6 +21,7 @@ class PickActionTestCase(unittest.TestCase):
         self.namespace.overdue = False
         self.namespace.due = None
         self.namespace.priority = None
+        self.namespace.time_travel = None
         self.namespace.number = sys.maxsize
 
 
@@ -199,6 +200,7 @@ class OverdueTasks(PickActionTestCase):
         future_duedate = todotxt.Task("Task due:9999-01-01")
         overdue = todotxt.Task("Task due:2000-01-01")
         self.namespace.overdue = True
+        self.namespace.time_travel = None
         self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
 

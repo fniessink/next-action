@@ -15,8 +15,8 @@ Feature: limit the next actions by due date
       (A) Task A
       (B) Task B due:{yesterday}
       """
-    When the user asks for the next action that's over due
-    Then Next-action shows the user the next action that's over due
+    When the user asks for the next action over due
+    Then Next-action shows the user the next action over due
 
   Scenario: invalid date
     When the user asks for the next action with an invalid due date
@@ -27,7 +27,7 @@ Feature: limit the next actions by due date
       """
       Task A due:1313-13-13
       """
-    When the user asks for the next action that's over due
+    When the user asks for the next action over due
     Then Next-action tells the user there's nothing to do
 
   Scenario: number in configuration file
