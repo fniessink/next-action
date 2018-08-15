@@ -9,4 +9,4 @@ bandit==1.4.0
 mypy==0.620
 hypothesis==3.68.0
 behave==1.2.6
-asserts==0.8.4
+asserts==0.8.5
