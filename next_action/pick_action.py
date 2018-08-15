@@ -21,7 +21,7 @@ def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
     excluded_projects = arguments.excluded_projects
     # First, get the potential next actions by filtering out completed tasks and tasks with a future creation date or
     # future threshold date
-    eligible_tasks = filter(Task.is_actionable, tasks)
+    eligible_tasks = filter(lambda task: task.is_actionable(arguments.time_travel), tasks)
     # Then, exclude tasks that have an excluded context
     if excluded_contexts:
         eligible_tasks = filter(lambda task: not excluded_contexts & task.contexts(), eligible_tasks)
@@ -36,7 +36,7 @@ def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
         eligible_tasks = filter(lambda task: projects & task.projects(), eligible_tasks)
     # If the user only wants to see overdue tasks, filter out non-overdue tasks
     if arguments.overdue:
-        eligible_tasks = filter(Task.is_overdue, eligible_tasks)
+        eligible_tasks = filter(lambda task: task.is_overdue(arguments.time_travel), eligible_tasks)
     # If the user only wants to see tasks due before a due date, filter out non-due tasks
     if arguments.due:
         eligible_tasks = filter(lambda task: task.is_due(arguments.due), eligible_tasks)

@@ -14,6 +14,11 @@ def relative_date(days: int) -> str:
     return (datetime.date.today() + datetime.timedelta(days=days)).isoformat()
 
 
+def today() -> str:
+    """Return the date of today as an ISO-formatted string."""
+    return relative_date(0)
+
+
 def tomorrow() -> str:
     """Return the date of tomorrow as an ISO-formatted string."""
     return relative_date(1)
@@ -67,13 +72,13 @@ def next_action_from_file(context, filename):
     context.arguments.extend(["--file", real_filename])
 
 
-@when("the user asks for the next action due tomorrow")
-def next_action_due(context):
+@when("the user asks for the next action due {due_date}")
+def next_action_due(context, due_date):
     """Add the due argument."""
-    context.arguments.extend(["--due", tomorrow()])
+    context.arguments.extend(["--due", today() if due_date == "today" else tomorrow()])
 
 
-@when("the user asks for the next action that's over due")
+@when("the user asks for the next action over due")
 def next_action_over_due(context):
     """Add the over due argument."""
     context.arguments.extend(["--overdue"])
@@ -169,6 +174,12 @@ def next_action_not_for_project(context, projects):
     context.arguments.extend([f"-+{p}" for p in projects])
 
 
+@when("the user wants to pretend it's {some_date}")
+def time_travel_tomorrow(context, some_date):
+    """Add the time travel argument."""
+    context.arguments.extend(["--time-travel", some_date])
+
+
 @then("Next-action tells the user there's nothing to do")
 def nothing_todo(context):
     """Check that Next-action tells the user there's nothing to do."""
@@ -239,7 +250,7 @@ def show_next_action_due_tomorrow(context):
     assert_in(tomorrow(), context.next_action())
 
 
-@then("Next-action shows the user the next action that's over due")
+@then("Next-action shows the user the next action over due")
 def show_next_action_over_due(context):
     """Check that the next action was due yesterday."""
     assert_in(yesterday(), context.next_action())

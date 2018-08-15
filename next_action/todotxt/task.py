@@ -69,9 +69,9 @@ class Task:
         """Return whether the task is completed or not."""
         return self.text.startswith("x ")
 
-    def is_future(self) -> bool:
+    def is_future(self, today: datetime.date = None) -> bool:
         """Return whether the task is a future task, i.e. has a creation or threshold date in the future."""
-        today = datetime.date.today()
+        today = today or datetime.date.today()
         creation_date = self.creation_date()
         if creation_date:
             return creation_date > today
@@ -80,14 +80,15 @@ class Task:
             return threshold_date > today
         return False
 
-    def is_actionable(self) -> bool:
+    def is_actionable(self, today: datetime.date = None) -> bool:
         """Return whether the task is actionable, meaning it's uncompleted and doesn't have a future creation date."""
-        return not self.is_completed() and not self.is_future()
+        return not self.is_completed() and not self.is_future(today)
 
-    def is_overdue(self) -> bool:
+    def is_overdue(self, today: datetime.date = None) -> bool:
         """Return whether the task is overdue, i.e. whether it has a due date in the past."""
+        today = today or datetime.date.today()
         due_date = self.due_date()
-        return due_date < datetime.date.today() if due_date else False
+        return due_date < today if due_date else False
 
     def is_blocked(self) -> bool:
         """Return whether a task is blocked, i.e. whether it has uncompleted child tasks."""

@@ -22,6 +22,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Showing more than one next action](#showing-more-than-one-next-action)
   - [Task dependencies](#task-dependencies)
   - [Styling the output](#styling-the-output)
+  - [Time travel](#time-travel)
   - [Configuring *Next-action*](#configuring-next-action)
   - [Option details](#option-details)
 - [Recent changes](#recent-changes)
@@ -45,8 +46,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>]
+[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -67,6 +68,9 @@ Input options:
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument
                         can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
+  -t [<date>], --time-travel [<date>]
+                        time travel to the given date and show the next action(s) at that date (default:
+                        tomorrow)
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
@@ -284,6 +288,15 @@ When you've decided on a style you prefer, it makes sense to configure the style
 
 Not passing an argument to `--style` cancels the style that is configured in the configuration file, if any.
 
+### Time travel
+
+If you want to know what the next action would be if it were tomorrow, Monday, or on a specific date, you can tell *Next-action* to pretend it's that day.
+
+```console
+$ next-action --time-travel 3000
+(A) Start preparing for emigration to Mars t:3000-01-01 due:3500-12-31
+```
+
 ### Configuring *Next-action*
 
 In addition to specifying options on the command-line, you can also configure options in a configuration file.
@@ -436,8 +449,8 @@ When you use an option that takes an optional argument, but have it followed by 
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>]
+[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 
@@ -471,9 +484,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -Wignore -m coverage run --branch -m unittest
-.........................................................................................................................................................................................................................................................
+.............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 249 tests in 3.481s
+Ran 253 tests in 6.166s
 
 OK
 ```
@@ -485,7 +498,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1437      0    183      0   100%
+TOTAL    1454      0    191      0   100%
 
 26 files skipped due to complete coverage.
 ```
@@ -500,10 +513,10 @@ To run the feature tests:
 
 ```console
 $ behave --format null tests/features
-14 features passed, 0 failed, 0 skipped
-87 scenarios passed, 0 failed, 0 skipped
-284 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m21.743s
+15 features passed, 0 failed, 0 skipped
+90 scenarios passed, 0 failed, 0 skipped
+300 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 2m8.303s
 ```
 
 The feature tests should have 100% coverage:
@@ -513,7 +526,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     410      0    165      0   100%
+TOTAL     414      0    171      0   100%
 
 12 files skipped due to complete coverage.
 ```

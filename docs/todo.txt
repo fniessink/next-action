@@ -13,4 +13,4 @@ Take out the garbage @home +DinnerParty due:2018-07-02
 Do the dishes @home +DinnerParty after:meal
 x This is a completed task
 9999-01-01 Start preparing for five-digit years
-Start preparing for emigration to Mars t:3000-01-01
+(A) Start preparing for emigration to Mars t:3000-01-01 due:3500-12-31
