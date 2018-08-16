@@ -4,16 +4,16 @@ import argparse
 import datetime
 from typing import Tuple
 
-from .todotxt import Task, Tasks
+from . import todotxt
 
 
-def sort_key(task: Task) -> Tuple[str, datetime.date, datetime.date, int]:
+def sort_key(task: todotxt.Task) -> Tuple[str, datetime.date, datetime.date, int]:
     """Return the sort key for a task."""
     return (task.priority() or "ZZZ", task.due_date() or datetime.date.max, task.creation_date() or datetime.date.max,
             -len(task.projects()))
 
 
-def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
+def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt.Tasks:
     """Return the next action(s) from the collection of tasks."""
     contexts = arguments.contexts
     projects = arguments.projects
@@ -45,4 +45,4 @@ def next_actions(tasks: Tasks, arguments: argparse.Namespace) -> Tasks:
     # Remove blocked tasks
     eligible_tasks = filter(lambda task: not task.is_blocked(), eligible_tasks)
     # Finally, sort by priority, due date and creation date
-    return Tasks(sorted(eligible_tasks, key=sort_key)[:arguments.number])
+    return todotxt.Tasks(sorted(eligible_tasks, key=sort_key)[:arguments.number])
