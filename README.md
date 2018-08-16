@@ -560,7 +560,7 @@ $ pydocstyle .
 
 ### Generating documentation
 
-This `README.md` file is generated with `python docs/update_readme.py`. The [dependency graph](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.svg) is created with:
+This `README.md` file is generated with `python docs/update_readme.py`. The dependency graph below is created with:
 
 ```console
 $ pydeps --noshow -T png -o docs/dependencies.png next_action
