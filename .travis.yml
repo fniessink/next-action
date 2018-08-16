@@ -18,7 +18,7 @@ jobs:
       dist: trusty
       sudo: false
       script:
-      - bandit -r .
+      - bandit -r next_action
       - pycodestyle .
       - pydocstyle .
     - stage: test
