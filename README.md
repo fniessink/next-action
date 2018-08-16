@@ -31,6 +31,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Running unit tests](#running-unit-tests)
   - [Running feature tests](#running-feature-tests)
   - [Running quality checks](#running-quality-checks)
+  - [Generating documentation](#generating-documentation)
 
 ## Demo
 
@@ -486,7 +487,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 253 tests in 6.166s
+Ran 253 tests in 6.299s
 
 OK
 ```
@@ -516,7 +517,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 90 scenarios passed, 0 failed, 0 skipped
 300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 2m8.303s
+Took 1m46.149s
 ```
 
 The feature tests should have 100% coverage:
@@ -563,5 +564,5 @@ This `README.md` file is generated with `python docs/update_readme.py`. The [dep
 
 ```console
 $ pydeps --noshow -o docs/dependencies.svg next_action
-(no findings hence no output)
+(no output on stdout)
 ```
