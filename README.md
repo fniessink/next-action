@@ -556,3 +556,12 @@ $ pycodestyle .
 $ pydocstyle .
 (no findings hence no output)
 ```
+
+### Generating documentation
+
+This `README.md` file is generated with `python docs/update_readme.py`. The [dependency graph](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.svg) is created with:
+
+```console
+$ pydeps --noshow -o docs/dependencies.svg next_action
+(no findings hence no output)
+```
