@@ -19,6 +19,8 @@ def do_command(line):
     stdout = command_output.stdout.strip()
     if command[0] in ("mypy", "pycodestyle", "pydocstyle") and stdout == "":
         stdout = "(no findings hence no output)"
+    if command[0] in ("pydeps",) and stdout == "":
+        stdout = "(no output on stdout)"
     stderr = "" if command[0] == "pylint" else command_output.stderr.strip()
     return stdout, stderr
 
