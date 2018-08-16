@@ -566,3 +566,9 @@ This `README.md` file is generated with `python docs/update_readme.py`. The [dep
 $ pydeps --noshow -o docs/dependencies.svg next_action
 (no output on stdout)
 ```
+
+### Dependencies
+
+The dependency graph shows the relationships between the modules in the code base and the packages used.
+
+![svg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.svg)
