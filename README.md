@@ -488,7 +488,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 253 tests in 4.888s
+Ran 253 tests in 3.954s
 
 OK
 ```
@@ -518,7 +518,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 90 scenarios passed, 0 failed, 0 skipped
 300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m51.244s
+Took 1m38.468s
 ```
 
 The feature tests should have 100% coverage:
@@ -535,7 +535,9 @@ TOTAL     418      0    171      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, pycodestyle, and pydocstyle to check for quality issues. Mypy should give no warnings or errors:
+We use mypy, pylint, pycodestyle, pydocstyle, pyroma to check for quality issues.
+
+Mypy should give no warnings or errors:
 
 ```console
 $ mypy --no-incremental --ignore-missing-import next_action
@@ -550,13 +552,26 @@ $ pylint next_action
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 ```
 
-And both pycodestyle and pydocstyle should give no warnings or errors:
+Both pycodestyle and pydocstyle should give no warnings or errors:
 
 ```console
 $ pycodestyle .
 (no findings hence no output)
 $ pydocstyle .
 (no findings hence no output)
+```
+
+And pyroma should score 10 out of 10:
+
+```console
+$ pyroma --min=10 .
+------------------------------
+Checking .
+Found next-action
+------------------------------
+Final rating: 10/10
+Your cheese is so fresh most people think it's a cream: Mascarpone
+------------------------------
 ```
 
 ### Generating documentation

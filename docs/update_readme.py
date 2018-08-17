@@ -21,7 +21,7 @@ def do_command(line):
         stdout = "(no findings hence no output)"
     if command[0] in ("pydeps",) and stdout == "":
         stdout = "(no output on stdout)"
-    stderr = "" if command[0] == "pylint" else command_output.stderr.strip()
+    stderr = "" if command[0] in ("pylint", "pyroma") else command_output.stderr.strip()
     return stdout, stderr
 
 
