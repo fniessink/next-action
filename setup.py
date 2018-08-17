@@ -23,6 +23,7 @@ setup(
             "next-action=next_action.cli:next_action",
         ],
     },
+    zip_safe=True,
     test_suite="tests",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
