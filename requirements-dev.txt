@@ -12,5 +12,5 @@ behave==1.2.6
 asserts==0.8.6
 pydeps==1.6.2
 pyroma==2.4
-vulture=0.29
+vulture==0.29
 
