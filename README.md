@@ -488,7 +488,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 253 tests in 3.954s
+Ran 253 tests in 3.755s
 
 OK
 ```
@@ -518,7 +518,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 90 scenarios passed, 0 failed, 0 skipped
 300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m38.468s
+Took 1m39.237s
 ```
 
 The feature tests should have 100% coverage:
@@ -535,7 +535,7 @@ TOTAL     418      0    171      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, pycodestyle, pydocstyle, pyroma to check for quality issues.
+We use mypy, pylint, pycodestyle, pydocstyle, pyroma, and vulture to check for quality issues.
 
 Mypy should give no warnings or errors:
 
@@ -558,6 +558,12 @@ Both pycodestyle and pydocstyle should give no warnings or errors:
 $ pycodestyle .
 (no findings hence no output)
 $ pydocstyle .
+(no findings hence no output)
+```
+
+Vulture should find no dead code:
+```console
+$ vulture next_action
 (no findings hence no output)
 ```
 
