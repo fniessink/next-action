@@ -32,6 +32,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Running feature tests](#running-feature-tests)
   - [Running quality checks](#running-quality-checks)
   - [Generating documentation](#generating-documentation)
+  - [Source code structure and dependencies](#source-code-structure-and-dependencies)
 
 ## Demo
 
@@ -487,7 +488,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 253 tests in 6.299s
+Ran 253 tests in 4.888s
 
 OK
 ```
@@ -499,7 +500,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1454      0    191      0   100%
+TOTAL    1463      0    191      0   100%
 
 26 files skipped due to complete coverage.
 ```
@@ -517,7 +518,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 90 scenarios passed, 0 failed, 0 skipped
 300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m46.149s
+Took 1m51.244s
 ```
 
 The feature tests should have 100% coverage:
@@ -527,7 +528,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     414      0    171      0   100%
+TOTAL     418      0    171      0   100%
 
 12 files skipped due to complete coverage.
 ```
