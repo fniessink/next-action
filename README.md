@@ -32,6 +32,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Running feature tests](#running-feature-tests)
   - [Running quality checks](#running-quality-checks)
   - [Generating documentation](#generating-documentation)
+  - [Source code structure and dependencies](#source-code-structure-and-dependencies)
 
 ## Demo
 
@@ -487,7 +488,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 253 tests in 6.299s
+Ran 253 tests in 3.755s
 
 OK
 ```
@@ -499,7 +500,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1454      0    191      0   100%
+TOTAL    1463      0    191      0   100%
 
 26 files skipped due to complete coverage.
 ```
@@ -517,7 +518,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 90 scenarios passed, 0 failed, 0 skipped
 300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m46.149s
+Took 1m39.237s
 ```
 
 The feature tests should have 100% coverage:
@@ -527,14 +528,16 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     414      0    171      0   100%
+TOTAL     418      0    171      0   100%
 
 12 files skipped due to complete coverage.
 ```
 
 ### Running quality checks
 
-We use mypy, pylint, pycodestyle, and pydocstyle to check for quality issues. Mypy should give no warnings or errors:
+We use mypy, pylint, pycodestyle, pydocstyle, pyroma, and vulture to check for quality issues.
+
+Mypy should give no warnings or errors:
 
 ```console
 $ mypy --no-incremental --ignore-missing-import next_action
@@ -549,13 +552,32 @@ $ pylint next_action
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 ```
 
-And both pycodestyle and pydocstyle should give no warnings or errors:
+Both pycodestyle and pydocstyle should give no warnings or errors:
 
 ```console
 $ pycodestyle .
 (no findings hence no output)
 $ pydocstyle .
 (no findings hence no output)
+```
+
+Vulture should find no dead code:
+```console
+$ vulture next_action
+(no findings hence no output)
+```
+
+And pyroma should score 10 out of 10:
+
+```console
+$ pyroma --min=10 .
+------------------------------
+Checking .
+Found next-action
+------------------------------
+Final rating: 10/10
+Your cheese is so fresh most people think it's a cream: Mascarpone
+------------------------------
 ```
 
 ### Generating documentation
@@ -567,8 +589,8 @@ $ pydeps --noshow -T png -o docs/dependencies.png next_action
 (no output on stdout)
 ```
 
-### Dependencies
+### Source code structure and dependencies
 
-The dependency graph shows the relationships between the modules in the code base and the packages used.
+The dependency graph shows the relationships between the packages and modules in the code base and the third-party packages used. When the user imvokes *Next-action* from the command-line, the `next_action()` method in the `next_action.cli` module is run. The `cli` module uses the `next_action.arguments` package to parse the command-line arguments and the configuration file. The *Todo.txt* file is read into a domain model using the `next_action.todotxt` package. The `next_action.pick_action` module contains the logic to select the next action. Finally, the output is formatted using the `next_action.output` package.
 
 ![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.png)

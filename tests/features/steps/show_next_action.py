@@ -1,5 +1,6 @@
 """Test the next action feature."""
 
+import argparse
 import datetime
 import tempfile
 
@@ -292,7 +293,9 @@ def invalid_priority_error_message(context):
 @then("Next-action shows the next action with the style {style}")
 def show_next_action_with_style(context, style):
     """Check the style."""
-    assert_equal(colorize("A task", style), context.next_action().strip())
+    namespace = argparse.Namespace()
+    namespace.style = style
+    assert_equal(colorize("A task", namespace), context.next_action().strip())
 
 
 @then('Next-action tells the user the argument "{argument}" is unrecognized')
