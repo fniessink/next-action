@@ -567,8 +567,8 @@ $ pydeps --noshow -T png -o docs/dependencies.png next_action
 (no output on stdout)
 ```
 
-### Dependencies
+### Source code structure and dependencies
 
-The dependency graph shows the relationships between the modules in the code base and the packages used.
+The dependency graph shows the relationships between the packages and modules in the code base and the third-party packages used. When the user imvokes *Next-action* from the command-line, the `next_action()` method in the `next_action.cli` module is run. The `cli` module uses the `next_action.arguments` package to parse the command-line arguments and the configuration file. The *Todo.txt* file is read into a domain model using the `next_action.todotxt` package. The `next_action.pick_action` module contains the logic to select the next action. Finally, the output is formatted using the `next_action.output` package.
 
 ![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.png)
