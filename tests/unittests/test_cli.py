@@ -5,9 +5,8 @@ import sys
 import unittest
 from unittest.mock import patch, mock_open, call
 
-from next_action.cli import next_action
+from next_action import next_action, __version__
 from next_action.arguments import config
-from next_action import __version__
 
 from .arguments.test_parser import USAGE_MESSAGE
 

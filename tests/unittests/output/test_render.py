@@ -4,7 +4,7 @@ import argparse
 import unittest
 
 from next_action import todotxt
-from next_action.output import render
+from next_action.output import render_next_action
 
 
 class RenderTest(unittest.TestCase):
@@ -21,14 +21,15 @@ class RenderTest(unittest.TestCase):
     def test_reference_always(self):
         """Test that the source filename is added if reference is always."""
         self.namespace.reference = "always"
-        self.assertEqual("Todo [todo.txt]", render([todotxt.Task("Todo", "todo.txt")], self.namespace))
+        self.assertEqual("Todo [todo.txt]", render_next_action([todotxt.Task("Todo", "todo.txt")], [], self.namespace))
 
     def test_reference_multiple(self):
         """Test that the source filename is added if reference is multiple and there are multiple todo.txt files."""
         self.namespace.file.append("work.txt")
         self.assertEqual(
             "Todo [todo.txt]\nProposal [work.txt]",
-            render([todotxt.Task("Todo", "todo.txt"), todotxt.Task("Proposal", "work.txt")], self.namespace))
+            render_next_action([todotxt.Task("Todo", "todo.txt"), todotxt.Task("Proposal", "work.txt")], [],
+                               self.namespace))
 
     def test_reference_never(self):
         """Test that the source filename is not added if reference is never."""
@@ -36,31 +37,32 @@ class RenderTest(unittest.TestCase):
         self.namespace.file.append("work.txt")
         self.assertEqual(
             "Todo\nProposal",
-            render([todotxt.Task("Todo", "todo.txt"), todotxt.Task("Proposal", "work.txt")], self.namespace))
+            render_next_action([todotxt.Task("Todo", "todo.txt"), todotxt.Task("Proposal", "work.txt")], [],
+                               self.namespace))
 
     def test_blocked(self):
         """Test that the blocked task is rendered."""
         self.namespace.blocked = True
         self.assertEqual(
             "Rinse before:repeat\nblocks:\n- Repeat id:repeat",
-            render([todotxt.Task("Rinse before:repeat", tasks=[todotxt.Task("Repeat id:repeat")])],
-                   self.namespace))
+            render_next_action([todotxt.Task("Rinse before:repeat", tasks=[todotxt.Task("Repeat id:repeat")])], [],
+                               self.namespace))
 
     def test_blocked_multiple(self):
         """Test that multiple blocked tasks are rendered."""
         self.namespace.blocked = True
         self.assertEqual(
             "Rinse before:repeat before:rinse\nblocks:\n- Repeat id:repeat\n- Rinse id:rinse",
-            render([todotxt.Task("Rinse before:repeat before:rinse",
-                                 tasks=[todotxt.Task("Repeat id:repeat"), todotxt.Task("Rinse id:rinse")])],
-                   self.namespace))
+            render_next_action([todotxt.Task("Rinse before:repeat before:rinse",
+                                             tasks=[todotxt.Task("Repeat id:repeat"), todotxt.Task("Rinse id:rinse")])],
+                               [], self.namespace))
 
     def test_blocked_recursive(self):
         """Test that the blocked tasks are rendered, recursively."""
         self.namespace.blocked = True
         self.assertEqual(
             "Lather before:rinse\nblocks:\n- Rinse id:rinse before:repeat\n  blocks:\n  - Repeat id:repeat",
-            render([todotxt.Task("Lather before:rinse",
-                                 tasks=[todotxt.Task("Rinse id:rinse before:repeat",
-                                                     tasks=[todotxt.Task("Repeat id:repeat")])])],
-                   self.namespace))
+            render_next_action([todotxt.Task("Lather before:rinse",
+                                             tasks=[todotxt.Task("Rinse id:rinse before:repeat",
+                                                                 tasks=[todotxt.Task("Repeat id:repeat")])])], [],
+                               self.namespace))
