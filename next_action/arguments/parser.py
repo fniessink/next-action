@@ -10,14 +10,13 @@ from typing import List, Set
 
 from pygments.styles import get_all_styles
 
-import next_action
 from .config import read_config_file, write_config_file, validate_config_file
 
 
 class NextActionArgumentParser(argparse.ArgumentParser):
     """Command-line argument parser for Next-action."""
 
-    def __init__(self) -> None:
+    def __init__(self, version: str = "?") -> None:
         """Initialize the parser."""
         super().__init__(
             usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
@@ -32,18 +31,18 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                    "cases where a context or project is mistaken for an argument to an option.",
             formatter_class=CapitalisedHelpFormatter)
         self.__default_filenames = ["~/todo.txt"]
-        self.add_optional_arguments()
+        self.add_optional_arguments(version)
         self.add_configuration_options()
         self.add_input_options()
         self.add_output_options()
         self.add_number_options()
         self.add_filter_arguments()
 
-    def add_optional_arguments(self) -> None:
+    def add_optional_arguments(self, version: str) -> None:
         """Add the optional arguments to the parser."""
         self._optionals.title = self._optionals.title.capitalize() if self._optionals.title else None
         self.add_argument(
-            "--version", action="version", version="%(prog)s {0}".format(next_action.__version__))
+            "--version", action="version", version="%(prog)s {0}".format(version))
 
     def add_configuration_options(self) -> None:
         """Add the configuration options to the parser."""

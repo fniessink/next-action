@@ -20,7 +20,7 @@ setup(
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "next-action=next_action.cli:next_action",
+            "next-action=next_action:next_action",
         ],
     },
     zip_safe=True,

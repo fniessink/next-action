@@ -486,9 +486,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -Wignore -m coverage run --branch -m unittest
-.............................................................................................................................................................................................................................................................
+......................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 253 tests in 3.755s
+Ran 262 tests in 3.800s
 
 OK
 ```
@@ -500,9 +500,9 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1463      0    191      0   100%
+TOTAL    1508      0    191      0   100%
 
-26 files skipped due to complete coverage.
+27 files skipped due to complete coverage.
 ```
 
 We use `-Wignore` to ignore the depreciation warnings caused by the current version of the dateparser module.
@@ -518,7 +518,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 90 scenarios passed, 0 failed, 0 skipped
 300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m39.237s
+Took 1m40.310s
 ```
 
 The feature tests should have 100% coverage:
@@ -528,7 +528,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     418      0    171      0   100%
+TOTAL     424      0    171      0   100%
 
 12 files skipped due to complete coverage.
 ```
@@ -562,8 +562,9 @@ $ pydocstyle .
 ```
 
 Vulture should find no dead code:
+
 ```console
-$ vulture next_action
+$ vulture next_action .vulture-whitelist.py
 (no findings hence no output)
 ```
 
@@ -582,15 +583,30 @@ Your cheese is so fresh most people think it's a cream: Mascarpone
 
 ### Generating documentation
 
-This `README.md` file is generated with `python docs/update_readme.py`. The dependency graph below is created with:
+This `README.md` file is generated with `python docs/update_readme.py`. The dependency graph below is created with Pydeps:
 
 ```console
 $ pydeps --noshow -T png -o docs/dependencies.png next_action
 (no output on stdout)
 ```
 
+The package and class diagrams below are creted with Pyreverse (part of Pylint):
+
+```console
+$ pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action
+(stdout suppressed)
+```
+
 ### Source code structure and dependencies
 
-The dependency graph shows the relationships between the packages and modules in the code base and the third-party packages used. When the user imvokes *Next-action* from the command-line, the `next_action()` method in the `next_action.cli` module is run. The `cli` module uses the `next_action.arguments` package to parse the command-line arguments and the configuration file. The *Todo.txt* file is read into a domain model using the `next_action.todotxt` package. The `next_action.pick_action` module contains the logic to select the next action. Finally, the output is formatted using the `next_action.output` package.
+The dependency graph shows the relationships between the packages and modules in the code base and the third-party packages used. When the user imvokes *Next-action* from the command-line, the `next_action()` method in the `next_action` package is run. The `next_action()` method uses the `next_action.arguments` package to parse the command-line arguments and the configuration file. The *Todo.txt* file is read into a domain model using the `next_action.todotxt` package. The `next_action.pick_action` module contains the logic to select the next action. Finally, the output is formatted using the `next_action.output` package.
 
 ![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.png)
+
+The package diagram created by Pyreverse looks quite similar.
+
+![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/packages.png)
+
+The class diagram created by Pyreverse shows the classes used. The biggest one is the `NextActionArgumentParser` class, responsible for parsing the command-line arguments. The other two relevant classes are the `Task` class for holding information about an individual task and the `Tasks` class that contains a collection of tasks.
+
+![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/classes.png)
