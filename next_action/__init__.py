@@ -1,6 +1,5 @@
 """Main Next-action package."""
 
-import argparse
 import os
 
 from .arguments import parse_arguments
