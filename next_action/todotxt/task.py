@@ -1,6 +1,7 @@
 """Class that represents one task (i.e. one line) from a todo.txt file."""
 
 import datetime
+import functools
 import re
 import typing
 from typing import List, Optional, Sequence, Set
@@ -95,19 +96,23 @@ class Task:
         return any([task for task in self.tasks if not task.is_completed() and
                     (self.task_id() in task.parent_ids() or task.task_id() in self.child_ids())])
 
+    @functools.lru_cache(maxsize=None)
     def child_ids(self) -> Set[str]:
         """Return the ids of the child tasks."""
         return {match.group(1) for match in re.finditer(r"\bafter:(\S+)\b", self.text)}
 
+    @functools.lru_cache(maxsize=None)
     def parent_ids(self) -> Set[str]:
         """Return the ids of the parent tasks."""
         return {match.group(2) for match in re.finditer(r"\b(p|before):(\S+)\b", self.text)}
 
+    @functools.lru_cache(maxsize=None)
     def task_id(self) -> str:
         """Return the id of the task."""
         match = re.search(r"\bid:(\S+)\b", self.text)
         return match.group(1) if match else ""
 
+    @functools.lru_cache(maxsize=None)
     def blocked_tasks(self) -> Sequence["Task"]:
         """Return the tasks this task is blocking."""
         return [task for task in self.tasks if not task.is_completed() and
