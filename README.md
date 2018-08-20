@@ -488,7 +488,7 @@ To run the unit tests while generating coverage information:
 $ python -Wignore -m coverage run --branch -m unittest
 .......................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 263 tests in 3.338s
+Ran 263 tests in 3.284s
 
 OK
 ```
@@ -500,7 +500,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1524      0    193      0   100%
+TOTAL    1530      0    193      0   100%
 
 27 files skipped due to complete coverage.
 ```
@@ -518,7 +518,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 91 scenarios passed, 0 failed, 0 skipped
 302 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m42.460s
+Took 1m18.234s
 ```
 
 The feature tests should have 100% coverage:
@@ -528,7 +528,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     436      0    173      0   100%
+TOTAL     442      0    173      0   100%
 
 12 files skipped due to complete coverage.
 ```

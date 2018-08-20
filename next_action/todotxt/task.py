@@ -30,6 +30,7 @@ class Task:
         """Return the projects of the task."""
         return self.__prefixed_items(r"\+")
 
+    @functools.lru_cache(maxsize=None)
     def priority(self) -> Optional[str]:
         """Return the priority of the task."""
         match = re.match(r"\(([A-Z])\) ", self.text)
@@ -68,6 +69,7 @@ class Task:
         task_due_date = self.due_date()
         return task_due_date <= due_date if task_due_date else False
 
+    @functools.lru_cache(maxsize=None)
     def is_completed(self) -> bool:
         """Return whether the task is completed or not."""
         return self.text.startswith("x ")
