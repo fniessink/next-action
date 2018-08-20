@@ -185,7 +185,7 @@ $ next-action @home --due
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "june 2019"
+$ next-action @home --due "2019-07"
 (L) Pay June invoice @home due:2019-06-28
 ```
 
@@ -486,9 +486,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -Wignore -m coverage run --branch -m unittest
-......................................................................................................................................................................................................................................................................
+.......................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 262 tests in 3.800s
+Ran 263 tests in 3.338s
 
 OK
 ```
@@ -500,7 +500,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1508      0    191      0   100%
+TOTAL    1524      0    193      0   100%
 
 27 files skipped due to complete coverage.
 ```
@@ -516,9 +516,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
-90 scenarios passed, 0 failed, 0 skipped
-300 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m40.310s
+91 scenarios passed, 0 failed, 0 skipped
+302 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m42.460s
 ```
 
 The feature tests should have 100% coverage:
@@ -528,7 +528,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     424      0    171      0   100%
+TOTAL     436      0    173      0   100%
 
 12 files skipped due to complete coverage.
 ```

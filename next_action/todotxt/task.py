@@ -51,10 +51,12 @@ class Task:
         match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)
         return self.__create_date(match)
 
+    @functools.lru_cache(maxsize=None)
     def threshold_date(self) -> Optional[datetime.date]:
         """Return the threshold date of the task."""
         return self.__find_keyed_date("t")
 
+    @functools.lru_cache(maxsize=None)
     def due_date(self) -> Optional[datetime.date]:
         """Return the due date of the task."""
         due_dates = [self.__find_keyed_date("due")]
