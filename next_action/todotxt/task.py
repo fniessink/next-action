@@ -95,6 +95,7 @@ class Task:
         due_date = self.due_date()
         return due_date < today if due_date else False
 
+    @functools.lru_cache(maxsize=None)
     def is_blocked(self) -> bool:
         """Return whether a task is blocked, i.e. whether it has uncompleted child tasks."""
         return any([task for task in self.tasks if not task.is_completed() and
