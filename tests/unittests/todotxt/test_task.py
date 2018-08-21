@@ -8,6 +8,8 @@ from hypothesis import given, strategies
 
 from next_action import todotxt
 
+# pylint: disable=no-member
+
 
 class TodoTest(unittest.TestCase):
     """Unit tests for the Task class that represents one task item."""
@@ -111,15 +113,6 @@ class TaskPriorityTest(unittest.TestCase):
         before = todotxt.Task("Before before:1 id:before", tasks=tasks)
         tasks.extend([before, after1, after2])
         self.assertEqual("A", before.priority())
-
-    def test_blocking_completed(self):
-        """Test that the priority of a completed blocked task is ignored."""
-        tasks = todotxt.Tasks()
-        after = todotxt.Task("(B) After id:1", tasks=tasks)
-        after_completed = todotxt.Task("x (A) After id:2", tasks=tasks)
-        before = todotxt.Task("Before before:1 before:2", tasks=tasks)
-        tasks.extend([before, after, after_completed])
-        self.assertEqual("B", before.priority())
 
 
 class CreationDateTest(unittest.TestCase):
@@ -241,7 +234,6 @@ class DueDateTest(unittest.TestCase):
         self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date.today()))
         self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
         self.assertTrue(todotxt.Task("9999-01-01 due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
-        self.assertTrue(todotxt.Task("x Completed due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
         self.assertFalse(todotxt.Task("due:2018-01-01").is_due(datetime.date(2017, 12, 31)))
         self.assertFalse(todotxt.Task("Without due date").is_due(datetime.date(2017, 12, 31)))
 
@@ -268,59 +260,6 @@ class DueDateTest(unittest.TestCase):
         before = todotxt.Task("Before before:1 id:before", tasks=tasks)
         tasks.extend([before, after1, after2])
         self.assertEqual(datetime.date(2018, 1, 1), before.due_date())
-
-    def test_blocking_completed(self):
-        """Test that the due date of a completed blocked task is ignored."""
-        tasks = todotxt.Tasks()
-        after = todotxt.Task("After id:1 due:2018-02-01", tasks=tasks)
-        after_completed = todotxt.Task("x After id:2 due:2018-01-01", tasks=tasks)
-        before = todotxt.Task("Before before:1 before:2", tasks=tasks)
-        tasks.extend([before, after, after_completed])
-        self.assertEqual(datetime.date(2018, 2, 1), before.due_date())
-
-
-class TaskCompletionTest(unittest.TestCase):
-    """Unit tests for the completion status of tasks."""
-
-    def test_not_completed(self):
-        """Test that a task that doesn't start with an x isn't completed."""
-        self.assertFalse(todotxt.Task("Task x").is_completed())
-
-    def test_completed(self):
-        """Test that a task that does start with an x is completed."""
-        self.assertTrue(todotxt.Task("x Completed task").is_completed())
-
-    def test_space_after_x(self):
-        """Test that a task that does start with an x is completed."""
-        self.assertFalse(todotxt.Task("xNotCompleted").is_completed())
-
-    def test_x_must_be_lowercase(self):
-        """Test that a task that starts with an X isn't completed."""
-        self.assertFalse(todotxt.Task("X Not completed").is_completed())
-
-
-class ActionableTest(unittest.TestCase):
-    """Unit tests for the actionable status of tasks."""
-
-    def test_default(self):
-        """Test that a default task is actionable."""
-        self.assertTrue(todotxt.Task("Todo").is_actionable())
-
-    def test_past_creation_date(self):
-        """Test that a task with a past creation date is actionable."""
-        self.assertTrue(todotxt.Task("2018-01-01 Todo").is_actionable())
-
-    def test_future_creation_date(self):
-        """Test that a task with a future creation date is not actionable."""
-        self.assertFalse(todotxt.Task("9999-01-01 Todo").is_actionable())
-
-    def test_completed_task(self):
-        """Test that a completed task is not actionable."""
-        self.assertFalse(todotxt.Task("x 2018-01-01 Todo").is_actionable())
-
-    def test_two_dates(self):
-        """Test that a completed task with a past creation date is not actionable."""
-        self.assertFalse(todotxt.Task("x 2018-01-01 2018-01-01 Todo").is_actionable())
 
 
 class DependenciesTest(unittest.TestCase):
@@ -393,23 +332,6 @@ class DependenciesTest(unittest.TestCase):
         after2 = todotxt.Task("After 2 after:before", tasks=tasks)
         tasks.extend([before, after1, after2])
         self.assertTrue(after1.is_blocked())
-
-    @given(before_keys)
-    def test_completed_before_task(self, before_key):
-        """Test that a task is not blocked by a completed task."""
-        tasks = todotxt.Tasks()
-        after = todotxt.Task("After id:1", tasks=tasks)
-        completed_before = todotxt.Task("x Before {0}:1".format(before_key), tasks=tasks)
-        tasks.extend([after, completed_before])
-        self.assertFalse(after.is_blocked())
-
-    def test_after_completed_task(self):
-        """Test that a task is not blocked if it is specified to be done after a completed task."""
-        tasks = todotxt.Tasks()
-        after = todotxt.Task("After after:completed_before", tasks=tasks)
-        completed_before = todotxt.Task("x Before id:completed_before", tasks=tasks)
-        tasks.extend([after, completed_before])
-        self.assertFalse(after.is_blocked())
 
     @given(before_keys)
     def test_self_before_self(self, before_key):

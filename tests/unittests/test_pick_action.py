@@ -170,25 +170,17 @@ class FilterTasksTest(PickActionTestCase):
 class IgnoredTasksTest(PickActionTestCase):
     """Test that certain tasks are ignored when picking the next action."""
 
-    def test_ignore_completed_task(self):
-        """If there's one completed and one uncompleted task, the uncompleted one is the next action."""
-        completed_task = todotxt.Task("x Completed")
-        uncompleted_task = todotxt.Task("Todo")
-        self.assertEqual(
-            [uncompleted_task], pick_action.next_actions([completed_task, uncompleted_task], self.namespace))
-
     def test_ignore_future_task(self):
         """Ignore tasks with a start date in the future."""
         future_task = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
         regular_task = todotxt.Task("(B) Look busy")
         self.assertEqual([regular_task], pick_action.next_actions([future_task, regular_task], self.namespace))
 
-    def test_ignore_these_tasks(self):
-        """If all tasks are completed or future tasks, there's no next action."""
-        completed_task1 = todotxt.Task("x Completed")
-        completed_task2 = todotxt.Task("x Completed too")
-        future_task = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
-        self.assertEqual([], pick_action.next_actions([completed_task1, completed_task2, future_task], self.namespace))
+    def test_only_future_tasks(self):
+        """If all tasks are future tasks, there's no next action."""
+        future_task1 = todotxt.Task("(A) 9999-01-01 Start preparing for five-digit years")
+        future_task2 = todotxt.Task("(A) Start preparing for five-digit years t:9999-01-01")
+        self.assertEqual([], pick_action.next_actions([future_task1, future_task2], self.namespace))
 
 
 class OverdueTasks(PickActionTestCase):
@@ -241,6 +233,8 @@ class MinimimPriorityTest(PickActionTest):
 class BlockedTasksTest(PickActionTest):
     """Unit tests for blocked tasks."""
 
+    # pylint: disable=no-member
+
     def test_blocked(self):
         """Test that a blocked task isn't the next action."""
         tasks = todotxt.Tasks()
@@ -262,11 +256,10 @@ class BlockedTasksTest(PickActionTest):
         """Test that a blocked task isn't the next action."""
         tasks = todotxt.Tasks()
         parent = todotxt.Task("(A) Parent id:1", tasks=tasks)
-        child1 = todotxt.Task("x Child 1 p:1", tasks=tasks)
+        child1 = todotxt.Task("Child 1 p:1", tasks=tasks)
         child2 = todotxt.Task("Child 2 p:1", tasks=tasks)
-        child3 = todotxt.Task("Child 3 p:1", tasks=tasks)
-        tasks.extend([parent, child1, child2, child3])
-        self.assertEqual([child2, child3], pick_action.next_actions(tasks, self.namespace))
+        tasks.extend([parent, child1, child2])
+        self.assertEqual([child1, child2], pick_action.next_actions(tasks, self.namespace))
 
     def test_multiple_parents(self):
         """Test that a blocked task isn't the next action."""
