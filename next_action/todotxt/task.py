@@ -94,12 +94,21 @@ class Task:
     @functools.lru_cache(maxsize=None)
     def blocked_tasks(self) -> Sequence["Task"]:
         """Return the tasks this task is blocking."""
-        return [task for task in self.tasks if self.is_blocking(task)]
+        if self.has_family():
+            return [task for task in self.tasks if self.is_blocking(task)]
+        return []
 
     @functools.lru_cache(maxsize=None)
     def is_blocking(self, task: "Task") -> bool:
         """Return whether this task is blocking the other task."""
-        return task.task_id() in self.parent_ids() or self.task_id() in task.child_ids()
+        if self.has_family():
+            return (task.task_id() in self.parent_ids()) or (self.task_id() in task.child_ids())
+        return False
+
+    @functools.lru_cache(maxsize=None)
+    def has_family(self) -> bool:
+        """Return whether this task has no parents and/or children."""
+        return self.task_id() or self.child_ids() or self.parent_ids()
 
     @functools.lru_cache(maxsize=None)
     def child_ids(self) -> Set[str]:
