@@ -38,14 +38,12 @@ class Task:
         priorities.extend([blocked_task.priority() for blocked_task in self.blocked_tasks()])
         return min(priorities, default=None, key=lambda priority: priority or "ZZZ")
 
-    def priority_at_least(self, min_priority: Optional[str]) -> bool:
+    def priority_at_least(self, min_priority: str) -> bool:
         """Return whether the priority of task is at least the given priority."""
-        if not min_priority:
-            return True
         priority = self.priority()
-        if not priority:
-            return False
-        return priority <= min_priority
+        if priority:
+            return priority <= min_priority
+        return False
 
     def creation_date(self) -> Optional[datetime.date]:
         """Return the creation date of the task."""
@@ -94,21 +92,12 @@ class Task:
     @functools.lru_cache(maxsize=None)
     def blocked_tasks(self) -> Sequence["Task"]:
         """Return the tasks this task is blocking."""
-        if self.has_family():
-            return [task for task in self.tasks if self.is_blocking(task)]
-        return []
+        return [task for task in self.tasks if self.is_blocking(task)]
 
     @functools.lru_cache(maxsize=None)
     def is_blocking(self, task: "Task") -> bool:
         """Return whether this task is blocking the other task."""
-        if self.has_family():
-            return (task.task_id() in self.parent_ids()) or (self.task_id() in task.child_ids())
-        return False
-
-    @functools.lru_cache(maxsize=None)
-    def has_family(self) -> bool:
-        """Return whether this task has no parents and/or children."""
-        return self.task_id() or self.child_ids() or self.parent_ids()
+        return task.task_id() in self.parent_ids() or self.task_id() in task.child_ids()
 
     @functools.lru_cache(maxsize=None)
     def child_ids(self) -> Set[str]:

@@ -40,7 +40,8 @@ def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt
     if arguments.due:
         eligible_tasks = filter(lambda task: task.is_due(arguments.due), eligible_tasks)
     # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
-    eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
+    if arguments.priority:
+        eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
     # Remove blocked tasks
     eligible_tasks = filter(lambda task: not task.is_blocked(), eligible_tasks)
     # Finally, sort by priority, due date and creation date

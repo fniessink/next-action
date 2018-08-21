@@ -85,9 +85,8 @@ class TaskPriorityTest(unittest.TestCase):
         self.assertTrue(todotxt.Task("(A) Task").priority_at_least("A"))
         self.assertTrue(todotxt.Task("(A) Task").priority_at_least("B"))
         self.assertFalse(todotxt.Task("(B) Task").priority_at_least("A"))
+        self.assertTrue(todotxt.Task("(Z) Task").priority_at_least("Z"))
         self.assertFalse(todotxt.Task("Task").priority_at_least("Z"))
-        self.assertTrue(todotxt.Task("(Z) Task").priority_at_least(None))
-        self.assertTrue(todotxt.Task("Task").priority_at_least(None))
 
     def test_blocking(self):
         """Test the priority of a task without its own priority.
