@@ -89,7 +89,7 @@ class Task:
     @functools.lru_cache(maxsize=None)
     def is_blocked(self) -> bool:
         """Return whether a task is blocked, i.e. whether it has (uncompleted) child tasks."""
-        return any([task for task in self.tasks if task.is_blocking(self)])
+        return any(task for task in self.tasks if task.is_blocking(self))
 
     @functools.lru_cache(maxsize=None)
     def blocked_tasks(self) -> Sequence["Task"]:
