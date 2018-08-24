@@ -19,9 +19,8 @@ def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt
     projects = arguments.projects
     excluded_contexts = arguments.excluded_contexts
     excluded_projects = arguments.excluded_projects
-    # First, get the potential next actions by filtering out completed tasks and tasks with a future creation date or
-    # future threshold date
-    eligible_tasks = filter(lambda task: task.is_actionable(arguments.time_travel), tasks)
+    # First, get the potential next actions by filtering out tasks with a future creation date or threshold date
+    eligible_tasks = filter(lambda task: not task.is_future(arguments.time_travel), tasks)
     # Then, exclude tasks that have an excluded context
     if excluded_contexts:
         eligible_tasks = filter(lambda task: not excluded_contexts & task.contexts(), eligible_tasks)
@@ -41,7 +40,8 @@ def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt
     if arguments.due:
         eligible_tasks = filter(lambda task: task.is_due(arguments.due), eligible_tasks)
     # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
-    eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
+    if arguments.priority:
+        eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
     # Remove blocked tasks
     eligible_tasks = filter(lambda task: not task.is_blocked(), eligible_tasks)
     # Finally, sort by priority, due date and creation date

@@ -6,7 +6,7 @@ import shutil
 import string
 import sys
 import textwrap
-from typing import List, Set
+from typing import cast, List, Set, Tuple
 
 from pygments.styles import get_all_styles
 
@@ -260,11 +260,16 @@ def filter_type(value: str) -> str:
 
 def date_type(value: str) -> datetime.date:
     """Return the date if it's valid, else raise an error."""
-    import dateparser
-    date_time = dateparser.parse(value, languages=["en"],
-                                 settings={"PREFER_DAY_OF_MONTH": "last", "PREFER_DATES_FROM": "future"})
-    if date_time:
-        return date_time.date()
+    relative_days = dict(yesterday=-1, today=0, tomorrow=1)
+    if value.lower() in relative_days:
+        return datetime.date.today() + datetime.timedelta(days=relative_days[value.lower()])
+    from dateutil.parser import parse
+    try:
+        date_time, remaining_tokens = cast(Tuple, parse(value, fuzzy_with_tokens=True, ignoretz=True))
+        if not remaining_tokens:
+            return date_time.date()
+    except ValueError:
+        pass
     raise argparse.ArgumentTypeError("invalid date: {0}".format(value))
 
 

@@ -2,8 +2,8 @@
 
 import datetime
 import os
+import pathlib
 import shlex
-import shutil
 import subprocess  # nosec
 import sys
 
@@ -24,8 +24,9 @@ def do_command(line):
         stdout = "(no output on stdout)"
     if command[0] in ("pyreverse",):
         stdout = "(stdout suppressed)"
-        shutil.move("packages.png", "docs")
-        shutil.move("classes.png", "docs")
+        for diagram in ("packages", "classes"):
+            filename = pathlib.Path(diagram + ".png")
+            filename.replace(pathlib.Path("docs") / filename)
     stderr = "" if command[0] in ("pylint", "pyroma") else command_output.stderr.strip()
     return stdout, stderr
 

@@ -286,6 +286,15 @@ class DueDateTest(ParserTestCase):
                           call("next-action: error: argument -d/--due: invalid date: 2019-02-15-12\n")],
                          mock_stderr_write.call_args_list)
 
+    @patch.object(sys, "argv", ["next-action", "--due", "Extra 2019-02-15"])
+    @patch.object(sys.stderr, "write")
+    def test_extra_tokens(self, mock_stderr_write):
+        """Test that the argument parser exits if the option is invalid."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE),
+                          call("next-action: error: argument -d/--due: invalid date: Extra 2019-02-15\n")],
+                         mock_stderr_write.call_args_list)
+
 
 @patch.object(config, "open", mock_open(read_data=""))
 class ReferenceTest(ParserTestCase):

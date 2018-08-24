@@ -1,6 +1,7 @@
 """Class that represents one task (i.e. one line) from a todo.txt file."""
 
 import datetime
+import functools
 import re
 import typing
 from typing import List, Optional, Sequence, Set
@@ -29,6 +30,7 @@ class Task:
         """Return the projects of the task."""
         return self.__prefixed_items(r"\+")
 
+    @functools.lru_cache(maxsize=None)
     def priority(self) -> Optional[str]:
         """Return the priority of the task."""
         match = re.match(r"\(([A-Z])\) ", self.text)
@@ -36,24 +38,24 @@ class Task:
         priorities.extend([blocked_task.priority() for blocked_task in self.blocked_tasks()])
         return min(priorities, default=None, key=lambda priority: priority or "ZZZ")
 
-    def priority_at_least(self, min_priority: Optional[str]) -> bool:
+    def priority_at_least(self, min_priority: str) -> bool:
         """Return whether the priority of task is at least the given priority."""
-        if not min_priority:
-            return True
         priority = self.priority()
-        if not priority:
-            return False
-        return priority <= min_priority
+        if priority:
+            return priority <= min_priority
+        return False
 
     def creation_date(self) -> Optional[datetime.date]:
         """Return the creation date of the task."""
         match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)
         return self.__create_date(match)
 
+    @functools.lru_cache(maxsize=None)
     def threshold_date(self) -> Optional[datetime.date]:
         """Return the threshold date of the task."""
         return self.__find_keyed_date("t")
 
+    @functools.lru_cache(maxsize=None)
     def due_date(self) -> Optional[datetime.date]:
         """Return the due date of the task."""
         due_dates = [self.__find_keyed_date("due")]
@@ -64,10 +66,6 @@ class Task:
         """Return whether the task is due on or before the given due date."""
         task_due_date = self.due_date()
         return task_due_date <= due_date if task_due_date else False
-
-    def is_completed(self) -> bool:
-        """Return whether the task is completed or not."""
-        return self.text.startswith("x ")
 
     def is_future(self, today: datetime.date = None) -> bool:
         """Return whether the task is a future task, i.e. has a creation or threshold date in the future."""
@@ -80,38 +78,42 @@ class Task:
             return threshold_date > today
         return False
 
-    def is_actionable(self, today: datetime.date = None) -> bool:
-        """Return whether the task is actionable, meaning it's uncompleted and doesn't have a future creation date."""
-        return not self.is_completed() and not self.is_future(today)
-
     def is_overdue(self, today: datetime.date = None) -> bool:
         """Return whether the task is overdue, i.e. whether it has a due date in the past."""
         today = today or datetime.date.today()
         due_date = self.due_date()
         return due_date < today if due_date else False
 
+    @functools.lru_cache(maxsize=None)
     def is_blocked(self) -> bool:
-        """Return whether a task is blocked, i.e. whether it has uncompleted child tasks."""
-        return any([task for task in self.tasks if not task.is_completed() and
-                    (self.task_id() in task.parent_ids() or task.task_id() in self.child_ids())])
+        """Return whether a task is blocked, i.e. whether it has (uncompleted) child tasks."""
+        return any(task for task in self.tasks if task.is_blocking(self))
 
+    @functools.lru_cache(maxsize=None)
+    def blocked_tasks(self) -> Sequence["Task"]:
+        """Return the tasks this task is blocking."""
+        return [task for task in self.tasks if self.is_blocking(task)]
+
+    @functools.lru_cache(maxsize=None)
+    def is_blocking(self, task: "Task") -> bool:
+        """Return whether this task is blocking the other task."""
+        return task.task_id() in self.parent_ids() or self.task_id() in task.child_ids()
+
+    @functools.lru_cache(maxsize=None)
     def child_ids(self) -> Set[str]:
         """Return the ids of the child tasks."""
         return {match.group(1) for match in re.finditer(r"\bafter:(\S+)\b", self.text)}
 
+    @functools.lru_cache(maxsize=None)
     def parent_ids(self) -> Set[str]:
         """Return the ids of the parent tasks."""
         return {match.group(2) for match in re.finditer(r"\b(p|before):(\S+)\b", self.text)}
 
+    @functools.lru_cache(maxsize=None)
     def task_id(self) -> str:
         """Return the id of the task."""
         match = re.search(r"\bid:(\S+)\b", self.text)
         return match.group(1) if match else ""
-
-    def blocked_tasks(self) -> Sequence["Task"]:
-        """Return the tasks this task is blocking."""
-        return [task for task in self.tasks if not task.is_completed() and
-                (task.task_id() in self.parent_ids() or self.task_id() in task.child_ids())]
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """Return the prefixed items in the task."""

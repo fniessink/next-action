@@ -147,6 +147,12 @@ def next_action_invalid_argument(context, argument_type):
     context.arguments.extend(arguments)
 
 
+@when("the user asks for the next action with a due date with extra tokens")
+def next_action_extra_tokens(context):
+    """Add an invalid due date with extra tokens."""
+    context.arguments.extend(["--due", "extra 2018-01-01"])
+
+
 @when("the user asks for the next action with a {context_or_project} that is both included and excluded")
 def next_action_c_or_p_in_and_ex(context, context_or_project):
     """Both include and exclude an context or project."""
@@ -310,7 +316,7 @@ def invalid_argument_error_message(context, argument):
     if "context" in argument or "project" in argument:
         message = f"argument <context|project>: {argument} name missing"
     else:
-        message = "argument -d/--due: invalid date: 2018-02-30"
+        message = "argument -d/--due: invalid date: "
     assert_in(f"next-action: error: {message}", context.next_action())
 
 
