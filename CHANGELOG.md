@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2018-08-13
+## [1.7.0] - 2018-08-23
 
 ### Added
 
 - Allow for time travel using the `--time-travel` option. Closes #206.
+
+### Changed
+
+- Several performance improvements.
 
 ## [1.6.1] - 2018-08-10
 
