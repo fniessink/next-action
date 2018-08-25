@@ -12,11 +12,12 @@ class Task:
 
     iso_date_reg_exp = r"(\d{4})-(\d{1,2})-(\d{1,2})"
 
-    def __init__(self, todo_txt: str, filename: str = "", tasks: Sequence["Task"] = None) -> None:
-        """Initialise the task with its Todo.txt text string, originating filename, and the other tasks."""
+    def __init__(self, todo_txt: str, filename: str = "") -> None:
+        """Initialise the task with its Todo.txt text string and originating filename."""
         self.text = todo_txt
         self.filename = filename
-        self.tasks = tasks if tasks is not None else []
+        self.__is_blocked = False
+        self.__blocked_tasks = []
 
     def __repr__(self) -> str:
         """Return a text representation of the task."""
@@ -45,6 +46,7 @@ class Task:
             return priority <= min_priority
         return False
 
+    @functools.lru_cache(maxsize=None)
     def creation_date(self) -> Optional[datetime.date]:
         """Return the creation date of the task."""
         match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)
@@ -87,17 +89,20 @@ class Task:
     @functools.lru_cache(maxsize=None)
     def is_blocked(self) -> bool:
         """Return whether a task is blocked, i.e. whether it has (uncompleted) child tasks."""
-        return any(task for task in self.tasks if task.is_blocking(self))
+        return self.__is_blocked
+
+    def set_is_blocked(self):
+        """Set the blocked status."""
+        self.__is_blocked = True
 
     @functools.lru_cache(maxsize=None)
     def blocked_tasks(self) -> Sequence["Task"]:
         """Return the tasks this task is blocking."""
-        return [task for task in self.tasks if self.is_blocking(task)]
+        return self.__blocked_tasks
 
-    @functools.lru_cache(maxsize=None)
-    def is_blocking(self, task: "Task") -> bool:
-        """Return whether this task is blocking the other task."""
-        return task.task_id() in self.parent_ids() or self.task_id() in task.child_ids()
+    def add_blocked_task(self, task: "Task") -> None:
+        """Add the task to the blocked tasks."""
+        self.__blocked_tasks.append(task)
 
     @functools.lru_cache(maxsize=None)
     def child_ids(self) -> Set[str]:
