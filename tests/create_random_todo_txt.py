@@ -14,6 +14,11 @@ def context():
     return " @" + random.choice(string.ascii_lowercase) if random_bool() else ""
 
 
+def project():
+    """Return a random project."""
+    return " +" + random.choice(string.ascii_lowercase) if random_bool() else ""
+
+
 def prio():
     """Return a random priority."""
     return f"({random.choice(string.ascii_uppercase)}) " if random_bool() else ""
@@ -40,7 +45,7 @@ def create_random_todo_txt():
                 while sample and random_bool() and random_bool():
                     before += f" before:task{sample.pop()}" if random_bool() else ""
             id_ = task_id(i)
-            todo_txt.write(f"{prio()}Task {i}{id_}{due_date()}{before}{after}{context()}\n")
+            todo_txt.write(f"{prio()}Task {i}{id_}{due_date()}{before}{after}{context()}{project()}\n")
             if id_:
                 ids.append(i)
 
