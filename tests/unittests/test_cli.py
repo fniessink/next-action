@@ -128,7 +128,7 @@ context or project is mistaken for an argument to an option.
     def test_version(self, mock_stdout_write):
         """Test that --version shows the version number."""
         self.assertRaises(SystemExit, next_action)
-        self.assertEqual([call("next-action {0}\n".format(__version__))], mock_stdout_write.call_args_list)
+        self.assertEqual([call(f"next-action {__version__}\n")], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--number", "2"])
     @patch("fileinput.open", mock_open(read_data="Walk the dog @home\n(A) Buy wood +DogHouse\n(B) Call mom\n"))
@@ -180,7 +180,7 @@ context or project is mistaken for an argument to an option.
         """Test that the printed next actions reference their filename."""
         expected_filename = os.path.expanduser("~/todo.txt")
         next_action()
-        self.assertEqual([call("(B) Call mom [{0}]".format(expected_filename)),
+        self.assertEqual([call(f"(B) Call mom [{expected_filename}]"),
                           call("\n")], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "@home"])

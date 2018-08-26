@@ -42,7 +42,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """Add the optional arguments to the parser."""
         self._optionals.title = self._optionals.title.capitalize() if self._optionals.title else None
         self.add_argument(
-            "--version", action="version", version="%(prog)s {0}".format(version))
+            "--version", action="version", version=f"%(prog)s {version}")
 
     def add_configuration_options(self) -> None:
         """Add the configuration options to the parser."""
@@ -78,7 +78,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         styles = sorted(list(get_all_styles()))
         output_group.add_argument(
             "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
-            help="colorize the output; available styles: {0} (default: %(default)s)".format(", ".join(styles)))
+            help=f"colorize the output; available styles: {', '.join(styles)} (default: %(default)s)")
 
     def add_number_options(self) -> None:
         """Add the number options to the parser."""
@@ -152,13 +152,13 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                 argument = value[len("-"):]
                 if not argument[len("@"):]:
                     argument_type = "context" if argument.startswith("@") else "project"
-                    self.error("argument <context|project>: {0} name missing".format(argument_type))
+                    self.error(f"argument <context|project>: {argument_type} name missing")
                 elif argument in namespace.filters:
-                    self.error("{0} is both included and excluded".format(argument))
+                    self.error(f"{argument} is both included and excluded")
                 else:
                     namespace.filters.append(value)
             else:
-                self.error("unrecognized argument: {0}".format(value))
+                self.error(f"unrecognized argument: {value}")
         namespace.contexts = subset(namespace.filters, "@")
         namespace.projects = subset(namespace.filters, "+")
         namespace.excluded_contexts = subset(namespace.filters, "-@")
@@ -254,8 +254,8 @@ def filter_type(value: str) -> str:
         if value[len("@"):]:
             return value
         value_type = "context" if value.startswith("@") else "project"
-        raise argparse.ArgumentTypeError("{0} name missing".format(value_type))
-    raise argparse.ArgumentTypeError("unrecognized argument: {0}".format(value))
+        raise argparse.ArgumentTypeError(f"{value_type} name missing")
+    raise argparse.ArgumentTypeError(f"unrecognized argument: {value}")
 
 
 def date_type(value: str) -> datetime.date:
@@ -270,7 +270,7 @@ def date_type(value: str) -> datetime.date:
             return date_time.date()
     except ValueError:
         pass
-    raise argparse.ArgumentTypeError("invalid date: {0}".format(value))
+    raise argparse.ArgumentTypeError(f"invalid date: {value}")
 
 
 def number_type(value: str) -> int:
@@ -281,7 +281,7 @@ def number_type(value: str) -> int:
             return number
     except ValueError:
         pass
-    raise argparse.ArgumentTypeError("invalid number: {0}".format(value))
+    raise argparse.ArgumentTypeError(f"invalid number: {value}")
 
 
 def subset(filters: List[str], prefix: str) -> Set[str]:

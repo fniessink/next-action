@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+
 from typing import Tuple
 
 from . import todotxt

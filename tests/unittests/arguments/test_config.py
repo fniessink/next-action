@@ -480,7 +480,7 @@ class FiltersTest(ConfigTestCase):
         regex = r"^\-?[@|\+]\S+"
         self.assertEqual(
             [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: 0: "
-                                       "value does not match regex '{0}'\n".format(regex))],
+                                       f"value does not match regex '{regex}'\n")],
             mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -492,7 +492,7 @@ class FiltersTest(ConfigTestCase):
         regex = r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*"
         self.assertEqual(
             [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: "
-                                       "value does not match regex '{0}'\n".format(regex))],
+                                       f"value does not match regex '{regex}'\n")],
             mock_stderr_write.call_args_list)
 
 

@@ -73,7 +73,7 @@ class TaskPriorityTest(unittest.TestCase):
     def test_priorities(self):
         """Test a task with a priority."""
         for priority in string.ascii_uppercase:
-            self.assertEqual(priority, todotxt.Task("({0}) Todo".format(priority)).priority())
+            self.assertEqual(priority, todotxt.Task(f"({priority}) Todo").priority())
 
     def test_faulty_priorities(self):
         """Test that priorities must be one upper case letter."""
@@ -151,7 +151,7 @@ class CreationDateTest(unittest.TestCase):
     def test_is_future_task(self):
         """Test that a task with a creation date in the future is a future task."""
         self.assertTrue(todotxt.Task("9999-01-01 Prepare for five-digit years").is_future())
-        self.assertFalse(todotxt.Task("{0} Todo".format(datetime.date.today().isoformat())).is_future())
+        self.assertFalse(todotxt.Task(f"{datetime.date.today().isoformat()} Todo").is_future())
 
 
 class ThresholdDateTest(unittest.TestCase):
@@ -209,7 +209,7 @@ class DueDateTest(unittest.TestCase):
 
     def test_due_today(self):
         """Test a task due today."""
-        task = todotxt.Task("Todo due:{0}".format(datetime.date.today().isoformat()))
+        task = todotxt.Task(f"Todo due:{datetime.date.today().isoformat()}")
         self.assertEqual(datetime.date.today(), task.due_date())
         self.assertFalse(task.is_overdue())
 
@@ -228,7 +228,7 @@ class DueDateTest(unittest.TestCase):
     @given(strategies.sampled_from(["2018-01-1", "2018-1-01", "2018-1-1"]))
     def test_single_digits(self, due_date):
         """Test a due date with single digits for day and/or month."""
-        self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task("(B) due:{0} Todo".format(due_date)).due_date())
+        self.assertEqual(datetime.date(2018, 1, 1), todotxt.Task(f"(B) due:{due_date} Todo").due_date())
 
     def test_is_due(self):
         """Test the is_due method."""
@@ -284,7 +284,7 @@ class DependenciesTest(unittest.TestCase):
     def test_one_before_another(self, before_key):
         """Test that a task specified to be done before another task blocks the latter."""
         after = todotxt.Task("After id:1")
-        before = todotxt.Task("Before {0}:1".format(before_key))
+        before = todotxt.Task(f"Before {before_key}:1")
         after.set_is_blocked()
         before.add_blocked_task(after)
         self.assertTrue(after.is_blocked())
@@ -300,7 +300,7 @@ class DependenciesTest(unittest.TestCase):
     @given(before_keys)
     def test_one_before_two(self, before_key):
         """Test that a task that is specified to be done before two other tasks blocks both tasks."""
-        before = todotxt.Task("Before {0}:1 {0}:2".format(before_key))
+        before = todotxt.Task(f"Before {before_key}:1 {before_key}:2")
         after1 = todotxt.Task("After id:1")
         after2 = todotxt.Task("After id:1")
         before.add_blocked_task(after1)
@@ -323,8 +323,8 @@ class DependenciesTest(unittest.TestCase):
     @given(before_keys)
     def test_two_before_one(self, before_key):
         """Test that a task that is specified to be done after two other tasks is blocked by both."""
-        before1 = todotxt.Task("Before 1 {0}:1".format(before_key))
-        before2 = todotxt.Task("Before 2 {0}:1".format(before_key))
+        before1 = todotxt.Task(f"Before 1 {before_key}:1")
+        before2 = todotxt.Task(f"Before 2 {before_key}:1")
         after = todotxt.Task("After id:1")
         before1.add_blocked_task(after)
         before2.add_blocked_task(after)
@@ -349,7 +349,7 @@ class DependenciesTest(unittest.TestCase):
 
         This doesn't make sense, but we're not in the business of validating todo.txt files.
         """
-        task = todotxt.Task("Todo id:1 {0}:1".format(before_key))
+        task = todotxt.Task(f"Todo id:1 {before_key}:1")
         task.set_is_blocked()
         task.add_blocked_task(task)
         self.assertTrue(task.is_blocked())
@@ -370,8 +370,8 @@ class DependenciesTest(unittest.TestCase):
 
         This doesn't make sense, but we're not in the business of validating todo.txt files.
         """
-        task1 = todotxt.Task("Task 1 id:1 {0}:2".format(before_key))
-        task2 = todotxt.Task("Task 2 id:2 {0}:1".format(before_key))
+        task1 = todotxt.Task(f"Task 1 id:1 {before_key}:2")
+        task2 = todotxt.Task(f"Task 2 id:2 {before_key}:1")
         task1.set_is_blocked()
         task2.set_is_blocked()
         task1.add_blocked_task(task2)

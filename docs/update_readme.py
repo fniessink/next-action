@@ -41,7 +41,7 @@ def create_toc(lines, toc_header, min_level=2, max_level=3):
         indent = (level - min_level) * 2
         title = line.split(" ", 1)[1].rstrip()
         slug = title.lower().replace(" ", "-").replace("*", "").replace(".", "")
-        result.append("{0}- [{1}](#{2})".format(" " * indent, title, slug))
+        result.append(f"{' ' * indent}- [{title}](#{slug})")
     return "\n".join(result)
 
 
@@ -115,7 +115,7 @@ def update_readme():
         sys.stderr.flush()
         process = process(line.rstrip())
     duration = datetime.datetime.now() - start
-    sys.stderr.write("\n" + "-" * 40 + "\nProcessed {0} lines in {1}s.\n".format(len(lines), duration.seconds))
+    sys.stderr.write("\n" + "-" * 40 + f"\nProcessed {len(lines)} lines in {duration.seconds}s.\n")
 
 
 if __name__ == "__main__":

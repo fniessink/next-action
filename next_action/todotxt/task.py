@@ -21,12 +21,14 @@ class Task:
 
     def __repr__(self) -> str:
         """Return a text representation of the task."""
-        return "{0}<{1}>".format(self.__class__.__name__, self.text)
+        return f"{self.__class__.__name__}<{self.text}>"
 
+    @functools.lru_cache(maxsize=None)
     def contexts(self) -> Set[str]:
         """Return the contexts of the task."""
         return self.__prefixed_items("@")
 
+    @functools.lru_cache(maxsize=None)
     def projects(self) -> Set[str]:
         """Return the projects of the task."""
         return self.__prefixed_items(r"\+")
@@ -49,7 +51,7 @@ class Task:
     @functools.lru_cache(maxsize=None)
     def creation_date(self) -> Optional[datetime.date]:
         """Return the creation date of the task."""
-        match = re.match(r"(?:\([A-Z]\) )?{0}\b".format(self.iso_date_reg_exp), self.text)
+        match = re.match(fr"(?:\([A-Z]\) )?{self.iso_date_reg_exp}\b", self.text)
         return self.__create_date(match)
 
     @functools.lru_cache(maxsize=None)
@@ -86,7 +88,6 @@ class Task:
         due_date = self.due_date()
         return due_date < today if due_date else False
 
-    @functools.lru_cache(maxsize=None)
     def is_blocked(self) -> bool:
         """Return whether a task is blocked, i.e. whether it has (uncompleted) child tasks."""
         return self.__is_blocked
@@ -95,7 +96,6 @@ class Task:
         """Set the blocked status."""
         self.__is_blocked = True
 
-    @functools.lru_cache(maxsize=None)
     def blocked_tasks(self) -> Sequence["Task"]:
         """Return the tasks this task is blocking."""
         return self.__blocked_tasks
@@ -122,11 +122,11 @@ class Task:
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """Return the prefixed items in the task."""
-        return {match.group(1) for match in re.finditer(" {0}([^ ]+)".format(prefix), self.text)}
+        return {match.group(1) for match in re.finditer(f" {prefix}([^ ]+)", self.text)}
 
     def __find_keyed_date(self, key: str) -> Optional[datetime.date]:
         """Find a key:value pair with the supplied key where the value is a date."""
-        match = re.search(r"\b{0}:{1}\b".format(key, self.iso_date_reg_exp), self.text)
+        match = re.search(fr"\b{key}:{self.iso_date_reg_exp}\b", self.text)
         return self.__create_date(match)
 
     @staticmethod

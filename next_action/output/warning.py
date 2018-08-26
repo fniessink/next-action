@@ -12,8 +12,8 @@ def invalid_arguments(namespace: argparse.Namespace, tasks: todotxt.Tasks) -> st
     error_messages = []
     if unknown_contexts:
         plural = "s" if len(unknown_contexts) > 1 else ""
-        error_messages.append("unknown context{0}: {1}".format(plural, ", ".join(sorted(unknown_contexts))))
+        error_messages.append(f"unknown context{plural}: {', '.join(sorted(unknown_contexts))}")
     if unknown_projects:
         plural = "s" if len(unknown_projects) > 1 else ""
-        error_messages.append("unknown project{0}: {1}".format(plural, ", ".join(sorted(unknown_projects))))
-    return (" (warning: {0})".format("; ".join(error_messages))) if error_messages else ""
+        error_messages.append(f"unknown project{plural}: {', '.join(sorted(unknown_projects))}")
+    return f" (warning: {'; '.join(error_messages)})" if error_messages else ""
