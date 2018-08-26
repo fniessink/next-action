@@ -43,26 +43,33 @@ class RenderTest(unittest.TestCase):
     def test_blocked(self):
         """Test that the blocked task is rendered."""
         self.namespace.blocked = True
+        rinse = todotxt.Task("Rinse before:repeat")
+        repeat = todotxt.Task("Repeat id:repeat")
+        rinse.add_blocked_task(repeat)
         self.assertEqual(
             "Rinse before:repeat\nblocks:\n- Repeat id:repeat",
-            render_next_action([todotxt.Task("Rinse before:repeat", tasks=[todotxt.Task("Repeat id:repeat")])], [],
-                               self.namespace))
+            render_next_action([rinse], [], self.namespace))
 
     def test_blocked_multiple(self):
         """Test that multiple blocked tasks are rendered."""
         self.namespace.blocked = True
+        lather = todotxt.Task("Rinse before:repeat before:rinse")
+        repeat = todotxt.Task("Repeat id:repeat")
+        rinse = todotxt.Task("Rinse id:rinse")
+        lather.add_blocked_task(repeat)
+        lather.add_blocked_task(rinse)
         self.assertEqual(
             "Rinse before:repeat before:rinse\nblocks:\n- Repeat id:repeat\n- Rinse id:rinse",
-            render_next_action([todotxt.Task("Rinse before:repeat before:rinse",
-                                             tasks=[todotxt.Task("Repeat id:repeat"), todotxt.Task("Rinse id:rinse")])],
-                               [], self.namespace))
+            render_next_action([lather], [], self.namespace))
 
     def test_blocked_recursive(self):
         """Test that the blocked tasks are rendered, recursively."""
         self.namespace.blocked = True
+        lather = todotxt.Task("Lather before:rinse")
+        rinse = todotxt.Task("Rinse id:rinse before:repeat")
+        repeat = todotxt.Task("Repeat id:repeat")
+        lather.add_blocked_task(rinse)
+        rinse.add_blocked_task(repeat)
         self.assertEqual(
             "Lather before:rinse\nblocks:\n- Rinse id:rinse before:repeat\n  blocks:\n  - Repeat id:repeat",
-            render_next_action([todotxt.Task("Lather before:rinse",
-                                             tasks=[todotxt.Task("Rinse id:rinse before:repeat",
-                                                                 tasks=[todotxt.Task("Repeat id:repeat")])])], [],
-                               self.namespace))
+            render_next_action([lather], [], self.namespace))

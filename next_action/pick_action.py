@@ -2,6 +2,7 @@
 
 import argparse
 import datetime
+
 from typing import Tuple
 
 from . import todotxt
@@ -19,8 +20,10 @@ def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt
     projects = arguments.projects
     excluded_contexts = arguments.excluded_contexts
     excluded_projects = arguments.excluded_projects
+
     # First, get the potential next actions by filtering out tasks with a future creation date or threshold date
-    eligible_tasks = filter(lambda task: not task.is_future(arguments.time_travel), tasks)
+    time_travel_date = arguments.time_travel or datetime.date.today()
+    eligible_tasks = filter(lambda task: not task.is_future(time_travel_date), tasks)
     # Then, exclude tasks that have an excluded context
     if excluded_contexts:
         eligible_tasks = filter(lambda task: not excluded_contexts & task.contexts(), eligible_tasks)
@@ -35,14 +38,12 @@ def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt
         eligible_tasks = filter(lambda task: projects & task.projects(), eligible_tasks)
     # If the user only wants to see overdue tasks, filter out non-overdue tasks
     if arguments.overdue:
-        eligible_tasks = filter(lambda task: task.is_overdue(arguments.time_travel), eligible_tasks)
+        eligible_tasks = filter(lambda task: task.is_overdue(time_travel_date), eligible_tasks)
     # If the user only wants to see tasks due before a due date, filter out non-due tasks
     if arguments.due:
         eligible_tasks = filter(lambda task: task.is_due(arguments.due), eligible_tasks)
     # If the user specified a minimum priority, filter out tasks with a lower priority or no priority
     if arguments.priority:
         eligible_tasks = filter(lambda task: task.priority_at_least(arguments.priority), eligible_tasks)
-    # Remove blocked tasks
-    eligible_tasks = filter(lambda task: not task.is_blocked(), eligible_tasks)
     # Finally, sort by priority, due date and creation date
     return todotxt.Tasks(sorted(eligible_tasks, key=sort_key)[:arguments.number])

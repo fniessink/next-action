@@ -21,5 +21,5 @@ def argument_help(context):
 @then("Next-action shows the version number")
 def check_version_number(context):
     """Check that the version number is the current Next-action version."""
-    expected = "next-action {0}\n".format(next_action.__version__)
+    expected = f"next-action {next_action.__version__}\n"
     assert_equal(expected, context.next_action())

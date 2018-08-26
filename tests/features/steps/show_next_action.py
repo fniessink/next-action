@@ -55,7 +55,7 @@ def todotxt(context):
 @given("a todo.txt named {filename} with")
 def named_todotxt(context, filename):
     """Add the contents to the temporary todo.txt file and remember its filename."""
-    context.execute_steps('given a todo.txt with\n"""\n{0}\n"""'.format(context.text))
+    context.execute_steps(f'given a todo.txt with\n"""\n{context.text}\n"""')
     del context.arguments[-2:]  # Remove the --file argument that was automatically added
     context.files[-1].given_filename = filename
 

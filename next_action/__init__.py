@@ -26,6 +26,6 @@ def next_action() -> None:
     try:
         tasks = read_todotxt_files(filenames)
     except OSError as reason:
-        parser.error("can't open file: {0}".format(reason))
+        parser.error(f"can't open file: {reason}")
     actions = next_actions(tasks, namespace)
     print(render_next_action(actions, tasks, namespace))

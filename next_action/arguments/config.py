@@ -20,11 +20,11 @@ def read_config_file(filename: str, default_filename: str, error: Callable[[str]
         if filename == default_filename:
             # Don't complain if there's no configuration file at the default location
             return dict()  # pragma: no cover-behave
-        error("can't open file: {0}".format(reason))
+        error(f"can't open file: {reason}")
     except OSError as reason:
-        error("can't open file: {0}".format(reason))
+        error(f"can't open file: {reason}")
     except yaml.YAMLError as reason:
-        error("can't parse {0}: {1}".format(filename, reason))
+        error(f"can't parse {filename}: {reason}")
 
 
 def write_config_file(namespace: argparse.Namespace) -> None:
@@ -92,16 +92,16 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
     try:
         valid = validator.validate(config)
     except cerberus.validator.DocumentError as reason:
-        error("{0} is invalid: {1}".format(config_filename, reason))
+        error(f"{config_filename} is invalid: {reason}")
     if not valid:
-        error("{0} is invalid: {1}".format(config_filename, flatten_errors(validator.errors)))
+        error(f"{config_filename} is invalid: {flatten_errors(validator.errors)}")
 
 
 def flatten_errors(error_message: Union[Dict, List, str]) -> str:
     """Flatten Cerberus' error messages."""
     def flatten_dict(error_dict: Dict) -> str:
         """Return a string version of the dict."""
-        return ", ".join(["{0}: {1}".format(key, flatten_errors(value)) for key, value in error_dict.items()])
+        return ", ".join([f"{key}: {flatten_errors(value)}" for key, value in error_dict.items()])
 
     def flatten_list(error_list: List) -> str:
         """Return a string version of the list."""

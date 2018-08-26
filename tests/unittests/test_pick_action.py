@@ -235,55 +235,23 @@ class BlockedTasksTest(PickActionTest):
 
     # pylint: disable=no-member
 
-    def test_blocked(self):
-        """Test that a blocked task isn't the next action."""
-        tasks = todotxt.Tasks()
-        parent = todotxt.Task("(A) Parent id:1", tasks=tasks)
-        child = todotxt.Task("Child p:1", tasks=tasks)
-        tasks.extend([child, parent])
-        self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
-
-    def test_blocked_chain(self):
-        """Test that a blocked task isn't the next action."""
-        tasks = todotxt.Tasks()
-        grandparent = todotxt.Task("(A) Grandparent id:1", tasks=tasks)
-        parent = todotxt.Task("(B) Parent p:1 id:2", tasks=tasks)
-        child = todotxt.Task("Child p:2", tasks=tasks)
-        tasks.extend([child, parent, grandparent])
-        self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
-
-    def test_multiple_childs(self):
-        """Test that a blocked task isn't the next action."""
-        tasks = todotxt.Tasks()
-        parent = todotxt.Task("(A) Parent id:1", tasks=tasks)
-        child1 = todotxt.Task("Child 1 p:1", tasks=tasks)
-        child2 = todotxt.Task("Child 2 p:1", tasks=tasks)
-        tasks.extend([parent, child1, child2])
-        self.assertEqual([child1, child2], pick_action.next_actions(tasks, self.namespace))
-
-    def test_multiple_parents(self):
-        """Test that a blocked task isn't the next action."""
-        tasks = todotxt.Tasks()
-        parent1 = todotxt.Task("(A) Parent id:1", tasks=tasks)
-        parent2 = todotxt.Task("(B) Parent id:2", tasks=tasks)
-        child = todotxt.Task("Child 1 p:1 p:2", tasks=tasks)
-        tasks.extend([parent1, parent2, child])
-        self.assertEqual([child], pick_action.next_actions(tasks, self.namespace))
-
     def test_due_date_of_blocked_task(self):
         """Test that a task that blocks a task with an earlier due date takes precendence."""
         tasks = todotxt.Tasks()
-        due_first_but_blocked = todotxt.Task("Task id:1 due:2018-01-01", tasks=tasks)
-        blocking_task = todotxt.Task("Blocking before:1", tasks=tasks)
-        due_second = todotxt.Task("Task due:2018-02-01", tasks=tasks)
-        tasks.extend([due_first_but_blocked, blocking_task, due_second])
+        due_first_but_blocked = todotxt.Task("Task id:1 due:2018-01-01")
+        blocking_task = todotxt.Task("Blocking before:1")
+        due_second = todotxt.Task("Task due:2018-02-01")
+        due_first_but_blocked.set_is_blocked()
+        blocking_task.add_blocked_task(due_first_but_blocked)
+        tasks.extend([blocking_task, due_second])
         self.assertEqual([blocking_task, due_second], pick_action.next_actions(tasks, self.namespace))
 
     def test_priority_of_blocked_task(self):
         """Test that a task that blocks a task with a higher priority takes precendence."""
-        tasks = todotxt.Tasks()
-        high_prio_but_blocked = todotxt.Task("(A) Task id:1", tasks=tasks)
-        blocking_task = todotxt.Task("Blocking before:1", tasks=tasks)
-        second_prio = todotxt.Task("(B) Task", tasks=tasks)
-        tasks.extend([high_prio_but_blocked, blocking_task, second_prio])
+        high_prio_but_blocked = todotxt.Task("(A) Task id:1")
+        blocking_task = todotxt.Task("Blocking before:1")
+        second_prio = todotxt.Task("(B) Task")
+        high_prio_but_blocked.set_is_blocked()
+        blocking_task.add_blocked_task(high_prio_but_blocked)
+        tasks = todotxt.Tasks([second_prio, blocking_task])
         self.assertEqual([blocking_task, second_prio], pick_action.next_actions(tasks, self.namespace))
