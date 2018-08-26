@@ -17,7 +17,7 @@ class Task:
         self.text = todo_txt
         self.filename = filename
         self.__is_blocked = False
-        self.__blocked_tasks = []
+        self.__blocked_tasks: Sequence["Task"] = []
 
     def __repr__(self) -> str:
         """Return a text representation of the task."""
