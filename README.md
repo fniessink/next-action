@@ -48,8 +48,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>]
-[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>] [-s
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -57,7 +57,7 @@ is selected by specifying contexts the tasks must have and/or projects the tasks
 
 Optional arguments:
   -h, --help            show this help message and exit
-  --version             show program's version number and exit
+  -V, --version         show program's version number and exit
 
 Configuration options:
   -c [<config.cfg>], --config-file [<config.cfg>]
@@ -107,7 +107,7 @@ Use -- to separate options with optional arguments from contexts and projects, i
 where a context or project is mistaken for an argument to an option.
 ```
 
-Assuming your todo.txt file is your home folder, running *Next-action* without arguments will show the next action you should do. Given this [todo.txt](https://raw.githubusercontent.com/fniessink/next-action/master/docs/todo.txt), calling mom would be the next action:
+Assuming your todo.txt file is in your home folder, running *Next-action* without arguments will show the next action you should do. For example, given this [todo.txt](https://raw.githubusercontent.com/fniessink/next-action/master/docs/todo.txt), calling mom would be the next action:
 
 ```console
 $ next-action
@@ -166,7 +166,7 @@ $ next-action +DogHouse @weekend
 Nothing to do!
 ```
 
-But, if there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action* will warn you:
+If there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action* will warn you:
 
 ```console
 $ next-action +PaintGarage @freetime
@@ -292,7 +292,7 @@ Not passing an argument to `--style` cancels the style that is configured in the
 
 ### Time travel
 
-If you want to know what the next action would be if it were tomorrow, Monday, or on a specific date, you can tell *Next-action* to pretend it's that day.
+If you want to know what the next action would be if it were tomorrow, Monday, or a specific date, you can tell *Next-action* to pretend it's that day.
 
 ```console
 $ next-action --time-travel 3000
@@ -451,8 +451,8 @@ When you use an option that takes an optional argument, but have it followed by 
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>]
-[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>] [-s
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 
@@ -485,10 +485,10 @@ To work on the software, clone the repository, create a virtual environment, ins
 To run the unit tests while generating coverage information:
 
 ```console
-$ python -Wignore -m coverage run --branch -m unittest
+$ python -m coverage run --branch -m unittest
 ...........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 251 tests in 2.520s
+Ran 251 tests in 2.473s
 
 OK
 ```
@@ -505,8 +505,6 @@ TOTAL    1523      0    199      0   100%
 28 files skipped due to complete coverage.
 ```
 
-We use `-Wignore` to ignore the depreciation warnings caused by the current version of the dateparser module.
-
 Running `python -m unittest` and `python setup.py test` should give the same results, without generating the coverage information.
 
 ### Running feature tests
@@ -518,7 +516,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 93 scenarios passed, 0 failed, 0 skipped
 308 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m19.630s
+Took 1m24.147s
 ```
 
 The feature tests should have 100% coverage:

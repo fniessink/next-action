@@ -19,7 +19,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def __init__(self, version: str = "?") -> None:
         """Initialize the parser."""
         super().__init__(
-            usage=textwrap.fill("next-action [-h] [--version] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
+            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
                                 "[-t [<date>]] [-b] [-r <ref>] [-s [<style>]] [-a | -n <number>] "
                                 "[-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
@@ -42,7 +42,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """Add the optional arguments to the parser."""
         self._optionals.title = self._optionals.title.capitalize() if self._optionals.title else None
         self.add_argument(
-            "--version", action="version", version=f"%(prog)s {version}")
+            "-V", "--version", action="version", version=f"%(prog)s {version}")
 
     def add_configuration_options(self) -> None:
         """Add the configuration options to the parser."""
