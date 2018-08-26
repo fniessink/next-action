@@ -1,7 +1,5 @@
 """Main Next-action package."""
 
-import os
-
 from .arguments import parse_arguments
 from .pick_action import next_actions
 from .output import render_next_action
@@ -22,9 +20,8 @@ def next_action() -> None:
     4) display them.
     """
     parser, namespace = parse_arguments(__version__)
-    filenames = [os.path.expanduser(filename) for filename in namespace.file]
     try:
-        tasks = read_todotxt_files(filenames)
+        tasks = read_todotxt_files(namespace.file)
     except OSError as reason:
         parser.error(f"can't open file: {reason}")
     actions = next_actions(tasks, namespace)
