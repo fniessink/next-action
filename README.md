@@ -40,9 +40,21 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Installation
 
+### *Next-action*
+
 *Next-action* requires Python 3.6 or newer.
 
-`pip install next-action`
+`pip install --upgrade next-action`
+
+### Tab completion for bash
+
+To install tab completion for the bash shell, follow these steps:
+
+- Download [extra/bash-completion-next-action.sh]((https://raw.githubusercontent.com/fniessink/next-action/master/extra/bash-completion-next-action.sh) and put it where ever you like, for example in your home folder.
+- Next, add the line `source ~/bash-completion-next-action.sh` to your `~/.bashrc` or `~/.bash_profile` file.
+- Then, open a new terminal.
+
+Hitting tab after `next-action ` should give you the possible command line options. Hitting tab after an option that takes arguments, shows the possible arguments.
 
 ## Usage
 
