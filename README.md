@@ -17,6 +17,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 - [Demo](#demo)
 - [Installation](#installation)
+  - [*Next-action*](#next-action)
+  - [Tab completion for bash](#tab-completion-for-bash)
 - [Usage](#usage)
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
@@ -191,14 +193,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay July invoice @home due:2019-07-28
+(K) Pay October invoice @home due:2019-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2019-07"
-(L) Pay June invoice @home due:2019-06-28
+$ next-action @home --due "2019-09"
+(L) Pay September invoice @home due:2019-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
@@ -472,14 +474,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay July invoice @home due:2019-07-28
+(K) Pay October invoice @home due:2019-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay July invoice @home due:2019-07-28
+(K) Pay October invoice @home due:2019-10-28
 ```
 
 ## Recent changes
@@ -500,7 +502,7 @@ To run the unit tests while generating coverage information:
 $ python -m coverage run --branch -m unittest
 ...........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 251 tests in 2.473s
+Ran 251 tests in 4.058s
 
 OK
 ```
@@ -528,7 +530,7 @@ $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
 93 scenarios passed, 0 failed, 0 skipped
 308 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m24.147s
+Took 1m49.636s
 ```
 
 The feature tests should have 100% coverage:
