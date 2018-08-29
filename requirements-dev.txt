@@ -7,7 +7,7 @@ pydocstyle==2.1.1
 pycodestyle==2.4.0
 bandit==1.5.0
 mypy==0.620
-hypothesis==3.69.9
+hypothesis==3.69.11
 behave==1.2.6
 asserts==0.8.6
 pydeps==1.6.2
