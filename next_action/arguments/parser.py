@@ -122,6 +122,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         filters.add_argument(
             "dummy", metavar="-+<project> ...", nargs="*", default=argparse.SUPPRESS,
             help="projects the next action must not be part of")
+        # List filters in the current todo.txt file(s), for tab completion
+        filters.add_argument(
+            "--list-filters", action="store_true", help=argparse.SUPPRESS)
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """Parse the command-line arguments."""

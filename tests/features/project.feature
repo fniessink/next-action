@@ -59,6 +59,10 @@ Feature: filter next-actions by project
     When the user asks for the next action at GarageSale
     Then Next-action shows the user the next action for GarageSale
 
+ Scenario: list filters for tab completion
+    When the user asks for the list of filters
+    Then Next-action shows the user the list of filters: +GarageSale +PaintHouse
+
   Scenario: invalid project
     When the user asks for the next action with an invalid project
     Then Next-action tells the user the project is invalid

@@ -72,3 +72,7 @@ Feature: filter next-actions by context
   Scenario: context both included and excluded
     When the user asks for the next action with a context that is both included and excluded
     Then Next-action tells the user the context is both included and excluded
+
+  Scenario: list filters for tab completion
+    When the user asks for the list of filters
+    Then Next-action shows the user the list of filters: @home @work

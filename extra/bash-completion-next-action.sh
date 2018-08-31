@@ -1,12 +1,10 @@
 _next_action()
 {
-  arguments="-a --all -b --blocked -c --config-file -d --due -f --file -h --help -n --number -o --overdue -p --priority -r --reference -s --style -t --time-travel -V --version"
-
   local cur prev
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
   prev="${COMP_WORDS[COMP_CWORD-1]}"
-  
+
   case "${prev}" in
     --file|-f|--config-file|-c)
       COMPREPLY=( $(compgen -A "file" -- ${cur}) )
@@ -35,8 +33,9 @@ _next_action()
     *)
       ;;
   esac
-  COMPREPLY=( $(compgen -W "${arguments}" -- ${cur}) )
+  local arguments="-a --all -b --blocked -c --config-file -d --due -f --file -h --help -n --number -o --overdue -p --priority -r --reference -s --style -t --time-travel -V --version"
+  local filters=$(${prev} --list-filters 2> /dev/null)
+  COMPREPLY=( $(compgen -W "${arguments} ${filters}" -- ${cur}) )
   return 0
 }
 complete -F _next_action next-action
-

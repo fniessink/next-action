@@ -201,3 +201,11 @@ context or project is mistaken for an argument to an option.
         self.assertEqual(
             [call("Nothing to do! (warning: unknown projects: AutumnCleaning, SpringCleaning)"), call("\n")],
             mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--list-filters"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\nWrite proposal +NewProject\n"))
+    @patch.object(sys.stdout, "write")
+    def test_list_filters(self, mock_stdout_write):
+        """Test that the contexts and projects are listed."""
+        next_action()
+        self.assertEqual([call("+NewProject @park"), call("\n")], mock_stdout_write.call_args_list)

@@ -41,3 +41,9 @@ def render_nothing_todo(tasks: todotxt.Tasks, namespace: argparse.Namespace):
 def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
     """Render the next action(s) or, if there are none, tell the user there's nothing to do."""
     return render_tasks(next_actions, namespace) if next_actions else render_nothing_todo(tasks, namespace)
+
+
+def render_filters(tasks: todotxt.Tasks) -> str:
+    """Return the contexts and projects, for tab completion."""
+    return " ".join(sorted([f"@{context} -@{context}" for context in tasks.contexts()] +
+                           [f"+{project} -+{project}" for project in tasks.projects()]))
