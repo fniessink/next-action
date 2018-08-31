@@ -9,7 +9,7 @@ bandit==1.5.0
 mypy==0.620
 hypothesis==3.69.12
 behave==1.2.6
-asserts==0.8.6
+asserts==0.9.0
 pydeps==1.6.2
 pyroma==2.4
 vulture==0.29
