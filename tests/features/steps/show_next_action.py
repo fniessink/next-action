@@ -143,7 +143,7 @@ def next_action_invalid_argument(context, argument_type):
         arguments = ["--due", "2018-02-30"]
     else:
         argument = "@" if "context" in argument_type else "+"
-        arguments = [("-" + argument) if "excluded" in argument_type else argument]
+        arguments = [("not" + argument) if "excluded" in argument_type else argument]
     context.arguments.extend(arguments)
 
 
@@ -157,14 +157,14 @@ def next_action_extra_tokens(context):
 def next_action_c_or_p_in_and_ex(context, context_or_project):
     """Both include and exclude an context or project."""
     argument_type = "@" if "context" in context_or_project else "+"
-    context.arguments.extend([f"{argument_type}name", f"-{argument_type}name"])
+    context.arguments.extend([f"{argument_type}name", f"not{argument_type}name"])
 
 
 @when("the user asks for the next action not at {contexts}")
 def next_action_not_at_context(context, contexts):
     """Add the excluded contexts to the command line arguments."""
     contexts = contexts.split(" and not at ")
-    context.arguments.extend([f"-@{c}" for c in contexts])
+    context.arguments.extend([f"not@{c}" for c in contexts])
 
 
 @when("the user asks for the next action for {projects}")
@@ -178,7 +178,7 @@ def next_action_for_project(context, projects):
 def next_action_not_for_project(context, projects):
     """Add the excluded projects to the command line arguments."""
     projects = projects.split(" and not for ")
-    context.arguments.extend([f"-+{p}" for p in projects])
+    context.arguments.extend([f"not+{p}" for p in projects])
 
 
 @when("the user wants to pretend it's {some_date}")
@@ -319,7 +319,7 @@ def show_list_of_filters(context, filters):
 @then('Next-action tells the user the argument "{argument}" is unrecognized')
 def unrecognized_arg_error_message(context, argument):
     """Check the error message."""
-    assert_in("unrecognized argument: " + argument, context.next_action())
+    assert_regex(context.next_action(), f".*unrecognized arguments?: {argument}.*")
 
 
 @then("Next-action tells the user the {argument} is invalid")

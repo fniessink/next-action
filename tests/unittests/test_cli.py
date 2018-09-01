@@ -115,8 +115,8 @@ Limit the tasks from which the next actions are selected:
   @<context> ...        contexts the next action must have
   +<project> ...        projects the next action must be part of; if repeated the next action must be part of at least
                         one of the projects
-  -@<context> ...       contexts the next action must not have
-  -+<project> ...       projects the next action must not be part of
+  not@<context> ...     contexts the next action must not have
+  not+<project> ...     projects the next action must not be part of
 
 Use -- to separate options with optional arguments from contexts and projects, in order to handle cases where a
 context or project is mistaken for an argument to an option.
@@ -208,4 +208,5 @@ context or project is mistaken for an argument to an option.
     def test_list_filters(self, mock_stdout_write):
         """Test that the contexts and projects are listed."""
         next_action()
-        self.assertEqual([call("+NewProject @park"), call("\n")], mock_stdout_write.call_args_list)
+        self.assertEqual(
+            [call("+NewProject not+NewProject @park not@park"), call("\n")], mock_stdout_write.call_args_list)

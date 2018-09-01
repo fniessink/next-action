@@ -105,12 +105,12 @@ class FilterArgumentTest(ParserTestCase):
                           call("next-action: error: argument <context|project>: context name missing\n")],
                          mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "-@home"])
+    @patch.object(sys, "argv", ["next-action", "not@home"])
     def test_exclude_context(self):
         """Test that contexts can be excluded."""
         self.assertEqual({"home"}, parse_arguments()[1].excluded_contexts)
 
-    @patch.object(sys, "argv", ["next-action", "@home", "-@home"])
+    @patch.object(sys, "argv", ["next-action", "@home", "not@home"])
     @patch.object(sys.stderr, "write")
     def test_include_exclude_context(self, mock_stderr_write):
         """Test that contexts cannot be included and excluded."""
@@ -124,7 +124,7 @@ class FilterArgumentTest(ParserTestCase):
     def test_invalid_extra_argument(self, mock_stderr_write):
         """Test that the argument parser exits if the extra argument is invalid."""
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unrecognized argument: -^\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unrecognized arguments: -^\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])
@@ -146,12 +146,12 @@ class FilterArgumentTest(ParserTestCase):
                           call("next-action: error: argument <context|project>: project name missing\n")],
                          mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "-+DogHouse"])
+    @patch.object(sys, "argv", ["next-action", "not+DogHouse"])
     def test_exclude_project(self):
         """Test that projects can be excluded."""
         self.assertEqual({"DogHouse"}, parse_arguments()[1].excluded_projects)
 
-    @patch.object(sys, "argv", ["next-action", "+DogHouse", "-+DogHouse"])
+    @patch.object(sys, "argv", ["next-action", "+DogHouse", "not+DogHouse"])
     @patch.object(sys.stderr, "write")
     def test_include_exclude_project(self, mock_stderr_write):
         """Test that projects cannot be included and excluded."""
@@ -160,7 +160,7 @@ class FilterArgumentTest(ParserTestCase):
                           call("next-action: error: +DogHouse is both included and excluded\n")],
                          mock_stderr_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "-+"])
+    @patch.object(sys, "argv", ["next-action", "not+"])
     @patch.object(sys.stderr, "write")
     def test_empty_excluded_project(self, mock_stderr_write):
         """Test that the argument parser exits if the project is empty."""
@@ -175,7 +175,7 @@ class FilterArgumentTest(ParserTestCase):
         self.assertEqual({"home", "weekend"}, parse_arguments()[1].contexts)
         self.assertEqual({"DogHouse", "PaintHouse"}, parse_arguments()[1].projects)
 
-    @patch.object(sys, "argv", ["next-action", "@home", "-@work", "+PaintHouse"])
+    @patch.object(sys, "argv", ["next-action", "@home", "not@work", "+PaintHouse"])
     def test_project_after_excluded(self):
         """Test project after excluded context."""
         namespace = parse_arguments()[1]

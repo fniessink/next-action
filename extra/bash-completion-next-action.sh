@@ -1,6 +1,6 @@
 _next_action()
 {
-  local cur prev
+  local cur prev 
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
   prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -34,8 +34,8 @@ _next_action()
       ;;
   esac
   local arguments="-a --all -b --blocked -c --config-file -d --due -f --file -h --help -n --number -o --overdue -p --priority -r --reference -s --style -t --time-travel -V --version"
-  local filters=$(${prev} --list-filters 2> /dev/null)
+  local filters=$(${COMP_LINE} --list-filters 2> /dev/null)
   COMPREPLY=( $(compgen -W "${arguments} ${filters}" -- ${cur}) )
   return 0
 }
-complete -F _next_action next-action
+complete -o filenames -F _next_action next-action

@@ -59,9 +59,33 @@ Feature: filter next-actions by project
     When the user asks for the next action at GarageSale
     Then Next-action shows the user the next action for GarageSale
 
+  Scenario: override project in configuration file with opposite project
+    Given a configuration file with
+      """
+      filters: +PaintHouse
+      """
+    When the user asks for the next action at not at PaintHouse
+    Then Next-action shows the user the next action not for PaintHouse
+
+  Scenario: excluded project in configuration file
+    Given a configuration file with
+      """
+      filters: not+PaintHouse
+      """
+    When the user asks for the next action
+    Then Next-action shows the user the next action not for PaintHouse
+
+Scenario: override excluded project in configuration file
+    Given a configuration file with
+      """
+      filters: not+PaintHouse
+      """
+    When the user asks for the next action for PaintHouse
+    Then Next-action shows the user the next action for PaintHouse
+
  Scenario: list filters for tab completion
     When the user asks for the list of filters
-    Then Next-action shows the user the list of filters: +GarageSale +PaintHouse
+    Then Next-action shows the user the list of filters: +GarageSale not+GarageSale +PaintHouse not+PaintHouse
 
   Scenario: invalid project
     When the user asks for the next action with an invalid project

@@ -45,5 +45,5 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
 
 def render_filters(tasks: todotxt.Tasks) -> str:
     """Return the contexts and projects, for tab completion."""
-    return " ".join(sorted([f"@{context} -@{context}" for context in tasks.contexts()] +
-                           [f"+{project} -+{project}" for project in tasks.projects()]))
+    return " ".join(sorted([f"@{context} not@{context}" for context in tasks.contexts()] +
+                           [f"+{project} not+{project}" for project in tasks.projects()]))
