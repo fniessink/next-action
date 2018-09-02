@@ -11,7 +11,7 @@ _next_action()
       return 0
       ;;
     --priority|-p)
-      local priorities=$(${command} --list-priorities 2> /dev/null)
+      local priorities=$(${command} --list-arguments priorities 2> /dev/null)
       COMPREPLY=( $(compgen -W "${priorities}" -- ${cur}) )
       return 0
       ;;
@@ -34,25 +34,25 @@ _next_action()
       case "$cur" in
         @*)
           local command=${COMP_LINE% *}  # Remove $cur to prevent next-action error omessage on incomplete context
-          local contexts=$(${command} --list-contexts 2> /dev/null)
+          local contexts=$(${command} --list-arguments contexts 2> /dev/null)
           COMPREPLY=( $(compgen -W "${contexts}" -- ${cur}) )
           return 0
           ;;
         +*)
           local command=${COMP_LINE% *}  # Remove $cur to prevent next-action error message on incomplete project
-          local projects=$(${command} --list-projects 2> /dev/null)
+          local projects=$(${command} --list-arguments projects 2> /dev/null)
           COMPREPLY=( $(compgen -W "${projects}" -- ${cur}) )
           return 0
           ;;
         -@*)
           local command=${COMP_LINE% *}  # Remove $cur to prevent next-action error omessage on incomplete context
-          local contexts=$(${command} --list-excluded-contexts 2> /dev/null)
+          local contexts=$(${command} --list-arguments excluded_contexts 2> /dev/null)
           COMPREPLY=( $(compgen -W "${contexts}" -- ${cur}) )
           return 0
           ;;
         -+*)
           local command=${COMP_LINE% *}  # Remove $cur to prevent next-action error omessage on incomplete project
-          local projects=$(${command} --list-excluded-projects 2> /dev/null)
+          local projects=$(${command} --list-arguments excluded_projects 2> /dev/null)
           COMPREPLY=( $(compgen -W "${projects}" -- ${cur}) )
           return 0
           ;;
