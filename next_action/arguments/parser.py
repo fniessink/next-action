@@ -97,7 +97,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         # List contexts or projects in the current todo.txt file(s), for tab completion
         filters.add_argument(
             "--list-arguments", help=argparse.SUPPRESS,
-            choices=["contexts", "projects", "excluded_contexts", "excluded_projects", "priorities"])
+            choices=["contexts", "projects", "excluded_contexts", "excluded_projects", "styles", "priorities"])
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,

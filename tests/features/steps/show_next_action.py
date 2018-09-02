@@ -311,9 +311,13 @@ def show_next_action_with_style(context, style):
 
 
 @then("Next-action shows the user the list of {argument_type}: {arguments}")
-def show_list_of_arguments(context, argument_type, arguments):  # pylint: disable=unused-argument
+def show_list_of_arguments(context, argument_type, arguments):
     """Check the arguments."""
-    assert_equal(arguments, context.next_action().strip())
+    if argument_type == "styles":
+        arguments = arguments.strip(".")
+        assert_true(context.next_action().startswith(arguments))
+    else:
+        assert_equal(arguments, context.next_action().strip())
 
 
 @then('Next-action tells the user the argument "{argument}" is unrecognized')

@@ -5,6 +5,8 @@ import sys
 import unittest
 from unittest.mock import patch, mock_open, call
 
+from pygments.styles import get_all_styles
+
 from next_action import next_action, __version__
 from next_action.arguments import config
 
@@ -246,3 +248,12 @@ context or project is mistaken for an argument to an option.
         next_action()
         self.assertEqual(
             [call("A C"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--list-arguments", "styles"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park"))
+    @patch.object(sys.stdout, "write")
+    def test_list_styles(self, mock_stdout_write):
+        """Test that the styles are listed."""
+        next_action()
+        self.assertEqual(
+            [call(" ".join(sorted(get_all_styles()))), call("\n")], mock_stdout_write.call_args_list)

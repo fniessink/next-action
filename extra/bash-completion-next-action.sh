@@ -21,7 +21,7 @@ _next_action()
       return 0
       ;;
     --style|-s)
-      local styles="abap algol algol_nu arduino autumn borland bw colorful default emacs friendly fruity igor lovelace manni monokai murphy native paraiso-dark paraiso-light pastie perldoc rainbow_dash rrt tango trac vim vs xcode"
+      local styles=$(${command} --list-arguments styles 2> /dev/null)
       COMPREPLY=( $(compgen -W "${styles}" -- ${cur}) )
       return 0
       ;;

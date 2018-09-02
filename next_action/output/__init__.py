@@ -2,6 +2,8 @@
 
 import argparse
 
+from pygments.styles import get_all_styles
+
 from .. import todotxt
 from .color import colorize
 from .reference import reference
@@ -45,8 +47,11 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
 
 def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
     """Return the arguments, for tab completion."""
-    prefix = dict(contexts="@", projects="+", excluded_contexts="-@", excluded_projects="-+",
-                  priorities="")[argument_type]
-    arguments_getter = argument_type.split("_")[-1]
-    arguments = (f"{prefix}{argument}" for argument in getattr(tasks, arguments_getter)())
-    return " ".join(sorted(arguments))
+    prefix = dict(contexts="@", projects="+", excluded_contexts="-@", excluded_projects="-+").get(argument_type, "")
+    if argument_type == "styles":
+        arguments = get_all_styles()
+    else:
+        arguments_getter = argument_type.split("_")[-1]
+        arguments = getattr(tasks, arguments_getter)()
+    prefixed_arguments = (f"{prefix}{argument}" for argument in arguments)
+    return " ".join(sorted(prefixed_arguments))

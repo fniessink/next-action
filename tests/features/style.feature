@@ -31,3 +31,7 @@ Feature: styling
       """
     When the user asks for the next action with the style default
     Then Next-action shows the next action with the style default
+
+ Scenario: list styles for tab completion
+    When the user asks for the list of styles
+    Then Next-action shows the user the list of styles: abap algol algol_nu ...
