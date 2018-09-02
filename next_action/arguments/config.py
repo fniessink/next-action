@@ -34,7 +34,7 @@ def write_config_file(namespace: argparse.Namespace) -> None:
                    reference=namespace.reference, style=namespace.style or "default")
     prefixed_filters = []
     for prefix, filters in (("@", namespace.contexts), ("+", namespace.projects),
-                            ("not@", namespace.excluded_contexts), ("not+", namespace.excluded_projects)):
+                            ("-@", namespace.excluded_contexts), ("-+", namespace.excluded_projects)):
         prefixed_filters.extend([prefix + filter_name for filter_name in filters])
     if prefixed_filters:
         options["filters"] = prefixed_filters
@@ -72,8 +72,8 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         },
         "filters": {
             "type": ["string", "list"],
-            "regex": r"^(not)?[@|\+]\S+(\s+(not)?[@|\+]\S+)*",
-            "schema": {"type": "string", "regex": r"^(not)?[@|\+]\S+"}
+            "regex": r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*",
+            "schema": {"type": "string", "regex": r"^\-?[@|\+]\S+"}
         },
         "reference": {
             "type": "string",

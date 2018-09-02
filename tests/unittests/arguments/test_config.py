@@ -110,14 +110,14 @@ class WriteConfigFileTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--number", "3", "--reference", "never",
                                 "--style", "fruity", "--file", "~/tasks.txt", "--priority", "Z", "@context", "+project",
-                                "not@excluded_context", "not+excluded_project"])
+                                "-@excluded_context", "-+excluded_project"])
     @patch.object(config, "open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
     def test_with_args(self, mock_stdout_write):
         """Test that the config file written to stdout includes the other arguments."""
         self.assertRaises(SystemExit, parse_arguments)
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n" \
-            "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- not@excluded_context\n- not+excluded_project\n" \
+            "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- -@excluded_context\n- -+excluded_project\n" \
             "number: 3\npriority: Z\nreference: never\nstyle: fruity\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
@@ -432,20 +432,20 @@ class FiltersTest(ConfigTestCase):
         self.assertEqual({"work", "desk"}, parse_arguments()[1].contexts)
 
     @patch.object(sys, "argv", ["next-action"])
-    @patch.object(config, "open", mock_open(read_data="filters:\n- '@work'\n- not@waiting\n"))
+    @patch.object(config, "open", mock_open(read_data="filters:\n- '@work'\n- -@waiting\n"))
     def test_context_list(self):
         """Test that a valid context changes the filters argument."""
         self.assertEqual({"work"}, parse_arguments()[1].contexts)
         self.assertEqual({"waiting"}, parse_arguments()[1].excluded_contexts)
 
     @patch.object(sys, "argv", ["next-action"])
-    @patch.object(config, "open", mock_open(read_data="filters: not+SideProject"))
+    @patch.object(config, "open", mock_open(read_data="filters: -+SideProject"))
     def test_excluded_project(self):
         """Test that an excluded valid project changes the filters argument."""
         self.assertEqual({"SideProject"}, parse_arguments()[1].excluded_projects)
 
     @patch.object(sys, "argv", ["next-action"])
-    @patch.object(config, "open", mock_open(read_data="filters: not@home"))
+    @patch.object(config, "open", mock_open(read_data="filters: -@home"))
     def test_excluded_context(self):
         """Test that an excluded valid context changes the filters argument."""
         self.assertEqual({"home"}, parse_arguments()[1].excluded_contexts)
@@ -457,14 +457,14 @@ class FiltersTest(ConfigTestCase):
         self.assertEqual({"ImportantProject"}, parse_arguments()[1].projects)
 
     @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
-    @patch.object(config, "open", mock_open(read_data="filters: not+ImportantProject"))
+    @patch.object(config, "open", mock_open(read_data="filters: -+ImportantProject"))
     def test_inverse_project(self):
         """Test that the configuration is ignored when the command line specifies the same project."""
         self.assertEqual(set(), parse_arguments()[1].excluded_projects)
         self.assertEqual({"ImportantProject"}, parse_arguments()[1].projects)
 
     @patch.object(sys, "argv", ["next-action", "+ImportantProject"])
-    @patch.object(config, "open", mock_open(read_data="filters: not+ImportantProject @work"))
+    @patch.object(config, "open", mock_open(read_data="filters: -+ImportantProject @work"))
     def test_ignore_project_not_context(self):
         """Test that the configuration is ignored when the command line specifies the same project."""
         self.assertEqual(set(), parse_arguments()[1].excluded_projects)
@@ -477,7 +477,7 @@ class FiltersTest(ConfigTestCase):
     def test_invalid_filter_list(self, mock_stderr_write):
         """Test that an invalid filter raises an error."""
         self.assertRaises(SystemExit, parse_arguments)
-        regex = r"^(not)?[@|\+]\S+"
+        regex = r"^\-?[@|\+]\S+"
         self.assertEqual(
             [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: 0: "
                                        f"value does not match regex '{regex}'\n")],
@@ -489,7 +489,7 @@ class FiltersTest(ConfigTestCase):
     def test_invalid_filter_string(self, mock_stderr_write):
         """Test that an invalid filter raises an error."""
         self.assertRaises(SystemExit, parse_arguments)
-        regex = r"^(not)?[@|\+]\S+(\s+(not)?[@|\+]\S+)*"
+        regex = r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*"
         self.assertEqual(
             [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: "
                                        f"value does not match regex '{regex}'\n")],

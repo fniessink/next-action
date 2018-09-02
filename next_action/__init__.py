@@ -2,7 +2,8 @@
 
 from .arguments import parse_arguments
 from .pick_action import next_actions
-from .output import render_next_action, render_filters
+from .output import render_next_action, render_contexts, render_projects, render_excluded_contexts, \
+    render_excluded_projects
 from .todotxt import read_todotxt_files
 
 
@@ -24,8 +25,14 @@ def next_action() -> None:
         tasks = read_todotxt_files(namespace.file)
     except OSError as reason:
         parser.error(f"can't open file: {reason}")
-    if namespace.list_filters:
-        print(render_filters(tasks))
+    if namespace.list_contexts:
+        print(render_contexts(tasks))
+    elif namespace.list_projects:
+        print(render_projects(tasks))
+    elif namespace.list_excluded_contexts:
+        print(render_excluded_contexts(tasks))
+    elif namespace.list_excluded_projects:
+        print(render_excluded_projects(tasks))
     else:
         actions = next_actions(tasks, namespace)
         print(render_next_action(actions, tasks, namespace))

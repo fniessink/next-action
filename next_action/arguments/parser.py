@@ -94,9 +94,15 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def add_filter_arguments(self) -> None:
         """Add the filter arguments to the parser."""
         filters = self.add_argument_group("Limit the tasks from which the next actions are selected")
-        # List filters in the current todo.txt file(s), for tab completion
+        # List contexts or projects in the current todo.txt file(s), for tab completion
         filters.add_argument(
-            "--list-filters", action="store_true", help=argparse.SUPPRESS)
+            "--list-contexts", action="store_true", help=argparse.SUPPRESS)
+        filters.add_argument(
+            "--list-projects", action="store_true", help=argparse.SUPPRESS)
+        filters.add_argument(
+            "--list-excluded-contexts", action="store_true", help=argparse.SUPPRESS)
+        filters.add_argument(
+            "--list-excluded-projects", action="store_true", help=argparse.SUPPRESS)
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,
@@ -117,19 +123,20 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             help="projects the next action must be part of; if repeated the next action must be part of at least one "
                  "of the projects")
         filters.add_argument(
-            "excluded_contexts", metavar="not@<context> ...", nargs="*", type=filter_type,
+            "excluded_contexts", metavar="-@<context> ...", nargs="*", type=filter_type,
             help="contexts the next action must not have")
         filters.add_argument(
-            "excluded_projects", metavar="not+<project> ...", nargs="*", type=filter_type,
+            "excluded_projects", metavar="-+<project> ...", nargs="*", type=filter_type,
             help="projects the next action must not be part of")
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """Parse the command-line arguments."""
-        namespace = super().parse_args(args, namespace)
+        namespace, remaining_args = self.parse_known_args(args, namespace)
+        self.parse_remaining_args(remaining_args, namespace)
         namespace.contexts = subset(namespace.filters, "@")
         namespace.projects = subset(namespace.filters, "+")
-        namespace.excluded_contexts = subset(namespace.filters, "not@")
-        namespace.excluded_projects = subset(namespace.filters, "not+")
+        namespace.excluded_contexts = subset(namespace.filters, "-@")
+        namespace.excluded_projects = subset(namespace.filters, "-+")
         self.validate_arguments(namespace)
         if namespace.time_travel and namespace.due:
             # Apply time travel to options that take a date argument (which currently is only --due)
@@ -141,6 +148,13 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             write_config_file(namespace)
             self.exit()
         return namespace
+
+    def parse_remaining_args(self, args, namespace: argparse.Namespace) -> None:
+        """Parse the remaining command-line arguments, i.e. the excluded contexts and projects."""
+        try:
+            namespace.filters.extend([filter_type(arg) for arg in args])
+        except argparse.ArgumentTypeError as reason:
+            self.error(str(reason))
 
     def validate_arguments(self, namespace: argparse.Namespace) -> None:
         """Validate arguments."""
@@ -200,10 +214,10 @@ class NextActionArgumentParser(argparse.ArgumentParser):
                 namespace.contexts.add(configured_filter[len("@"):])
             if configured_filter.startswith("+") and configured_filter[len("+"):] not in namespace.excluded_projects:
                 namespace.projects.add(configured_filter[len("+"):])
-            if configured_filter.startswith("not@") and configured_filter[len("not@"):] not in namespace.contexts:
-                namespace.excluded_contexts.add(configured_filter[len("not@"):])
-            if configured_filter.startswith("not+") and configured_filter[len("not+"):] not in namespace.projects:
-                namespace.excluded_projects.add(configured_filter[len("not+"):])
+            if configured_filter.startswith("-@") and configured_filter[len("-@"):] not in namespace.contexts:
+                namespace.excluded_contexts.add(configured_filter[len("-@"):])
+            if configured_filter.startswith("-+") and configured_filter[len("-+"):] not in namespace.projects:
+                namespace.excluded_projects.add(configured_filter[len("-+"):])
 
     @staticmethod
     def arguments_not_specified(*arguments: str) -> bool:
@@ -234,7 +248,7 @@ class CapitalisedHelpFormatter(argparse.HelpFormatter):
 
 def filter_type(value: str) -> str:
     """Return the filter if it's valid, else raise an error."""
-    if value.startswith("@") or value.startswith("+") or value.startswith("not@") or value.startswith("not+"):
+    if value.startswith("@") or value.startswith("+") or value.startswith("-@") or value.startswith("-+"):
         return value
     raise argparse.ArgumentTypeError(f"unrecognized argument: {value}")
 

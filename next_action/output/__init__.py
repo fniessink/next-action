@@ -43,7 +43,21 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
     return render_tasks(next_actions, namespace) if next_actions else render_nothing_todo(tasks, namespace)
 
 
-def render_filters(tasks: todotxt.Tasks) -> str:
-    """Return the contexts and projects, for tab completion."""
-    return " ".join(sorted([f"@{context} not@{context}" for context in tasks.contexts()] +
-                           [f"+{project} not+{project}" for project in tasks.projects()]))
+def render_contexts(tasks: todotxt.Tasks) -> str:
+    """Return the contexts, for tab completion."""
+    return " ".join(sorted(f"@{context}" for context in tasks.contexts()))
+
+
+def render_projects(tasks: todotxt.Tasks) -> str:
+    """Return the projects, for tab completion."""
+    return " ".join(sorted(f"+{project}" for project in tasks.projects()))
+
+
+def render_excluded_contexts(tasks: todotxt.Tasks) -> str:
+    """Return the contexts, for tab completion of excluded contexts."""
+    return " ".join(sorted(f"-@{context}" for context in tasks.contexts()))
+
+
+def render_excluded_projects(tasks: todotxt.Tasks) -> str:
+    """Return the projects, for tab completion of excluded projects."""
+    return " ".join(sorted(f"-+{project}" for project in tasks.projects()))

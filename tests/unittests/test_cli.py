@@ -115,8 +115,8 @@ Limit the tasks from which the next actions are selected:
   @<context> ...        contexts the next action must have
   +<project> ...        projects the next action must be part of; if repeated the next action must be part of at least
                         one of the projects
-  not@<context> ...     contexts the next action must not have
-  not+<project> ...     projects the next action must not be part of
+  -@<context> ...       contexts the next action must not have
+  -+<project> ...       projects the next action must not be part of
 
 Use -- to separate options with optional arguments from contexts and projects, in order to handle cases where a
 context or project is mistaken for an argument to an option.
@@ -202,11 +202,38 @@ context or project is mistaken for an argument to an option.
             [call("Nothing to do! (warning: unknown projects: AutumnCleaning, SpringCleaning)"), call("\n")],
             mock_stdout_write.call_args_list)
 
-    @patch.object(sys, "argv", ["next-action", "--list-filters"])
+    @patch.object(sys, "argv", ["next-action", "--list-contexts"])
     @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\nWrite proposal +NewProject\n"))
     @patch.object(sys.stdout, "write")
-    def test_list_filters(self, mock_stdout_write):
-        """Test that the contexts and projects are listed."""
+    def test_list_contexts(self, mock_stdout_write):
+        """Test that the contexts are listed."""
         next_action()
         self.assertEqual(
-            [call("+NewProject not+NewProject @park not@park"), call("\n")], mock_stdout_write.call_args_list)
+            [call("@park"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--list-projects"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\nWrite proposal +NewProject\n"))
+    @patch.object(sys.stdout, "write")
+    def test_list_projects(self, mock_stdout_write):
+        """Test that the projects are listed."""
+        next_action()
+        self.assertEqual(
+            [call("+NewProject"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--list-excluded-contexts"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\nWrite proposal +NewProject\n"))
+    @patch.object(sys.stdout, "write")
+    def test_list_excluded_contexts(self, mock_stdout_write):
+        """Test that the excluded contexts are listed."""
+        next_action()
+        self.assertEqual(
+            [call("-@park"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--list-excluded-projects"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\nWrite proposal +NewProject\n"))
+    @patch.object(sys.stdout, "write")
+    def test_list_excluded_projects(self, mock_stdout_write):
+        """Test that the excluded projects are listed."""
+        next_action()
+        self.assertEqual(
+            [call("-+NewProject"), call("\n")], mock_stdout_write.call_args_list)

@@ -70,7 +70,7 @@ Feature: filter next-actions by project
   Scenario: excluded project in configuration file
     Given a configuration file with
       """
-      filters: not+PaintHouse
+      filters: -+PaintHouse
       """
     When the user asks for the next action
     Then Next-action shows the user the next action not for PaintHouse
@@ -78,14 +78,18 @@ Feature: filter next-actions by project
 Scenario: override excluded project in configuration file
     Given a configuration file with
       """
-      filters: not+PaintHouse
+      filters: -+PaintHouse
       """
     When the user asks for the next action for PaintHouse
     Then Next-action shows the user the next action for PaintHouse
 
- Scenario: list filters for tab completion
-    When the user asks for the list of filters
-    Then Next-action shows the user the list of filters: +GarageSale not+GarageSale +PaintHouse not+PaintHouse
+ Scenario: list projects for tab completion
+    When the user asks for the list of projects
+    Then Next-action shows the user the list of filters: +GarageSale +PaintHouse
+
+ Scenario: list excluded projects for tab completion
+    When the user asks for the list of excluded projects
+    Then Next-action shows the user the list of filters: -+GarageSale -+PaintHouse
 
   Scenario: invalid project
     When the user asks for the next action with an invalid project

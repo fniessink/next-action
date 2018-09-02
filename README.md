@@ -114,8 +114,8 @@ Limit the tasks from which the next actions are selected:
   @<context> ...        contexts the next action must have
   +<project> ...        projects the next action must be part of; if repeated the next action must be part
                         of at least one of the projects
-  not@<context> ...     contexts the next action must not have
-  not+<project> ...     projects the next action must not be part of
+  -@<context> ...       contexts the next action must not have
+  -+<project> ...       projects the next action must not be part of
 
 Use -- to separate options with optional arguments from contexts and projects, in order to handle cases
 where a context or project is mistaken for an argument to an option.
@@ -162,14 +162,14 @@ $ next-action +DogHouse +PaintHouse @store @weekend
 It is also possible to exclude contexts, which means the next action will not have the specified contexts:
 
 ```console
-$ next-action +PaintHouse not@store
+$ next-action +PaintHouse -@store
 Borrow ladder from the neighbors +PaintHouse @home
 ```
 
 And of course, in a similar vein, projects can be excluded:
 
 ```console
-$ next-action not+PaintHouse @store
+$ next-action -+PaintHouse @store
 (G) Buy wood for new +DogHouse @store
 ```
 
@@ -336,12 +336,12 @@ To make this the configuration that *Next-action* reads by default, redirect the
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --blocked --number 3 --file ~/tasks.txt --style fruity --priority Z not@waiting
+$ next-action --write-config-file --blocked --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 blocked: true
 file: ~/tasks.txt
 filters:
-- not@waiting
+- -@waiting
 number: 3
 priority: Z
 reference: multiple
@@ -399,7 +399,7 @@ all: True
 You can limit the tasks from which the next action is selected by specifying contexts and/or projects to filter on, just like you would do on the command line:
 
 ```yaml
-filters: -+FutureProject @work not@waiting
+filters: -+FutureProject @work -@waiting
 ```
 
 This would make *Next-action* by default select next actions from tasks with a `@work` context and without the `@waiting` context and not belonging to the `+FutureProject`.
@@ -408,9 +408,9 @@ An alternative syntax is:
 
 ```yaml
 filters:
-  - not+FutureProject
+  - -+FutureProject
   - '@work'
-  - notse@waiting
+  - -@waiting
 ```
 
 Note that filters starting with `@` need to be in quotes. This is a [YAML restriction](http://yaml.org/spec/1.1/current.html#c-directive).
@@ -500,9 +500,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-............................................................................................................................................................................................................................................................
+...............................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 252 tests in 2.520s
+Ran 255 tests in 2.297s
 
 OK
 ```
@@ -514,7 +514,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1524      0    209      0   100%
+TOTAL    1560      0    222      0   100%
 
 28 files skipped due to complete coverage.
 ```
@@ -528,9 +528,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
-100 scenarios passed, 0 failed, 0 skipped
-334 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m52.612s
+102 scenarios passed, 0 failed, 0 skipped
+340 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m15.378s
 ```
 
 The feature tests should have 100% coverage:
@@ -540,7 +540,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     453      0    189      0   100%
+TOTAL     474      0    202      0   100%
 
 12 files skipped due to complete coverage.
 ```
