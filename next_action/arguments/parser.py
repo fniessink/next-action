@@ -103,6 +103,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "--list-excluded-contexts", action="store_true", help=argparse.SUPPRESS)
         filters.add_argument(
             "--list-excluded-projects", action="store_true", help=argparse.SUPPRESS)
+        filters.add_argument(
+            "--list-priorities", action="store_true", help=argparse.SUPPRESS)
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,

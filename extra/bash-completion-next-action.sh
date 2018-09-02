@@ -11,7 +11,7 @@ _next_action()
       return 0
       ;;
     --priority|-p)
-      local priorities="A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+      local priorities=$(${command} --list-priorities 2> /dev/null)
       COMPREPLY=( $(compgen -W "${priorities}" -- ${cur}) )
       return 0
       ;;

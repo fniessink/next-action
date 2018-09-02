@@ -18,7 +18,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 - [Demo](#demo)
 - [Installation](#installation)
   - [*Next-action*](#next-action)
-  - [Tab completion for bash](#tab-completion-for-bash)
+  - [Bash tab completion for *Next-action*](#bash-tab-completion-for-next-action)
 - [Usage](#usage)
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
@@ -500,9 +500,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-...............................................................................................................................................................................................................................................................
+....................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 255 tests in 2.297s
+Ran 260 tests in 3.436s
 
 OK
 ```
@@ -514,7 +514,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1560      0    222      0   100%
+TOTAL    1581      0    226      0   100%
 
 28 files skipped due to complete coverage.
 ```
@@ -528,9 +528,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
-102 scenarios passed, 0 failed, 0 skipped
-340 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m15.378s
+103 scenarios passed, 0 failed, 0 skipped
+343 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m44.994s
 ```
 
 The feature tests should have 100% coverage:
@@ -540,7 +540,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     474      0    202      0   100%
+TOTAL     481      0    206      0   100%
 
 12 files skipped due to complete coverage.
 ```

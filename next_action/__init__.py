@@ -3,7 +3,7 @@
 from .arguments import parse_arguments
 from .pick_action import next_actions
 from .output import render_next_action, render_contexts, render_projects, render_excluded_contexts, \
-    render_excluded_projects
+    render_excluded_projects, render_priorities
 from .todotxt import read_todotxt_files
 
 
@@ -33,6 +33,8 @@ def next_action() -> None:
         print(render_excluded_contexts(tasks))
     elif namespace.list_excluded_projects:
         print(render_excluded_projects(tasks))
+    elif namespace.list_priorities:
+        print(render_priorities(tasks))
     else:
         actions = next_actions(tasks, namespace)
         print(render_next_action(actions, tasks, namespace))

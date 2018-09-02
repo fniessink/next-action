@@ -237,3 +237,12 @@ context or project is mistaken for an argument to an option.
         next_action()
         self.assertEqual(
             [call("-+NewProject"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--list-priorities"])
+    @patch("fileinput.open", mock_open(read_data="\nWalk the dog @park\n(A) Write proposal\n(C) Get permit"))
+    @patch.object(sys.stdout, "write")
+    def test_list_priorities(self, mock_stdout_write):
+        """Test that the priorities are listed."""
+        next_action()
+        self.assertEqual(
+            [call("A C"), call("\n")], mock_stdout_write.call_args_list)

@@ -61,3 +61,8 @@ def render_excluded_contexts(tasks: todotxt.Tasks) -> str:
 def render_excluded_projects(tasks: todotxt.Tasks) -> str:
     """Return the projects, for tab completion of excluded projects."""
     return " ".join(sorted(f"-+{project}" for project in tasks.projects()))
+
+
+def render_priorities(tasks: todotxt.Tasks) -> str:
+    """Return the priorities, for tab completion of priorities."""
+    return " ".join(sorted(tasks.priorities()))

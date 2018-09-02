@@ -316,6 +316,12 @@ def show_list_of_filters(context, filters):
     assert_equal(filters, context.next_action().strip())
 
 
+@then("Next-action shows the user the list of priorities: {priorities}")
+def show_list_of_priorities(context, priorities):
+    """Check the priorities."""
+    assert_equal(priorities, context.next_action().strip())
+
+
 @then('Next-action tells the user the argument "{argument}" is unrecognized')
 def unrecognized_arg_error_message(context, argument):
     """Check the error message."""
