@@ -85,11 +85,11 @@ Scenario: override excluded project in configuration file
 
  Scenario: list projects for tab completion
     When the user asks for the list of projects
-    Then Next-action shows the user the list of filters: +GarageSale +PaintHouse
+    Then Next-action shows the user the list of projects: +GarageSale +PaintHouse
 
  Scenario: list excluded projects for tab completion
     When the user asks for the list of excluded projects
-    Then Next-action shows the user the list of filters: -+GarageSale -+PaintHouse
+    Then Next-action shows the user the list of excluded projects: -+GarageSale -+PaintHouse
 
   Scenario: invalid project
     When the user asks for the next action with an invalid project

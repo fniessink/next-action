@@ -43,26 +43,10 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
     return render_tasks(next_actions, namespace) if next_actions else render_nothing_todo(tasks, namespace)
 
 
-def render_contexts(tasks: todotxt.Tasks) -> str:
-    """Return the contexts, for tab completion."""
-    return " ".join(sorted(f"@{context}" for context in tasks.contexts()))
-
-
-def render_projects(tasks: todotxt.Tasks) -> str:
-    """Return the projects, for tab completion."""
-    return " ".join(sorted(f"+{project}" for project in tasks.projects()))
-
-
-def render_excluded_contexts(tasks: todotxt.Tasks) -> str:
-    """Return the contexts, for tab completion of excluded contexts."""
-    return " ".join(sorted(f"-@{context}" for context in tasks.contexts()))
-
-
-def render_excluded_projects(tasks: todotxt.Tasks) -> str:
-    """Return the projects, for tab completion of excluded projects."""
-    return " ".join(sorted(f"-+{project}" for project in tasks.projects()))
-
-
-def render_priorities(tasks: todotxt.Tasks) -> str:
-    """Return the priorities, for tab completion of priorities."""
-    return " ".join(sorted(tasks.priorities()))
+def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
+    """Return the arguments, for tab completion."""
+    prefix = dict(contexts="@", projects="+", excluded_contexts="-@", excluded_projects="-+",
+                  priorities="")[argument_type]
+    arguments_getter = argument_type.split("_")[-1]
+    arguments = (f"{prefix}{argument}" for argument in getattr(tasks, arguments_getter)())
+    return " ".join(sorted(arguments))

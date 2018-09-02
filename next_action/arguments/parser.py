@@ -96,15 +96,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         filters = self.add_argument_group("Limit the tasks from which the next actions are selected")
         # List contexts or projects in the current todo.txt file(s), for tab completion
         filters.add_argument(
-            "--list-contexts", action="store_true", help=argparse.SUPPRESS)
-        filters.add_argument(
-            "--list-projects", action="store_true", help=argparse.SUPPRESS)
-        filters.add_argument(
-            "--list-excluded-contexts", action="store_true", help=argparse.SUPPRESS)
-        filters.add_argument(
-            "--list-excluded-projects", action="store_true", help=argparse.SUPPRESS)
-        filters.add_argument(
-            "--list-priorities", action="store_true", help=argparse.SUPPRESS)
+            "--list-arguments", help=argparse.SUPPRESS,
+            choices=["contexts", "projects", "excluded_contexts", "excluded_projects", "priorities"])
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,
