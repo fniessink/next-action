@@ -48,9 +48,9 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 `pip install --upgrade next-action`
 
-### Tab completion for bash
+### Bash tab completion for *Next-action*
 
-To install tab completion for the bash shell, follow these steps:
+To install tab completion for *Next-action* in bash shell, follow these steps:
 
 - Download [extra/bash-completion-next-action.sh](https://raw.githubusercontent.com/fniessink/next-action/master/extra/bash-completion-next-action.sh) and put it where ever you like, for example in your home folder.
 - Next, add the line `source ~/bash-completion-next-action.sh` to your `~/.bashrc` or `~/.bash_profile` file.
