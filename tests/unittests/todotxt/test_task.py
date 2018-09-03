@@ -42,6 +42,10 @@ class TodoContextTest(unittest.TestCase):
         """Test that a context with a space before the @-sign is not considered a context."""
         self.assertEqual(set(), todotxt.Task("Todo@home").contexts())
 
+    def test_at_start_of_line(self):
+        """Test that a context at the start of a line is considered a context."""
+        self.assertEqual({"Home"}, todotxt.Task("@Home fix leak").contexts())
+
 
 class TaskProjectTest(unittest.TestCase):
     """Unit tests for task projects."""
@@ -61,6 +65,10 @@ class TaskProjectTest(unittest.TestCase):
     def test_no_space_before_at_sign(self):
         """Test that a project with a space before the +-sign is not considered a project."""
         self.assertEqual(set(), todotxt.Task("Todo+project").projects())
+
+    def test_at_start_of_line(self):
+        """Test that a project at the start of a line is considered a project."""
+        self.assertEqual({"Maintenance"}, todotxt.Task("+Maintenance fix leak").projects())
 
 
 class TaskPriorityTest(unittest.TestCase):

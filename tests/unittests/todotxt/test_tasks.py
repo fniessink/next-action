@@ -43,13 +43,12 @@ class ProjectsTest(unittest.TestCase):
 
     def test_task_with_project(self):
         """Test that a task collection with a task with a project has that project."""
-        self.assertEqual(set(["BigProject"]), Tasks([Task("Todo +BigProject")]).projects())
+        self.assertEqual({"BigProject"}, Tasks([Task("Todo +BigProject")]).projects())
 
     def test_task_with_projects(self):
         """Test that a task collection with a task with projects has those projects."""
-        self.assertEqual(set(["This", "That"]), Tasks([Task("Todo +This +That")]).projects())
+        self.assertEqual({"This", "That"}, Tasks([Task("Todo +This +That")]).projects())
 
     def test_tasks_with_projects(self):
         """Test that a task collection with tasks with projects has those projects."""
-        self.assertEqual(set(["Foo", "Bar", "Baz"]),
-                         Tasks([Task("Todo +Foo +Bar"), Task("Todo +Foo +Baz")]).projects())
+        self.assertEqual({"Foo", "Bar", "Baz"}, Tasks([Task("Todo +Foo +Bar"), Task("Todo +Foo +Baz")]).projects())

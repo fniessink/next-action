@@ -122,7 +122,7 @@ class Task:
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """Return the prefixed items in the task."""
-        return {match.group(1) for match in re.finditer(f" {prefix}([^ ]+)", self.text)}
+        return {match.group(2) for match in re.finditer(fr"(^| ){prefix}([^ ]+)", self.text)}
 
     def __find_keyed_date(self, key: str) -> Optional[datetime.date]:
         """Find a key:value pair with the supplied key where the value is a date."""
