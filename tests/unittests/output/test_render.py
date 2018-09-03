@@ -1,14 +1,14 @@
-"""Unit tests for the render function."""
+"""Unit tests for the render functions."""
 
 import argparse
 import unittest
 
 from next_action import todotxt
-from next_action.output import render_next_action
+from next_action.output import render_next_action, render_arguments
 
 
-class RenderTest(unittest.TestCase):
-    """Unit tests for the render method."""
+class RenderNextActionTest(unittest.TestCase):
+    """Unit tests for the render next action method."""
 
     def setUp(self):
         """Set up the namespace with default arguments for all unit tests."""
@@ -73,3 +73,11 @@ class RenderTest(unittest.TestCase):
         self.assertEqual(
             "Lather before:rinse\nblocks:\n- Rinse id:rinse before:repeat\n  blocks:\n  - Repeat id:repeat",
             render_next_action([lather], [], self.namespace))
+
+
+class RenderArgumentsTest(unittest.TestCase):
+    """Unit tests for the render arguments method."""
+
+    def test_reference_arguments(self):
+        """Test that the reference arguments are rendered correctly."""
+        self.assertEqual("always multiple never", render_arguments("reference", todotxt.Tasks()))

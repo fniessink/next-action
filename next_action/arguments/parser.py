@@ -13,6 +13,9 @@ from pygments.styles import get_all_styles
 from .config import read_config_file, write_config_file, validate_config_file
 
 
+REFERENCE_CHOICES = ("always", "never", "multiple")
+
+
 class NextActionArgumentParser(argparse.ArgumentParser):
     """Command-line argument parser for Next-action."""
 
@@ -72,7 +75,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-b", "--blocked", help="show the tasks blocked by the next action, if any (default: %(default)s)",
             action="store_true")
         output_group.add_argument(
-            "-r", "--reference", choices=["always", "never", "multiple"], default="multiple",
+            "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
                  "todo.txt files)")
         styles = sorted(list(get_all_styles()))
@@ -97,7 +100,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         # List contexts or projects in the current todo.txt file(s), for tab completion
         filters.add_argument(
             "--list-arguments", help=argparse.SUPPRESS,
-            choices=["contexts", "projects", "excluded_contexts", "excluded_projects", "styles", "priorities"])
+            choices=["contexts", "excluded_contexts", "excluded_projects", "priorities", "projects", "reference",
+                     "styles"])
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,

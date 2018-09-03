@@ -194,8 +194,10 @@ def ask_next_actions(context, number):
 
 
 @when("the user asks for the list of {argument_type}")
-def ask_for_list_of_aerguments(context, argument_type):
+def ask_for_list_of_arguments(context, argument_type):
     """Add the list filters argument."""
+    if argument_type.endswith(" arguments"):
+        argument_type = argument_type[:-len(" arguments")]
     context.arguments.extend(["--list-arguments", f"{argument_type.replace(' ', '_')}"])
 
 
@@ -313,7 +315,7 @@ def show_next_action_with_style(context, style):
 @then("Next-action shows the user the list of {argument_type}: {arguments}")
 def show_list_of_arguments(context, argument_type, arguments):
     """Check the arguments."""
-    if argument_type == "styles":
+    if argument_type in "styles":
         arguments = arguments.strip(".")
         assert_true(context.next_action().startswith(arguments))
     else:
