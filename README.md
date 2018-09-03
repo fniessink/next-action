@@ -199,7 +199,7 @@ $ next-action @home --due
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2019-09"
+$ next-action @home --due "2019-10-01"
 (L) Pay September invoice @home due:2019-09-28
 ```
 

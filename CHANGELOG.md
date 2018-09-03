@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Script for bash completion of the *Next-action* command line interface. Closes #228.
 
+### Fixed
+
+- Allow for projects and contexts at the start of a line. Fixes #242.
+
 ## [1.7.2] - 2018-08-26
 
 ### Fixed
