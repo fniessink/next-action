@@ -1,7 +1,7 @@
 _next_action()
 {
   COMPREPLY=()
-  local argument_type=""
+  local argument_type="all"
   local arguments=""
   local cur="${COMP_WORDS[COMP_CWORD]}"
   local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -40,14 +40,10 @@ _next_action()
       esac
       ;;
   esac
-  if [ "$argument_type" != "" ]
+  if [ "$arguments" == "" ]
   then
     arguments=$(${COMP_LINE% *} --list-arguments ${argument_type} 2> /dev/null)
   fi 
-  if [ "$arguments" == "" ]
-  then
-    arguments="@ + -@ -+ -a --all -b --blocked -c --config-file -d --due -f --file -h --help -n --number -o --overdue -p --priority -r --reference -s --style -t --time-travel -V --version"
-  fi
   COMPREPLY=( $(compgen -W "${arguments}" -- ${cur}) )
   return 0
 }

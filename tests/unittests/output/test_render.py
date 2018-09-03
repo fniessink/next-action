@@ -78,6 +78,12 @@ class RenderNextActionTest(unittest.TestCase):
 class RenderArgumentsTest(unittest.TestCase):
     """Unit tests for the render arguments method."""
 
+    def test_arguments(self):
+        """Test that the base arguments are rendered correctly."""
+        self.assertEqual("+ -+ --all --blocked --config-file --due --file --help --number --overdue --priority "
+                         "--reference --style --time-travel --version -@ -V -a -b -c -d -f -h -n -o -p -r -s -t @",
+                         render_arguments("all", todotxt.Tasks()))
+
     def test_reference_arguments(self):
         """Test that the reference arguments are rendered correctly."""
         self.assertEqual("always multiple never", render_arguments("reference", todotxt.Tasks()))

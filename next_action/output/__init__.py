@@ -48,7 +48,9 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
 def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
     """Return the arguments, for tab completion."""
     prefix = dict(contexts="@", projects="+", excluded_contexts="-@", excluded_projects="-+").get(argument_type, "")
-    if argument_type == "reference":
+    if argument_type == "all":
+        argument_values = arguments.parser.ARGUMENTS
+    elif argument_type == "reference":
         argument_values = arguments.parser.REFERENCE_CHOICES
     elif argument_type == "styles":
         argument_values = get_all_styles()
