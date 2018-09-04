@@ -84,6 +84,11 @@ class RenderArgumentsTest(unittest.TestCase):
                          "--reference --style --time-travel --version -@ -V -a -b -c -d -f -h -n -o -p -r -s -t @",
                          render_arguments("all", todotxt.Tasks()))
 
-    def test_reference_arguments(self):
+    def test_reference(self):
         """Test that the reference arguments are rendered correctly."""
         self.assertEqual("always multiple never", render_arguments("reference", todotxt.Tasks()))
+
+    def test_time_travel(self):
+        """Test that the time-travel arguments are rendered correctly."""
+        self.assertEqual("tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday",
+                         render_arguments("time_travel", todotxt.Tasks()))

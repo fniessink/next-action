@@ -21,7 +21,7 @@ _next_action()
       argument_type="styles"
       ;;
     --time-travel|-t)
-      arguments="tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
+      argument_type="time_travel"
       ;;
     *)
       case "$cur" in
@@ -43,7 +43,7 @@ _next_action()
   if [ "$arguments" == "" ]
   then
     arguments=$(${COMP_LINE% *} --list-arguments ${argument_type} 2> /dev/null)
-  fi 
+  fi
   COMPREPLY=( $(compgen -W "${arguments}" -- ${cur}) )
   return 0
 }

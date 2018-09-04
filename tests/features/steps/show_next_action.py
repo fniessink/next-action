@@ -313,9 +313,9 @@ def show_next_action_with_style(context, style):
 
 
 @then("Next-action shows the user the list of {argument_type}: {arguments}")
-def show_list_of_arguments(context, argument_type, arguments):
+def show_list_of_arguments(context, argument_type, arguments):  # pylint: disable=unused-argument
     """Check the arguments."""
-    if argument_type in "styles":
+    if "..." in arguments:
         arguments = arguments.strip(".")
         assert_true(context.next_action().startswith(arguments))
     else:

@@ -50,6 +50,8 @@ def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
     prefix = dict(contexts="@", projects="+", excluded_contexts="-@", excluded_projects="-+").get(argument_type, "")
     if argument_type == "all":
         argument_values = arguments.parser.ARGUMENTS
+    elif argument_type == "time_travel":
+        return "tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
     elif argument_type == "reference":
         argument_values = arguments.parser.REFERENCE_CHOICES
     elif argument_type == "styles":
