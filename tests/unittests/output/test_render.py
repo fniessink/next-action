@@ -3,6 +3,9 @@
 import argparse
 import unittest
 
+from hypothesis import given, strategies
+from pygments.styles import get_all_styles
+
 from next_action import todotxt
 from next_action.output import render_next_action, render_arguments
 
@@ -84,11 +87,29 @@ class RenderArgumentsTest(unittest.TestCase):
                          "--reference --style --time-travel --version -@ -V -a -b -c -d -f -h -n -o -p -r -s -t @",
                          render_arguments("all", todotxt.Tasks()))
 
-    def test_reference(self):
+    @given(strategies.sampled_from(["__reference", "_r"]))
+    def test_reference(self, argument):
         """Test that the reference arguments are rendered correctly."""
-        self.assertEqual("always multiple never", render_arguments("reference", todotxt.Tasks()))
+        self.assertEqual("always multiple never", render_arguments(argument, todotxt.Tasks()))
 
-    def test_time_travel(self):
+    @given(strategies.sampled_from(["__time_travel", "_t"]))
+    def test_time_travel(self, argument):
         """Test that the time-travel arguments are rendered correctly."""
         self.assertEqual("tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday",
-                         render_arguments("time_travel", todotxt.Tasks()))
+                         render_arguments(argument, todotxt.Tasks()))
+
+    @given(strategies.sampled_from(["__style", "_s"]))
+    def test_style(self, argument):
+        """Test that the style arguments are rendered correctly."""
+        self.assertEqual(" ".join(sorted(get_all_styles())), render_arguments(argument, todotxt.Tasks()))
+
+    @given(strategies.sampled_from(["__priority", "_p"]))
+    def test_priority_no_prios(self, argument):
+        """Test that the priority arguments are rendered correctly."""
+        self.assertEqual("", render_arguments(argument, todotxt.Tasks()))
+
+    @given(strategies.sampled_from(["__priority", "_p"]))
+    def test_priority(self, argument):
+        """Test that the priority arguments are rendered correctly."""
+        self.assertEqual("A C",
+                         render_arguments(argument, todotxt.Tasks([todotxt.Task("(A) A"), todotxt.Task("(C) C")])))

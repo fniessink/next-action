@@ -46,18 +46,20 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
 
 
 def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
-    """Return the arguments, for tab completion."""
-    prefix = dict(contexts="@", projects="+", excluded_contexts="-@", excluded_projects="-+").get(argument_type, "")
-    if argument_type == "all":
-        argument_values = arguments.parser.ARGUMENTS
-    elif argument_type == "time_travel":
+    """Return the argument for tab completion."""
+    argument_type = argument_type.replace("_", "-")  # Undo escaping
+    if argument_type in ("--time-travel", "-t"):
         return "tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
-    elif argument_type == "reference":
+    if argument_type in ("--reference", "-r"):
         argument_values = arguments.parser.REFERENCE_CHOICES
-    elif argument_type == "styles":
+    elif argument_type in ("--style", "-s"):
         argument_values = get_all_styles()
+    elif argument_type in ("--priority", "-p"):
+        argument_values = tasks.priorities()
+    elif argument_type in ("@", "-@"):
+        argument_values = (f"{argument_type}{context}" for context in tasks.contexts())
+    elif argument_type in ("+", "-+"):
+        argument_values = (f"{argument_type}{project}" for project in tasks.projects())
     else:
-        arguments_getter = argument_type.split("_")[-1]
-        argument_values = getattr(tasks, arguments_getter)()
-    prefixed_argument_values = (f"{prefix}{value}" for value in argument_values)
-    return " ".join(sorted(prefixed_argument_values))
+        argument_values = arguments.parser.ARGUMENTS
+    return " ".join(sorted(argument_values))

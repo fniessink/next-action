@@ -1,50 +1,35 @@
+#!/bin/bash
+
 _next_action()
 {
-  COMPREPLY=()
   local argument_type="all"
-  local arguments=""
-  local cur="${COMP_WORDS[COMP_CWORD]}"
-  local prev="${COMP_WORDS[COMP_CWORD-1]}"
+  local cur=${COMP_WORDS[COMP_CWORD]}
+  local prev=${COMP_WORDS[COMP_CWORD-1]}
 
-  case "${prev}" in
+  case ${prev} in
     --file|-f|--config-file|-c)
       COMPREPLY=( $(compgen -A "file" -- ${cur}) )
       return 0
       ;;
-    --priority|-p)
-      argument_type="priorities"
-      ;;
-    --reference|-r)
-      argument_type="reference"
-      ;;
-    --style|-s)
-      argument_type="styles"
-      ;;
-    --time-travel|-t)
-      argument_type="time_travel"
+    --priority|-p|--reference|-r|--style|-s|--time-travel|-t)
+      argument_type=${prev}
       ;;
     *)
-      case "$cur" in
-        @*)
-          argument_type="contexts"
+      case ${cur} in
+        @*|+*)
+          argument_type=${cur:0:1}
           ;;
-        +*)
-          argument_type="projects"
+        -@*|-+*)
+          argument_type=${cur:0:2}
           ;;
-        -@*)
-          argument_type="excluded_contexts"
-          ;;
-        -+*)
-          argument_type="excluded_projects"
+        *)
           ;;
       esac
       ;;
   esac
-  if [ "$arguments" == "" ]
-  then
-    arguments=$(${COMP_LINE% *} --list-arguments ${argument_type} 2> /dev/null)
-  fi
-  COMPREPLY=( $(compgen -W "${arguments}" -- ${cur}) )
+  local arguments=$(${COMP_LINE% *} --list-arguments ${argument_type//-/_} 2> /dev/null)
+  COMPREPLY=( $(compgen -W "${arguments}" -- "${cur}") )
   return 0
 }
+COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}  # Needed to prevent @ from being escaped
 complete -o filenames -F _next_action next-action
