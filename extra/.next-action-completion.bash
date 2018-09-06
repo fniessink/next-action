@@ -31,5 +31,5 @@ _next_action()
   COMPREPLY=( $(compgen -W "${arguments}" -- "${cur}") )
   return 0
 }
-COMP_WORDBREAKS=${COMP_WORDBREAKS/@/}  # Needed to prevent @ from being escaped
+shopt -u hostcomplete  # Needed to prevent @ from being escaped by the readline library
 complete -o filenames -F _next_action next-action

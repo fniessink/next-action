@@ -35,7 +35,3 @@ Feature: limit the next actions by priority
       """
     When the user asks for all next actions with a priority
     Then Next-action shows the user all next actions with a priority
-
-  Scenario: list priorities for tab completion
-    When the user asks for the list of priorities
-    Then Next-action shows the user the list of priorities: A B
