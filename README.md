@@ -18,7 +18,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 - [Demo](#demo)
 - [Installation](#installation)
   - [*Next-action*](#next-action)
-  - [Tab completion for bash](#tab-completion-for-bash)
+  - [Bash tab completion for *Next-action*](#bash-tab-completion-for-next-action)
 - [Usage](#usage)
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
@@ -48,15 +48,15 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 `pip install --upgrade next-action`
 
-### Tab completion for bash
+### Bash tab completion for *Next-action*
 
-To install tab completion for the bash shell, follow these steps:
+To install tab completion for *Next-action* in bash shell, follow these steps:
 
-- Download [extra/bash-completion-next-action.sh]((https://raw.githubusercontent.com/fniessink/next-action/master/extra/bash-completion-next-action.sh) and put it where ever you like, for example in your home folder.
+- Download [extra/bash-completion-next-action.sh](https://raw.githubusercontent.com/fniessink/next-action/master/extra/bash-completion-next-action.sh) and put it where ever you like, for example in your home folder.
 - Next, add the line `source ~/bash-completion-next-action.sh` to your `~/.bashrc` or `~/.bash_profile` file.
 - Then, open a new terminal.
 
-Hitting tab after `next-action ` should give you the possible command line options. Hitting tab after an option that takes arguments, shows the possible arguments.
+Typing `next-action [TAB]` should give you the possible command line options. Hitting tab after an option that takes arguments, shows the possible arguments.
 
 ## Usage
 
@@ -500,9 +500,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-...........................................................................................................................................................................................................................................................
+........................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 251 tests in 4.058s
+Ran 264 tests in 4.984s
 
 OK
 ```
@@ -514,7 +514,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1523      0    199      0   100%
+TOTAL    1584      0    216      0   100%
 
 28 files skipped due to complete coverage.
 ```
@@ -528,9 +528,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 15 features passed, 0 failed, 0 skipped
-93 scenarios passed, 0 failed, 0 skipped
-308 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m49.636s
+105 scenarios passed, 0 failed, 0 skipped
+347 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m42.811s
 ```
 
 The feature tests should have 100% coverage:
@@ -540,7 +540,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     457      0    179      0   100%
+TOTAL     471      0    196      0   100%
 
 12 files skipped due to complete coverage.
 ```

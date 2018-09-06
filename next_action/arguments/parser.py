@@ -13,6 +13,12 @@ from pygments.styles import get_all_styles
 from .config import read_config_file, write_config_file, validate_config_file
 
 
+ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--config-file", "-d", "--due",
+             "-f", "--file", "-h", "--help", "-n", "--number", "-o", "--overdue", "-p", "--priority", "-r",
+             "--reference", "-s", "--style", "-t", "--time-travel", "-V", "--version")
+REFERENCE_CHOICES = ("always", "never", "multiple")
+
+
 class NextActionArgumentParser(argparse.ArgumentParser):
     """Command-line argument parser for Next-action."""
 
@@ -72,7 +78,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-b", "--blocked", help="show the tasks blocked by the next action, if any (default: %(default)s)",
             action="store_true")
         output_group.add_argument(
-            "-r", "--reference", choices=["always", "never", "multiple"], default="multiple",
+            "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
                  "todo.txt files)")
         styles = sorted(list(get_all_styles()))
@@ -94,6 +100,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def add_filter_arguments(self) -> None:
         """Add the filter arguments to the parser."""
         filters = self.add_argument_group("Limit the tasks from which the next actions are selected")
+        # List contexts or projects in the current todo.txt file(s), for tab completion
+        filters.add_argument(
+            "--list-arguments", help=argparse.SUPPRESS)
         date = filters.add_mutually_exclusive_group()
         date.add_argument(
             "-d", "--due", metavar="<due date>", type=date_type, nargs="?", const=datetime.date.max,
@@ -106,27 +115,29 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         # Collect all context and project arguments in one list:
         filters.add_argument(
             "filters", metavar="<context|project>", help=argparse.SUPPRESS, nargs="*", type=filter_type)
-        # Add two dummy arguments for the help info:
         filters.add_argument(
-            "dummy", metavar="@<context> ...", nargs="*", default=argparse.SUPPRESS,
+            "contexts", metavar="@<context> ...", nargs="*", type=filter_type,
             help="contexts the next action must have")
         filters.add_argument(
-            "dummy", metavar="+<project> ...", nargs="*", default=argparse.SUPPRESS,
+            "projects", metavar="+<project> ...", nargs="*", type=filter_type,
             help="projects the next action must be part of; if repeated the next action must be part of at least one "
                  "of the projects")
-        # These arguments won't be collected because they start with a -. They'll be parsed by parse_remaining_args
-        # below
         filters.add_argument(
-            "dummy", metavar="-@<context> ...", nargs="*", default=argparse.SUPPRESS,
+            "excluded_contexts", metavar="-@<context> ...", nargs="*", type=filter_type,
             help="contexts the next action must not have")
         filters.add_argument(
-            "dummy", metavar="-+<project> ...", nargs="*", default=argparse.SUPPRESS,
+            "excluded_projects", metavar="-+<project> ...", nargs="*", type=filter_type,
             help="projects the next action must not be part of")
 
     def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
         """Parse the command-line arguments."""
-        namespace, remaining = self.parse_known_args(self.sorted_args(args), namespace)
-        self.parse_remaining_args(remaining, namespace)
+        namespace, remaining_args = self.parse_known_args(args, namespace)
+        self.parse_remaining_args(remaining_args, namespace)
+        namespace.contexts = subset(namespace.filters, "@")
+        namespace.projects = subset(namespace.filters, "+")
+        namespace.excluded_contexts = subset(namespace.filters, "-@")
+        namespace.excluded_projects = subset(namespace.filters, "-+")
+        self.validate_arguments(namespace)
         if namespace.time_travel and namespace.due:
             # Apply time travel to options that take a date argument (which currently is only --due)
             namespace.due += namespace.time_travel - datetime.date.today()
@@ -138,31 +149,25 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             self.exit()
         return namespace
 
-    @classmethod
-    def sorted_args(cls, args: List[str] = None) -> List[str]:
-        """Sort the arguments so excluded contexts and projects are last and can be parsed by parse_remaining_args."""
-        args = args or sys.argv[1:]
-        return [arg for arg in args if not cls.is_excluded_filter(arg)] + \
-               [arg for arg in args if cls.is_excluded_filter(arg)]
+    def parse_remaining_args(self, args, namespace: argparse.Namespace) -> None:
+        """Parse the remaining command-line arguments, i.e. the excluded contexts and projects."""
+        try:
+            namespace.filters.extend([filter_type(arg) for arg in args])
+        except argparse.ArgumentTypeError as reason:
+            self.error(str(reason))
 
-    def parse_remaining_args(self, remaining: List[str], namespace: argparse.Namespace) -> None:
-        """Parse the remaining command line arguments."""
-        for value in remaining:
-            if self.is_excluded_filter(value):
-                argument = value[len("-"):]
-                if not argument[len("@"):]:
-                    argument_type = "context" if argument.startswith("@") else "project"
-                    self.error(f"argument <context|project>: {argument_type} name missing")
-                elif argument in namespace.filters:
-                    self.error(f"{argument} is both included and excluded")
-                else:
-                    namespace.filters.append(value)
-            else:
-                self.error(f"unrecognized argument: {value}")
-        namespace.contexts = subset(namespace.filters, "@")
-        namespace.projects = subset(namespace.filters, "+")
-        namespace.excluded_contexts = subset(namespace.filters, "-@")
-        namespace.excluded_projects = subset(namespace.filters, "-+")
+    def validate_arguments(self, namespace: argparse.Namespace) -> None:
+        """Validate arguments."""
+        if any(value == "" for value in namespace.contexts | namespace.excluded_contexts):
+            self.error("argument <context|project>: context name missing")
+        if any(value == "" for value in namespace.projects | namespace.excluded_projects):
+            self.error("argument <context|project>: project name missing")
+        for value in namespace.contexts:
+            if value in namespace.excluded_contexts:
+                self.error(f"@{value} is both included and excluded")
+        for value in namespace.projects:
+            if value in namespace.excluded_projects:
+                self.error(f"+{value} is both included and excluded")
 
     def process_config_file(self, namespace: argparse.Namespace) -> None:
         """Process the configuration file."""
@@ -197,35 +202,28 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             setattr(namespace, "blocked", blocked)
         self.insert_configured_filters(config, namespace)
 
-    def insert_configured_filters(self, config, namespace: argparse.Namespace) -> None:
+    @staticmethod
+    def insert_configured_filters(config, namespace: argparse.Namespace) -> None:
         """Insert the configured filters in the namespace, if no matching command line filters are present."""
         filters = config.get("filters", [])
         if isinstance(filters, str):
             import re
             filters = re.split(r"\s", filters)
-        for prefix, filter_key in (("@", "contexts"), ("+", "projects"),
-                                   ("-@", "excluded_contexts"), ("-+", "excluded_projects")):
-            for configured_filter in subset(filters, prefix):
-                if self.filter_not_specified(prefix + configured_filter):
-                    getattr(namespace, filter_key).add(configured_filter)
+        for configured_filter in filters:
+            if configured_filter.startswith("@") and configured_filter[len("@"):] not in namespace.excluded_contexts:
+                namespace.contexts.add(configured_filter[len("@"):])
+            if configured_filter.startswith("+") and configured_filter[len("+"):] not in namespace.excluded_projects:
+                namespace.projects.add(configured_filter[len("+"):])
+            if configured_filter.startswith("-@") and configured_filter[len("-@"):] not in namespace.contexts:
+                namespace.excluded_contexts.add(configured_filter[len("-@"):])
+            if configured_filter.startswith("-+") and configured_filter[len("-+"):] not in namespace.projects:
+                namespace.excluded_projects.add(configured_filter[len("-+"):])
 
     @staticmethod
     def arguments_not_specified(*arguments: str) -> bool:
         """Return whether any of the arguments was specified on the command line."""
         return not any([command_line_arg.startswith(argument) for argument in arguments
                         for command_line_arg in sys.argv])
-
-    @staticmethod
-    def is_excluded_filter(argument: str) -> bool:
-        """Return whether the argument is an excluded context or project."""
-        return argument.startswith("-@") or argument.startswith("-+")
-
-    @staticmethod
-    def filter_not_specified(filtered: str) -> bool:
-        """Return whether the context or project or its opposite were specified on the command line."""
-        prefix = "-"
-        opposite = filtered[len(prefix):] if filtered.startswith(prefix) else prefix + filtered
-        return not (filtered in sys.argv or opposite in sys.argv)
 
     def fix_filenames(self, namespace: argparse.Namespace) -> None:
         """Fix the filenames."""
@@ -250,11 +248,8 @@ class CapitalisedHelpFormatter(argparse.HelpFormatter):
 
 def filter_type(value: str) -> str:
     """Return the filter if it's valid, else raise an error."""
-    if value.startswith("@") or value.startswith("+"):
-        if value[len("@"):]:
-            return value
-        value_type = "context" if value.startswith("@") else "project"
-        raise argparse.ArgumentTypeError(f"{value_type} name missing")
+    if value.startswith("@") or value.startswith("+") or value.startswith("-@") or value.startswith("-+"):
+        return value
     raise argparse.ArgumentTypeError(f"unrecognized argument: {value}")
 
 
@@ -286,4 +281,4 @@ def number_type(value: str) -> int:
 
 def subset(filters: List[str], prefix: str) -> Set[str]:
     """Return a subset of the filters based on prefix."""
-    return set(f.strip(prefix) for f in filters if f.startswith(prefix))
+    return set(f[len(prefix):] for f in filters if f.startswith(prefix))

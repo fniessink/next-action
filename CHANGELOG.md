@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Script for bash completion of the *Next-action* command line interface. Closes #228.
+- Tab completion for the *Next-action* command line interface in Bash. Closes #228.
 
 ### Fixed
 

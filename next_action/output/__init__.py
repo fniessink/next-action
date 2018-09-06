@@ -2,7 +2,9 @@
 
 import argparse
 
-from .. import todotxt
+from pygments.styles import get_all_styles
+
+from .. import todotxt, arguments
 from .color import colorize
 from .reference import reference
 from .warning import invalid_arguments
@@ -41,3 +43,23 @@ def render_nothing_todo(tasks: todotxt.Tasks, namespace: argparse.Namespace):
 def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
     """Render the next action(s) or, if there are none, tell the user there's nothing to do."""
     return render_tasks(next_actions, namespace) if next_actions else render_nothing_todo(tasks, namespace)
+
+
+def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
+    """Return the argument for tab completion."""
+    argument_type = argument_type.replace("_", "-")  # Undo escaping
+    if argument_type in ("--time-travel", "-t"):
+        return "tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
+    if argument_type in ("--reference", "-r"):
+        argument_values = arguments.parser.REFERENCE_CHOICES
+    elif argument_type in ("--style", "-s"):
+        argument_values = get_all_styles()
+    elif argument_type in ("--priority", "-p"):
+        argument_values = tasks.priorities()
+    elif argument_type in ("@", "-@"):
+        argument_values = (f"{argument_type}{context}" for context in tasks.contexts())
+    elif argument_type in ("+", "-+"):
+        argument_values = (f"{argument_type}{project}" for project in tasks.projects())
+    else:
+        argument_values = arguments.parser.ARGUMENTS
+    return " ".join(sorted(argument_values))

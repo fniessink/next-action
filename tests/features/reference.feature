@@ -46,3 +46,7 @@ Feature: reference next actions with the source file
     When the user asks for the next action
     And the user asks for the next action to be referenced never
     Then Next-action doesn't reference the source file of the next action
+
+  Scenario: list options for tab completion
+    When the user asks for the list of reference arguments
+    Then Next-action shows the user the list of reference arguments: always multiple never

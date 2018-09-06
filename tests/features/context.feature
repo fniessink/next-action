@@ -61,6 +61,22 @@ Feature: filter next-actions by context
     When the user asks for the next action not at work
     Then Next-action shows the user the next action not at work
 
+Scenario: excluded context in configuration file
+    Given a configuration file with
+      """
+      filters: -@work
+      """
+    When the user asks for the next action
+    Then Next-action shows the user the next action not at work
+
+  Scenario: override excluded context in configuration file
+    Given a configuration file with
+      """
+      filters: -@work
+      """
+    When the user asks for the next action at work
+    Then Next-action shows the user the next action at work
+
   Scenario: invalid context
     When the user asks for the next action with an invalid context
     Then Next-action tells the user the context is invalid
@@ -72,3 +88,11 @@ Feature: filter next-actions by context
   Scenario: context both included and excluded
     When the user asks for the next action with a context that is both included and excluded
     Then Next-action tells the user the context is both included and excluded
+
+  Scenario: list contexts for tab completion
+    When the user asks for the list of contexts
+    Then Next-action shows the user the list of contexts: @home @work
+
+  Scenario: list excluded contexts for tab completion
+    When the user asks for the list of excluded contexts
+    Then Next-action shows the user the list of excluded contexts: -@home -@work

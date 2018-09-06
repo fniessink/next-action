@@ -33,3 +33,7 @@ Feature: time travel
     When the user asks for the next action over due
     And the user wants to pretend it's today
     Then Next-action shows the user the next action with due today
+
+ Scenario: list arguments for tab completion
+    When the user asks for the list of time travel arguments
+    Then Next-action shows the user the list of time travel arguments: tomorrow yesterday Monday Tuesday ...

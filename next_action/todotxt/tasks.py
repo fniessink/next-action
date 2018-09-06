@@ -17,3 +17,7 @@ class Tasks(List[Task]):
     def projects(self) -> Set[str]:
         """Return the projects used in the collection of tasks."""
         return set(project for task in self for project in task.projects())
+
+    def priorities(self) -> Set[str]:
+        """Return the priorities used in the collection of tasks."""
+        return set(str(task.priority()) for task in self if task.priority())

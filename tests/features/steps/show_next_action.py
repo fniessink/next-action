@@ -143,7 +143,7 @@ def next_action_invalid_argument(context, argument_type):
         arguments = ["--due", "2018-02-30"]
     else:
         argument = "@" if "context" in argument_type else "+"
-        arguments = [("-" + argument) if "excluded" in argument_type else argument]
+        arguments = [f"-{argument}" if "excluded" in argument_type else argument]
     context.arguments.extend(arguments)
 
 
@@ -187,16 +187,24 @@ def time_travel_tomorrow(context, some_date):
     context.arguments.extend(["--time-travel", some_date])
 
 
-@then("Next-action tells the user there's nothing to do")
-def nothing_todo(context):
-    """Check that Next-action tells the user there's nothing to do."""
-    assert_in("Nothing to do!", context.next_action())
-
-
 @when("the user asks for {number} next actions")
 def ask_next_actions(context, number):
     """Add either the number of the all command line option to the command line arguments."""
     context.arguments.extend(["--all"] if number == "all" else ["--number", str(number)])
+
+
+@when("the user asks for the list of {argument_type}")
+def ask_for_list_of_arguments(context, argument_type):
+    """Add the list filters argument."""
+    if argument_type.endswith(" arguments"):
+        argument_type = argument_type[:-len(" arguments")]
+    context.arguments.extend(["--list-arguments", f"{argument_type.replace(' ', '_')}"])
+
+
+@then("Next-action tells the user there's nothing to do")
+def nothing_todo(context):
+    """Check that Next-action tells the user there's nothing to do."""
+    assert_in("Nothing to do!", context.next_action())
 
 
 @then("Next-action references the source file of the next action")
@@ -304,10 +312,20 @@ def show_next_action_with_style(context, style):
     assert_equal(colorize("A task", namespace), context.next_action().strip())
 
 
+@then("Next-action shows the user the list of {argument_type}: {arguments}")
+def show_list_of_arguments(context, argument_type, arguments):  # pylint: disable=unused-argument
+    """Check the arguments."""
+    if "..." in arguments:
+        arguments = arguments.strip(".")
+        assert_true(context.next_action().startswith(arguments))
+    else:
+        assert_equal(arguments, context.next_action().strip())
+
+
 @then('Next-action tells the user the argument "{argument}" is unrecognized')
 def unrecognized_arg_error_message(context, argument):
     """Check the error message."""
-    assert_in("unrecognized argument: " + argument, context.next_action())
+    assert_regex(context.next_action(), f".*unrecognized arguments?: {argument}.*")
 
 
 @then("Next-action tells the user the {argument} is invalid")
