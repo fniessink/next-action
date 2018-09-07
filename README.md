@@ -505,9 +505,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-..............................................................................................................................................................................................................................................................................
+..........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 270 tests in 3.905s
+Ran 250 tests in 4.352s
 
 OK
 ```
@@ -519,9 +519,9 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1605      0    226      0   100%
+TOTAL    1601      0    226      0   100%
 
-28 files skipped due to complete coverage.
+29 files skipped due to complete coverage.
 ```
 
 Running `python -m unittest` and `python setup.py test` should give the same results, without generating the coverage information.
@@ -535,7 +535,7 @@ $ behave --format null tests/features
 16 features passed, 0 failed, 0 skipped
 107 scenarios passed, 0 failed, 0 skipped
 355 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m27.821s
+Took 1m42.965s
 ```
 
 The feature tests should have 100% coverage:
@@ -552,7 +552,7 @@ TOTAL     479      0    206      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, pycodestyle, pydocstyle, pyroma, and vulture to check for quality issues.
+We use mypy, pylint, pycodestyle, pydocstyle, pyroma, and vulture to check for quality issues in the Python code. We use shellcheck to evaluate the Bash code.
 
 Mypy should give no warnings or errors:
 
@@ -596,6 +596,13 @@ Found next-action
 Final rating: 10/10
 Your cheese is so fresh most people think it's a cream: Mascarpone
 ------------------------------
+```
+
+Shellcheck should not complain about the Bash code:
+
+```console
+$ shellcheck extra/.next-action-completion.bash
+(no findings hence no output)
 ```
 
 ### Generating documentation
