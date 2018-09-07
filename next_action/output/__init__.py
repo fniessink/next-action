@@ -1,6 +1,7 @@
 """Package for formatting output."""
 
 import argparse
+from typing import Iterable
 
 from pygments.styles import get_all_styles
 
@@ -48,6 +49,7 @@ def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namesp
 def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
     """Return the argument for tab completion."""
     argument_type = argument_type.replace("_", "-")  # Undo escaping
+    argument_values: Iterable[str]
     if argument_type in ("--time-travel", "-t"):
         return "tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday"
     if argument_type in ("--reference", "-r"):

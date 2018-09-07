@@ -15,26 +15,41 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Table of contents
 
-- [Demo](#demo)
-- [Installation](#installation)
-  - [*Next-action*](#next-action)
-  - [Bash tab completion for *Next-action*](#bash-tab-completion-for-next-action)
-- [Usage](#usage)
-  - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
-  - [Showing more than one next action](#showing-more-than-one-next-action)
-  - [Task dependencies](#task-dependencies)
-  - [Styling the output](#styling-the-output)
-  - [Time travel](#time-travel)
-  - [Configuring *Next-action*](#configuring-next-action)
-  - [Option details](#option-details)
-- [Recent changes](#recent-changes)
-- [Developing *Next-action*](#developing-next-action)
-  - [Installing the development environment](#installing-the-development-environment)
-  - [Running unit tests](#running-unit-tests)
-  - [Running feature tests](#running-feature-tests)
-  - [Running quality checks](#running-quality-checks)
-  - [Generating documentation](#generating-documentation)
-  - [Source code structure and dependencies](#source-code-structure-and-dependencies)
+- [Next-action](#next-action)
+  - [Table of contents](#table-of-contents)
+  - [Demo](#demo)
+  - [Installation](#installation)
+    - [*Next-action*](#next-action)
+    - [Tab completion for *Next-action*](#tab-completion-for-next-action)
+  - [Usage](#usage)
+    - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
+      - [By contexts and/or projects](#by-contexts-andor-projects)
+      - [By due date](#by-due-date)
+      - [By priority](#by-priority)
+    - [Showing more than one next action](#showing-more-than-one-next-action)
+    - [Task dependencies](#task-dependencies)
+    - [Styling the output](#styling-the-output)
+    - [Time travel](#time-travel)
+    - [Configuring *Next-action*](#configuring-next-action)
+      - [Writing the configuration file](#writing-the-configuration-file)
+      - [Reading the configuration file](#reading-the-configuration-file)
+      - [Configuring a default todo.txt](#configuring-a-default-todotxt)
+      - [Configuring the number of next actions to show](#configuring-the-number-of-next-actions-to-show)
+      - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
+        - [Limiting by contexts and/or projects](#limiting-by-contexts-andor-projects)
+        - [Limiting by priority](#limiting-by-priority)
+      - [Configuring the output](#configuring-the-output)
+    - [Option details](#option-details)
+      - [Precedence](#precedence)
+      - [Optional arguments followed by positional arguments](#optional-arguments-followed-by-positional-arguments)
+  - [Recent changes](#recent-changes)
+  - [Developing *Next-action*](#developing-next-action)
+    - [Installing the development environment](#installing-the-development-environment)
+    - [Running unit tests](#running-unit-tests)
+    - [Running feature tests](#running-feature-tests)
+    - [Running quality checks](#running-quality-checks)
+    - [Generating documentation](#generating-documentation)
+    - [Source code structure and dependencies](#source-code-structure-and-dependencies)
 
 ## Demo
 
@@ -52,8 +67,13 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 To install tab completion for *Next-action* in the Bash shell, follow these steps:
 
-- Download [extra/bash-completion-next-action.sh](https://raw.githubusercontent.com/fniessink/next-action/master/extra/bash-completion-next-action.sh) and put it where ever you like, for example in your home folder.
-- Next, add the line `source ~/bash-completion-next-action.sh` to your `~/.bashrc` or `~/.bash_profile` file.
+- Download [extra/.next-action-completion.bash](https://raw.githubusercontent.com/fniessink/next-action/master/extra/.next-action-completion.bash) and save it in your home folder.
+- Next, add this line to your `~/.bash_profile` file:
+
+  ```bash
+  source ~/.next-action-completion.bash
+  ```
+
 - Then, open a new terminal.
 
 Typing `next-action [TAB]` should give you the possible command line options. Hitting tab after an option that takes arguments, shows the possible arguments.
@@ -500,9 +520,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-........................................................................................................................................................................................................................................................................
+............................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 264 tests in 4.984s
+Ran 268 tests in 3.839s
 
 OK
 ```
@@ -514,7 +534,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1584      0    216      0   100%
+TOTAL    1598      0    226      0   100%
 
 28 files skipped due to complete coverage.
 ```
@@ -527,10 +547,10 @@ To run the feature tests:
 
 ```console
 $ behave --format null tests/features
-15 features passed, 0 failed, 0 skipped
-105 scenarios passed, 0 failed, 0 skipped
-347 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m42.811s
+16 features passed, 0 failed, 0 skipped
+107 scenarios passed, 0 failed, 0 skipped
+355 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 1m41.301s
 ```
 
 The feature tests should have 100% coverage:
@@ -540,7 +560,7 @@ $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" 
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     471      0    196      0   100%
+TOTAL     479      0    206      0   100%
 
 12 files skipped due to complete coverage.
 ```

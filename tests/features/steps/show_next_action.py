@@ -198,7 +198,7 @@ def ask_for_list_of_arguments(context, argument_type):
     """Add the list filters argument."""
     if argument_type.endswith(" arguments"):
         argument_type = argument_type[:-len(" arguments")]
-    context.arguments.extend(["--list-arguments", f"{argument_type.replace(' ', '_')}"])
+    context.arguments.extend(["--list-arguments", f"{argument_type.replace(' ', '_').replace('-', '_')}"])
 
 
 @then("Next-action tells the user there's nothing to do")
