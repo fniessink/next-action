@@ -564,7 +564,7 @@ $ mypy --no-incremental --ignore-missing-import next_action
 Pylint should score 10 out of 10:
 
 ```console
-$ pylint next_action
+$ pylint next_action tests
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 ```

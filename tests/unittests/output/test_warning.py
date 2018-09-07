@@ -59,5 +59,5 @@ class InvalidArgumentsTest(fixtures.TestCaseWithNamespace):
     def test_present_context(self):
         """Test the message with one present context."""
         self.namespace.contexts = set(["home"])
-        self.tasks.append(todotxt.Task("A task @home"))
+        self.tasks.append(todotxt.Task("A task @home"))  # pylint: disable=no-member
         self.assertEqual("", invalid_arguments(self.namespace, self.tasks))
