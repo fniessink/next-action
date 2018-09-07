@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Prevent @ from being escaped when using tab completion. Fixes #249.
+- Don't consider brackets being part of context or project names. Fixes #245.
 
 ## [1.8.0] - 2018-09-06
 
