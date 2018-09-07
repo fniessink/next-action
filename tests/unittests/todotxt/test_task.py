@@ -23,6 +23,9 @@ class TodoTest(unittest.TestCase):
         self.assertEqual("Task<Todo>", repr(todotxt.Task("Todo")))
 
 
+BRACKETS = ["()", "<>", "{}", "[]", "''", '""']
+
+
 class TodoContextTest(unittest.TestCase):
     """Unit tests for Task contexts."""
 
@@ -45,6 +48,12 @@ class TodoContextTest(unittest.TestCase):
     def test_at_start_of_line(self):
         """Test that a context at the start of a line is considered a context."""
         self.assertEqual({"Home"}, todotxt.Task("@Home fix leak").contexts())
+
+    @given(strategies.sampled_from(BRACKETS))
+    def test_brackets(self, brackets):
+        """Test that a brackted context is considered a context."""
+        opening, closing = brackets[0], brackets[1]
+        self.assertEqual({"home"}, todotxt.Task(f"Clean desk {opening}@home{closing}").contexts())
 
 
 class TaskProjectTest(unittest.TestCase):
@@ -69,6 +78,12 @@ class TaskProjectTest(unittest.TestCase):
     def test_at_start_of_line(self):
         """Test that a project at the start of a line is considered a project."""
         self.assertEqual({"Maintenance"}, todotxt.Task("+Maintenance fix leak").projects())
+
+    @given(strategies.sampled_from(BRACKETS))
+    def test_brackets(self, brackets):
+        """Test that a bracketed project is considered a project."""
+        opening, closing = brackets[0], brackets[1]
+        self.assertEqual({"GarageSale"}, todotxt.Task(f"Organize {opening}+GarageSale{closing} @home").projects())
 
 
 class TaskPriorityTest(unittest.TestCase):

@@ -15,41 +15,26 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Table of contents
 
-- [Next-action](#next-action)
-  - [Table of contents](#table-of-contents)
-  - [Demo](#demo)
-  - [Installation](#installation)
-    - [*Next-action*](#next-action)
-    - [Tab completion for *Next-action*](#tab-completion-for-next-action)
-  - [Usage](#usage)
-    - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
-      - [By contexts and/or projects](#by-contexts-andor-projects)
-      - [By due date](#by-due-date)
-      - [By priority](#by-priority)
-    - [Showing more than one next action](#showing-more-than-one-next-action)
-    - [Task dependencies](#task-dependencies)
-    - [Styling the output](#styling-the-output)
-    - [Time travel](#time-travel)
-    - [Configuring *Next-action*](#configuring-next-action)
-      - [Writing the configuration file](#writing-the-configuration-file)
-      - [Reading the configuration file](#reading-the-configuration-file)
-      - [Configuring a default todo.txt](#configuring-a-default-todotxt)
-      - [Configuring the number of next actions to show](#configuring-the-number-of-next-actions-to-show)
-      - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
-        - [Limiting by contexts and/or projects](#limiting-by-contexts-andor-projects)
-        - [Limiting by priority](#limiting-by-priority)
-      - [Configuring the output](#configuring-the-output)
-    - [Option details](#option-details)
-      - [Precedence](#precedence)
-      - [Optional arguments followed by positional arguments](#optional-arguments-followed-by-positional-arguments)
-  - [Recent changes](#recent-changes)
-  - [Developing *Next-action*](#developing-next-action)
-    - [Installing the development environment](#installing-the-development-environment)
-    - [Running unit tests](#running-unit-tests)
-    - [Running feature tests](#running-feature-tests)
-    - [Running quality checks](#running-quality-checks)
-    - [Generating documentation](#generating-documentation)
-    - [Source code structure and dependencies](#source-code-structure-and-dependencies)
+- [Demo](#demo)
+- [Installation](#installation)
+  - [*Next-action*](#next-action)
+  - [Tab completion for *Next-action*](#tab-completion-for-next-action)
+- [Usage](#usage)
+  - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
+  - [Showing more than one next action](#showing-more-than-one-next-action)
+  - [Task dependencies](#task-dependencies)
+  - [Styling the output](#styling-the-output)
+  - [Time travel](#time-travel)
+  - [Configuring *Next-action*](#configuring-next-action)
+  - [Option details](#option-details)
+- [Recent changes](#recent-changes)
+- [Developing *Next-action*](#developing-next-action)
+  - [Installing the development environment](#installing-the-development-environment)
+  - [Running unit tests](#running-unit-tests)
+  - [Running feature tests](#running-feature-tests)
+  - [Running quality checks](#running-quality-checks)
+  - [Generating documentation](#generating-documentation)
+  - [Source code structure and dependencies](#source-code-structure-and-dependencies)
 
 ## Demo
 
@@ -520,9 +505,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-............................................................................................................................................................................................................................................................................
+..............................................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 268 tests in 3.839s
+Ran 270 tests in 3.905s
 
 OK
 ```
@@ -534,7 +519,7 @@ $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
 Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1598      0    226      0   100%
+TOTAL    1605      0    226      0   100%
 
 28 files skipped due to complete coverage.
 ```
@@ -550,7 +535,7 @@ $ behave --format null tests/features
 16 features passed, 0 failed, 0 skipped
 107 scenarios passed, 0 failed, 0 skipped
 355 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m41.301s
+Took 1m27.821s
 ```
 
 The feature tests should have 100% coverage:
