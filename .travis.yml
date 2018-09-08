@@ -7,12 +7,13 @@ jobs:
   include:
     - stage: test
       dist: xenial
+      python: 3.7
       before_script:
       - npm install -g gherkin-lint
       - apt-get install shellcheck
       script:
       - gherkin-lint tests/features/*.feature
-      - shellcheck extra/.next-action-completion.bash 
+      - shellcheck extra/.next-action-completion.bash
     - stage: test
       python: 3.7
       dist: xenial
