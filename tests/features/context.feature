@@ -61,7 +61,7 @@ Feature: filter next-actions by context
     When the user asks for the next action not at work
     Then Next-action shows the user the next action not at work
 
-Scenario: excluded context in configuration file
+  Scenario: excluded context in configuration file
     Given a configuration file with
       """
       filters: -@work

@@ -34,7 +34,7 @@ Feature: limit the next actions by due date
     When the user asks for the next action over due
     Then Next-action tells the user there's nothing to do
 
-  Scenario: number in configuration file
+  Scenario: override default number in configuration file
     Given a configuration file with
       """
       number: 3
@@ -42,7 +42,7 @@ Feature: limit the next actions by due date
     When the user asks for the next action
     Then Next-action shows the user 3 next actions
 
-  Scenario: override number in configuration file
+  Scenario: override configured number on the command line
     Given a configuration file with
       """
       number: 3

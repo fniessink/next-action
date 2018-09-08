@@ -9,7 +9,12 @@ jobs:
       python: 3.7
       dist: xenial
       sudo: true
-      script: 
+      before_script:
+      - npm install -g gherkin-lint
+      - sudo apt-get install shellcheck
+      script:
+      - gherkin-lint tests/features/*.feature
+      - shellcheck extra/.next-action-completion.bash
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
       - python-codacy-coverage -r coverage.xml
@@ -19,14 +24,12 @@ jobs:
       sudo: false
       script:
       - bandit -r next_action
+      - mypy --no-incremental --ignore-missing-import next_action
       - pycodestyle .
       - pydocstyle .
-    - stage: test
-      python: 3.6
-      dist: trusty
-      sudo: false
-      script:
-      - pylint *.py next_action
+      - vulture next_action .vulture-whitelist.py
+      - pyroma --min=10 .
+      - pylint *.py next_action tests
     - stage: test
       python: 3.6
       dist: trusty

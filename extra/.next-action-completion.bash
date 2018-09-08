@@ -1,14 +1,17 @@
 #!/bin/bash
+# Following this directive would mean we divert a lot from many tab completion examples:
+# shellcheck disable=SC2207
 
 _next_action()
 {
+  local arguments
   local argument_type="all"
   local cur=${COMP_WORDS[COMP_CWORD]}
   local prev=${COMP_WORDS[COMP_CWORD-1]}
 
   case ${prev} in
     --file|-f|--config-file|-c)
-      COMPREPLY=( $(compgen -A "file" -- ${cur}) )
+      COMPREPLY=( $(compgen -A "file" -- "${cur}") )
       return 0
       ;;
     --priority|-p|--reference|-r|--style|-s|--time-travel|-t)
@@ -27,7 +30,7 @@ _next_action()
       esac
       ;;
   esac
-  local arguments=$(${COMP_LINE% *} --list-arguments ${argument_type//-/_} 2> /dev/null)
+  arguments=$(${COMP_LINE% *} --list-arguments "${argument_type//-/_}" 2> /dev/null)
   COMPREPLY=( $(compgen -W "${arguments}" -- "${cur}") )
   return 0
 }

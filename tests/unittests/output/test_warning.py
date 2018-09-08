@@ -1,22 +1,17 @@
 """Unit tests for the warning module in the output package."""
 
-import argparse
-import unittest
-
 from next_action import todotxt
 from next_action.output.warning import invalid_arguments
 
+from .. import fixtures
 
-class InvalidArgumentsTest(unittest.TestCase):
+
+class InvalidArgumentsTest(fixtures.TestCaseWithNamespace):
     """Unit tests for the invalid argument warning method."""
 
     def setUp(self):
         """Set up the namespace with default arguments for all unit tests."""
-        self.namespace = argparse.Namespace()
-        self.namespace.contexts = set()
-        self.namespace.projects = set()
-        self.namespace.excluded_contexts = set()
-        self.namespace.excluded_projects = set()
+        super().setUp()
         self.tasks = todotxt.Tasks()
 
     def test_no_args_and_no_tasks(self):
@@ -64,5 +59,5 @@ class InvalidArgumentsTest(unittest.TestCase):
     def test_present_context(self):
         """Test the message with one present context."""
         self.namespace.contexts = set(["home"])
-        self.tasks.append(todotxt.Task("A task @home"))
+        self.tasks.append(todotxt.Task("A task @home"))  # pylint: disable=no-member
         self.assertEqual("", invalid_arguments(self.namespace, self.tasks))

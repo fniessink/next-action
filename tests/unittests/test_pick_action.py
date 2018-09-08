@@ -1,31 +1,13 @@
 """Unit test for the next action algorithm."""
 
-import argparse
 import datetime
-import unittest
-import sys
 
 from next_action import todotxt, pick_action
 
-
-class PickActionTestCase(unittest.TestCase):
-    """Base class for pick action unit tests."""
-
-    def setUp(self):
-        """Set up the namespace with default arguments for all unit tests."""
-        self.namespace = argparse.Namespace()
-        self.namespace.contexts = set()
-        self.namespace.projects = set()
-        self.namespace.excluded_contexts = set()
-        self.namespace.excluded_projects = set()
-        self.namespace.overdue = False
-        self.namespace.due = None
-        self.namespace.priority = None
-        self.namespace.time_travel = None
-        self.namespace.number = sys.maxsize
+from . import fixtures
 
 
-class PickActionTest(PickActionTestCase):
+class PickActionTest(fixtures.TestCaseWithNamespace):
     """Unit tests for the pick action algorithm."""
 
     def test_no_tasks(self):
@@ -93,7 +75,7 @@ class PickActionTest(PickActionTestCase):
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2], self.namespace))
 
 
-class FilterTasksTest(PickActionTestCase):
+class FilterTasksTest(fixtures.TestCaseWithNamespace):
     """Test that the tasks from which the next action is picked, can be filtered."""
 
     def test_context(self):
@@ -167,7 +149,7 @@ class FilterTasksTest(PickActionTestCase):
         self.assertEqual([task1], pick_action.next_actions([task1, task2, task3], self.namespace))
 
 
-class IgnoredTasksTest(PickActionTestCase):
+class IgnoredTasksTest(fixtures.TestCaseWithNamespace):
     """Test that certain tasks are ignored when picking the next action."""
 
     def test_ignore_future_task(self):
@@ -183,7 +165,7 @@ class IgnoredTasksTest(PickActionTestCase):
         self.assertEqual([], pick_action.next_actions([future_task1, future_task2], self.namespace))
 
 
-class OverdueTasks(PickActionTestCase):
+class OverdueTasks(fixtures.TestCaseWithNamespace):
     """Unit tests for the overdue filter."""
 
     def test_overdue_tasks(self):
@@ -196,7 +178,7 @@ class OverdueTasks(PickActionTestCase):
         self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
 
-class DueTasks(PickActionTestCase):
+class DueTasks(fixtures.TestCaseWithNamespace):
     """Unit tests for the is_due filter."""
 
     def test_due_tasks(self):
@@ -217,7 +199,7 @@ class DueTasks(PickActionTestCase):
                          pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
 
 
-class MinimimPriorityTest(PickActionTest):
+class MinimimPriorityTest(fixtures.TestCaseWithNamespace):
     """Unit test for the mininum priority filter."""
 
     def test_priority(self):
@@ -230,7 +212,7 @@ class MinimimPriorityTest(PickActionTest):
             [high_priority], pick_action.next_actions([no_priority, low_priority, high_priority], self.namespace))
 
 
-class BlockedTasksTest(PickActionTest):
+class BlockedTasksTest(fixtures.TestCaseWithNamespace):
     """Unit tests for blocked tasks."""
 
     # pylint: disable=no-member
