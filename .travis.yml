@@ -8,6 +8,7 @@ jobs:
     - stage: test
       dist: xenial
       python: 3.7
+      sudo: true
       before_script:
       - npm install -g gherkin-lint
       - apt-get install shellcheck
