@@ -15,26 +15,44 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Table of contents
 
-- [Demo](#demo)
-- [Installation](#installation)
-  - [*Next-action*](#next-action)
-  - [Tab completion for *Next-action*](#tab-completion-for-next-action)
-- [Usage](#usage)
-  - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
-  - [Showing more than one next action](#showing-more-than-one-next-action)
-  - [Task dependencies](#task-dependencies)
-  - [Styling the output](#styling-the-output)
-  - [Time travel](#time-travel)
-  - [Configuring *Next-action*](#configuring-next-action)
-  - [Option details](#option-details)
-- [Recent changes](#recent-changes)
-- [Developing *Next-action*](#developing-next-action)
-  - [Installing the development environment](#installing-the-development-environment)
-  - [Running unit tests](#running-unit-tests)
-  - [Running feature tests](#running-feature-tests)
-  - [Running quality checks](#running-quality-checks)
-  - [Generating documentation](#generating-documentation)
-  - [Source code structure and dependencies](#source-code-structure-and-dependencies)
+- [Next-action](#next-action)
+  - [Table of contents](#table-of-contents)
+  - [Demo](#demo)
+  - [Installation](#installation)
+    - [*Next-action*](#next-action)
+    - [Tab completion for *Next-action*](#tab-completion-for-next-action)
+  - [Usage](#usage)
+    - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
+      - [By contexts and/or projects](#by-contexts-andor-projects)
+      - [By due date](#by-due-date)
+      - [By priority](#by-priority)
+    - [Showing more than one next action](#showing-more-than-one-next-action)
+    - [Task dependencies](#task-dependencies)
+    - [Styling the output](#styling-the-output)
+    - [Time travel](#time-travel)
+    - [Configuring *Next-action*](#configuring-next-action)
+      - [Writing the configuration file](#writing-the-configuration-file)
+      - [Reading the configuration file](#reading-the-configuration-file)
+      - [Configuring a default todo.txt](#configuring-a-default-todotxt)
+      - [Configuring the number of next actions to show](#configuring-the-number-of-next-actions-to-show)
+      - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
+        - [Limiting by contexts and/or projects](#limiting-by-contexts-andor-projects)
+        - [Limiting by priority](#limiting-by-priority)
+      - [Configuring the output](#configuring-the-output)
+    - [Option details](#option-details)
+      - [Precedence](#precedence)
+      - [Optional arguments followed by positional arguments](#optional-arguments-followed-by-positional-arguments)
+  - [Recent changes](#recent-changes)
+  - [Developing *Next-action*](#developing-next-action)
+    - [Installing the development environment and dependencies](#installing-the-development-environment-and-dependencies)
+    - [Running unit tests](#running-unit-tests)
+    - [Running feature tests](#running-feature-tests)
+    - [Running quality checks](#running-quality-checks)
+      - [Python](#python)
+      - [Bash](#bash)
+      - [Gherkin](#gherkin)
+    - [Generating documentation](#generating-documentation)
+    - [Source code structure and dependencies](#source-code-structure-and-dependencies)
 
 ## Demo
 
@@ -495,9 +513,18 @@ See the [change log](https://github.com/fniessink/next-action/blob/master/CHANGE
 
 ## Developing *Next-action*
 
-### Installing the development environment
+### Installing the development environment and dependencies
 
-To work on the software, clone the repository, create a virtual environment, install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`, and install *Next-action* in development mode using `python setup.py develop`.
+To work on the software, follow these steps to install the development environment and the dependencies:
+
+- Clone the repository: `git clone https://github.com/fniessink/next-action.git`.
+- Enter the folder: `cd next-action`.
+- Create a virtual environment: `virtalenv .venv`.
+- Activate the virtual environment: `. .venv/bin/activate`.
+- Install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`.
+- Install *Next-action* in development mode using `python setup.py develop`.
+- Follow the instructions on [shellcheck.net](https://www.shellcheck.net) to install shellcheck.
+- Install gherkin-lint with `npm install -g gherkin-lint`.
 
 ### Running unit tests
 
@@ -552,7 +579,9 @@ TOTAL     479      0    206      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, pycodestyle, pydocstyle, pyroma, and vulture to check for quality issues in the Python code. We use shellcheck to evaluate the Bash code.
+We use mypy, pylint, pycodestyle, pydocstyle, pyroma, and vulture to check for quality issues in the Python code. We use shellcheck to evaluate the Bash code. And we use gherkin-lint to check the Gherkin feature files.
+
+#### Python
 
 Mypy should give no warnings or errors:
 
@@ -598,10 +627,21 @@ Your cheese is so fresh most people think it's a cream: Mascarpone
 ------------------------------
 ```
 
+#### Bash
+
 Shellcheck should not complain about the Bash code:
 
 ```console
 $ shellcheck extra/.next-action-completion.bash
+(no findings hence no output)
+```
+
+#### Gherkin
+
+Gherkin-lint should not complain about the Gherkin feature files:
+
+```console
+$ gherkin-lint tests/features/*.feature
 (no findings hence no output)
 ```
 

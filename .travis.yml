@@ -6,10 +6,18 @@ install:
 jobs:
   include:
     - stage: test
+      dist: xenial
+      before_script:
+      - npm install -g gherkin-lint
+      - apt-get install shellcheck
+      script:
+      - gherkin-lint tests/features/*.feature
+      - shellcheck extra/.next-action-completion.bash 
+    - stage: test
       python: 3.7
       dist: xenial
       sudo: true
-      script: 
+      script:
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
       - python-codacy-coverage -r coverage.xml

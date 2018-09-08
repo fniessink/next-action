@@ -5,7 +5,6 @@ Feature: filter next-actions by project
   1a. Project doesn't exist
   1b. Project name is empty
 
-
   Background: a todo.txt file with different projects
     Given a todo.txt with
       """
@@ -75,7 +74,7 @@ Feature: filter next-actions by project
     When the user asks for the next action
     Then Next-action shows the user the next action not for PaintHouse
 
-Scenario: override excluded project in configuration file
+  Scenario: override excluded project in configuration file
     Given a configuration file with
       """
       filters: -+PaintHouse
