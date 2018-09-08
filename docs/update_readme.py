@@ -18,7 +18,8 @@ def do_command(line):
     command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                     universal_newlines=True)
     stdout = command_output.stdout.strip()
-    if command[0] in ("shellcheck", "gherkin-lint", "mypy", "pycodestyle", "pydocstyle", "vulture") and stdout == "":
+    if command[0] in ("bandit", "shellcheck", "gherkin-lint", "mypy", "pycodestyle", "pydocstyle",
+                      "vulture") and stdout == "":
         stdout = "(no findings hence no output)"
     if command[0] in ("pydeps",) and stdout == "":
         stdout = "(no output on stdout)"
@@ -27,7 +28,7 @@ def do_command(line):
         for diagram in ("packages", "classes"):
             filename = pathlib.Path(diagram + ".png")
             filename.replace(pathlib.Path("docs") / filename)
-    stderr = "" if command[0] in ("pylint", "pyroma") else command_output.stderr.strip()
+    stderr = "" if command[0] in ("pylint", "pyroma", "bandit") else command_output.stderr.strip()
     return stdout, stderr
 
 
