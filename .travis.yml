@@ -11,7 +11,7 @@ jobs:
       sudo: true
       before_script:
       - npm install -g gherkin-lint
-      - apt-get install shellcheck
+      - sudo apt-get install shellcheck
       script:
       - gherkin-lint tests/features/*.feature
       - shellcheck extra/.next-action-completion.bash
