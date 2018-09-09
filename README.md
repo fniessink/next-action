@@ -52,7 +52,8 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 To install tab completion for *Next-action* in the Bash shell, follow these steps:
 
-- Download [extra/.next-action-completion.bash](https://raw.githubusercontent.com/fniessink/next-action/master/extra/.next-action-completion.bash) and save it in your home folder.
+- Download [extra/.next-action-completion.bash](https://raw.githubusercontent.com/fniessink/next-action/master/extra/.next-action-completion.bash)
+  and save it in your home folder.
 - Next, add this line to your `~/.bash_profile` file:
 
   ```bash
@@ -61,7 +62,8 @@ To install tab completion for *Next-action* in the Bash shell, follow these step
 
 - Then, open a new terminal.
 
-Typing `next-action [TAB]` should give you the possible command line options. Hitting tab after an option that takes arguments, shows the possible arguments.
+Typing `next-action [TAB]` should give you the possible command line options. Hitting tab after an option that takes
+arguments, shows the possible arguments.
 
 ## Usage
 
@@ -126,14 +128,19 @@ Use -- to separate options with optional arguments from contexts and projects, i
 where a context or project is mistaken for an argument to an option.
 ```
 
-Assuming your todo.txt file is in your home folder, running *Next-action* without arguments will show the next action you should do. For example, given this [todo.txt](https://raw.githubusercontent.com/fniessink/next-action/master/docs/todo.txt), calling mom would be the next action:
+Assuming your todo.txt file is in your home folder, running *Next-action* without arguments will show the next action
+you should do. For example, given this
+[todo.txt](https://raw.githubusercontent.com/fniessink/next-action/master/docs/todo.txt), calling mom would be the next
+action:
 
 ```console
 $ next-action
 (A) Call mom @phone
 ```
 
-The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over newer tasks. Finally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
+The next action is determined using priority. Due date is considered after priority, with tasks due earlier getting
+precedence over tasks due later. Creation date is considered after due date, with older tasks getting precedence over
+newer tasks. Finally, tasks that belong to more projects get precedence over tasks that belong to fewer projects.
 
 Several types of tasks can not be a next action:
 
@@ -157,7 +164,8 @@ $ next-action +DogHouse @home
 Get rid of old +DogHouse @home
 ```
 
-When you supply multiple contexts and/or projects, the next action belongs to all of the contexts and at least one of the projects:
+When you supply multiple contexts and/or projects, the next action belongs to all of the contexts and at least one of
+the projects:
 
 ```console
 $ next-action +DogHouse +PaintHouse @store @weekend
@@ -185,7 +193,8 @@ $ next-action +DogHouse @weekend
 Nothing to do!
 ```
 
-If there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action* will warn you:
+If there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action*
+will warn you:
 
 ```console
 $ next-action +PaintGarage @freetime
@@ -208,7 +217,8 @@ $ next-action @home --due "2019-10-01"
 (L) Pay September invoice @home due:2019-09-28
 ```
 
-To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action is selected to overdue actions:
+To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
+is selected to overdue actions:
 
 ```console
 $ next-action --overdue
@@ -217,7 +227,8 @@ Buy flowers due:2018-02-14
 
 #### By priority
 
-To make sure you work on important tasks rather than urgent tasks, you can make sure the tasks from which the next action is selected have at least a minimum priority:
+To make sure you work on important tasks rather than urgent tasks, you can make sure the tasks from which the
+next action is selected have at least a minimum priority:
 
 ```console
 $ next-action @work --priority C
@@ -244,11 +255,13 @@ $ next-action --all @store
 Buy groceries @store +DinnerParty before:meal
 ```
 
-Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never the next action.
+Note again that completed tasks, tasks with a future creation or threshold date, and blocked tasks are never the next
+action.
 
 ### Task dependencies
 
-*Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal depends on buying groceries and that doing the dishes comes after cooking the meal can be specified as follows:
+*Next-action* takes task dependencies into account when determining the next actions. For example, that cooking a meal
+depends on buying groceries and that doing the dishes comes after cooking the meal can be specified as follows:
 
 ```console
 $ grep +DinnerParty docs/todo.txt
@@ -258,7 +271,8 @@ Take out the garbage @home +DinnerParty due:2018-07-02
 Do the dishes @home +DinnerParty after:meal
 ```
 
-This means that buying groceries blocks cooking the meal; cooking, and thus doing the dishes as well, can't be done until buying the groceries has been completed:
+This means that buying groceries blocks cooking the meal; cooking, and thus doing the dishes as well, can't be done
+until buying the groceries has been completed:
 
 ```console
 $ next-action --all +DinnerParty
@@ -266,7 +280,10 @@ Buy groceries @store +DinnerParty before:meal
 Take out the garbage @home +DinnerParty due:2018-07-02
 ```
 
-Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have a due date, buying groceries takes on the same due date as cooking the meal. Priority is taken into account in a similar way.
+Note how buying the groceries comes before taking out the garbage even though buying the groceries has no due date and
+taking out the garbage does. As buying groceries has to be done before cooking the meal and cooking the meal does have
+a due date, buying groceries takes on the same due date as cooking the meal. Priority is taken into account in a
+similar way.
 
 To show which tasks are blocked by the next action, use the `--blocked` option:
 
@@ -280,38 +297,49 @@ blocks:
 Take out the garbage @home +DinnerParty due:2018-07-02
 ```
 
-If you always want to see the tasks that are blocked by the next action, you can configure this in the configuration file. See the section below on how to configure *Next-action*.
+If you always want to see the tasks that are blocked by the next action, you can configure this in the configuration
+file. See the section below on how to configure *Next-action*.
 
 Additional notes:
 
 - The ids can be any string without whitespace.
-- Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files use that.
-- A task can block multiple other tasks by repeating the before key, e.g. `Buy groceries before:cooking and before:sending_invites`.
-- A task can be blocked by multiple other tasks by repeating the after key, e.g. `Eat meal after:cooking and after:setting_the_table`.
+- Instead of `before` you can also use `p` (for "parent") because some other tools that work with *Todo.txt* files
+  use that.
+- A task can block multiple other tasks by repeating the before key,
+  e.g. `Buy groceries before:cooking and before:sending_invites`.
+- A task can be blocked by multiple other tasks by repeating the after key,
+  e.g. `Eat meal after:cooking and after:setting_the_table`.
 - If a task blocks one or more tasks, the blocking task takes on the priority and due date of the tasks it is blocking:
-  - the blocking task is considered to have a priority that is the maximum of its own priority and the priorities of the tasks it is blocking, and
-  - the blocking task is considered to have a due date that is the minimum of its own due date and the due dates of the tasks it is blocking.
+  - the blocking task is considered to have a priority that is the maximum of its own priority and the priorities of
+    the tasks it is blocking, and
+  - the blocking task is considered to have a due date that is the minimum of its own due date and the due dates of
+    the tasks it is blocking.
 
 ### Styling the output
 
-By default, *Next-action* references the todo.txt file from which actions were read if you read tasks from multiple todo.txt files. The `--reference` option controls this:
+By default, *Next-action* references the todo.txt file from which actions were read if you read tasks from multiple
+todo.txt files. The `--reference` option controls this:
 
 ```console
 $ next-action --reference always
 (A) Call mom @phone [docs/todo.txt]
 ```
 
-Use `--reference never` to turn off this behavior. To permanently change this, configure the option in the configuration file. See the section below on how to configure *Next-action*.
+Use `--reference never` to turn off this behavior. To permanently change this, configure the option in the
+configuration file. See the section below on how to configure *Next-action*.
 
-The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible styles.
+The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible
+styles.
 
-When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the section below on how to configure *Next-action*.
+When you've decided on a style you prefer, it makes sense to configure the style in the configuration file. See the
+section below on how to configure *Next-action*.
 
 Not passing an argument to `--style` cancels the style that is configured in the configuration file, if any.
 
 ### Time travel
 
-If you want to know what the next action would be if it were tomorrow, Monday, or a specific date, you can tell *Next-action* to pretend it's that day.
+If you want to know what the next action would be if it were tomorrow, Monday, or a specific date, you can tell
+*Next-action* to pretend it's that day.
 
 ```console
 $ next-action --time-travel 3000
@@ -320,8 +348,9 @@ $ next-action --time-travel 3000
 
 ### Configuring *Next-action*
 
-In addition to specifying options on the command-line, you can also configure options in a configuration file.
-The configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be read, how many next actions should be shown, output styling, and context and/or project filters.
+In addition to specifying options on the command-line, you can also configure options in a configuration file. The
+configuration file format is [YAML](http://yaml.org). The options currently supported are which todo.txt files must be
+read, how many next actions should be shown, output styling, and context and/or project filters.
 
 #### Writing the configuration file
 
@@ -336,7 +365,8 @@ reference: multiple
 style: default
 ```
 
-To make this the configuration that *Next-action* reads by default, redirect the output to `~/.next-action.cfg` like this: `next-action --write-config-file > ~/.next-action.cfg`.
+To make this the configuration that *Next-action* reads by default, redirect the output to `~/.next-action.cfg` like
+this: `next-action --write-config-file > ~/.next-action.cfg`.
 
 Any additional options specified on the command line are used to generate the configuration file:
 
@@ -355,16 +385,20 @@ style: fruity
 
 #### Reading the configuration file
 
-By default, *Next-action* tries to read a file called [.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home folder.
+By default, *Next-action* tries to read a file called
+[.next-action.cfg](https://raw.githubusercontent.com/fniessink/next-action/master/docs/.next-action.cfg) in your home
+folder.
 
-If you want to use a configuration file that is not in the default location (`~/.next-action.cfg`), you'll need to explicitly specify its location:
+If you want to use a configuration file that is not in the default location (`~/.next-action.cfg`), you'll need to
+explicitly specify its location:
 
 ```console
 $ next-action --config-file docs/.next-action.cfg
 (A) Call mom @phone
 ```
 
-To skip reading the default configuration file, and also not read an alternative configuration file, use the `--config-file` option without arguments.
+To skip reading the default configuration file, and also not read an alternative configuration file, use the
+`--config-file` option without arguments.
 
 #### Configuring a default todo.txt
 
@@ -397,17 +431,19 @@ Or you can have *Next-action* show all next actions:
 all: True
 ```
 
-#### Limiting the tasks from which next actions are selected
+#### Configuring the tasks from which next actions are selected
 
 ##### Limiting by contexts and/or projects
 
-You can limit the tasks from which the next action is selected by specifying contexts and/or projects to filter on, just like you would do on the command line:
+You can limit the tasks from which the next action is selected by specifying contexts and/or projects to filter on,
+just like you would do on the command line:
 
 ```yaml
 filters: -+FutureProject @work -@waiting
 ```
 
-This would make *Next-action* by default select next actions from tasks with a `@work` context and without the `@waiting` context and not belonging to the `+FutureProject`.
+This would make *Next-action* by default select next actions from tasks with a `@work` context and without the
+`@waiting` context and not belonging to the `+FutureProject`.
 
 An alternative syntax is:
 
@@ -418,7 +454,8 @@ filters:
   - -@waiting
 ```
 
-Note that filters starting with `@` need to be in quotes. This is a [YAML restriction](http://yaml.org/spec/1.1/current.html#c-directive).
+Note that filters starting with `@` need to be in quotes. This is a
+[YAML restriction](http://yaml.org/spec/1.1/current.html#c-directive).
 
 ##### Limiting by priority
 
@@ -428,24 +465,24 @@ The minimum priority of next actions to show can be specified as well:
 priority: Z
 ```
 
-This could be useful if you, for example, keep a backlog of ideas without priority in your todo.txt file and prioritize only the tasks that are actionable.
+This could be useful if you, for example, keep a backlog of ideas without priority in your todo.txt file and
+prioritize only the tasks that are actionable.
 
-Specifying a value on the command line overrides the priority in the configuration file, e.g. `next-action --priority C`. To override the priority set in the configuration but not set another minimum priority, use the priority option without argument: `next-action --priority`.
+Specifying a value on the command line overrides the priority in the configuration file, e.g.
+`next-action --priority C`. To override the priority set in the configuration but not set another minimum priority,
+use the priority option without argument: `next-action --priority`.
 
 #### Configuring the output
 
-Whether the next actions
-should have a reference
-to the todo.txt file
-from which they were
-read can be configured
+Whether the next actions should have a reference to the todo.txt file from which they were read can be configured
 using the reference keyword:
 
 ```yaml
 reference: always
 ```
 
-Possible values are `always`, `never`, or `multiple`. The latter means that the filename is only added when you read tasks from multiple todo.txt files. The default value is `multiple`.
+Possible values are `always`, `never`, or `multiple`. The latter means that the filename is only added when you read
+tasks from multiple todo.txt files. The default value is `multiple`.
 
 The output style can be configured using the style keyword:
 
@@ -465,13 +502,16 @@ blocked: true
 
 #### Precedence
 
-Options in the configuration file override the default options. Command-line options in turn override options in the configuration file.
+Options in the configuration file override the default options. Command-line options in turn override options in the
+configuration file.
 
-If you have a configuration file with default options that you occasionally want to ignore, you can skip reading the configuration file entirely with the `--no-config-file` option.
+If you have a configuration file with default options that you occasionally want to ignore, you can skip reading the
+configuration file entirely with the `--no-config-file` option.
 
 #### Optional arguments followed by positional arguments
 
-When you use an option that takes an optional argument, but have it followed by a positional argument, *Next-action* will interpret the positional argument as the argument to the option and complain, e.g.:
+When you use an option that takes an optional argument, but have it followed by a positional argument, *Next-action*
+will interpret the positional argument as the argument to the option and complain, e.g.:
 
 ```console
 $ next-action --due @home
@@ -512,6 +552,7 @@ To work on the software, follow these steps to install the development environme
 - Install *Next-action* in development mode using `python setup.py develop`.
 - Follow the instructions on [shellcheck.net](https://www.shellcheck.net) to install shellcheck.
 - Install gherkin-lint with `npm install -g gherkin-lint`.
+- Install markdownlint with `npm install -g markdownlint-cli`.
 
 ### Running unit tests
 
@@ -521,7 +562,7 @@ To run the unit tests while generating coverage information:
 $ python -m coverage run --branch -m unittest
 ..........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 250 tests in 4.489s
+Ran 250 tests in 3.359s
 
 OK
 ```
@@ -538,7 +579,8 @@ TOTAL    1601      0    226      0   100%
 29 files skipped due to complete coverage.
 ```
 
-Running `python -m unittest` and `python setup.py test` should give the same results, without generating the coverage information.
+Running `python -m unittest` and `python setup.py test` should give the same results, without generating the
+coverage information.
 
 ### Running feature tests
 
@@ -549,7 +591,7 @@ $ behave --format null tests/features
 16 features passed, 0 failed, 0 skipped
 107 scenarios passed, 0 failed, 0 skipped
 355 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m34.451s
+Took 1m24.363s
 ```
 
 The feature tests should have 100% coverage:
@@ -566,7 +608,9 @@ TOTAL     479      0    206      0   100%
 
 ### Running quality checks
 
-We use mypy, pylint, pycodestyle, pydocstyle, bandit, pyroma, and vulture to check for quality issues in the Python code. We use shellcheck to evaluate the Bash code. And we use gherkin-lint to check the Gherkin feature files.
+The tools mypy, pylint, pycodestyle, pydocstyle, bandit, pyroma, and vulture are used to check for quality issues in
+the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are chcked with gherkin-lint.
+And the Markdown files are evaluated with markdownlint.
 
 #### Python
 
@@ -639,9 +683,21 @@ $ gherkin-lint tests/features/*.feature
 (no findings hence no output)
 ```
 
+#### Markdown
+
+Markdownlint should not complain about the Markdown files:
+
+```console
+$ markdownlint README.md
+(no findings hence no output)
+$ markdownlint -c .markdownlint-changelog.json CHANGELOG.md
+(no findings hence no output)
+```
+
 ### Generating documentation
 
-This `README.md` file is generated with `python docs/update_readme.py`. The dependency graph below is created with Pydeps:
+This `README.md` file is generated with `python docs/update_readme.py`. The dependency graph below is created with
+Pydeps:
 
 ```console
 $ pydeps --noshow -T png -o docs/dependencies.png next_action
@@ -657,7 +713,12 @@ $ pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=p
 
 ### Source code structure and dependencies
 
-The dependency graph shows the relationships between the packages and modules in the code base and the third-party packages used. When the user imvokes *Next-action* from the command-line, the `next_action()` method in the `next_action` package is run. The `next_action()` method uses the `next_action.arguments` package to parse the command-line arguments and the configuration file. The *Todo.txt* file is read into a domain model using the `next_action.todotxt` package. The `next_action.pick_action` module contains the logic to select the next action. Finally, the output is formatted using the `next_action.output` package.
+The dependency graph shows the relationships between the packages and modules in the code base and the third-party
+packages used. When the user imvokes *Next-action* from the command-line, the `next_action()` method in the
+`next_action` package is run. The `next_action()` method uses the `next_action.arguments` package to parse the
+command-line arguments and the configuration file. The *Todo.txt* file is read into a domain model using the
+`next_action.todotxt` package. The `next_action.pick_action` module contains the logic to select the next action.
+Finally, the output is formatted using the `next_action.output` package.
 
 ![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/dependencies.png)
 
@@ -665,6 +726,8 @@ The package diagram created by Pyreverse looks quite similar.
 
 ![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/packages.png)
 
-The class diagram created by Pyreverse shows the classes used. The biggest one is the `NextActionArgumentParser` class, responsible for parsing the command-line arguments. The other two relevant classes are the `Task` class for holding information about an individual task and the `Tasks` class that contains a collection of tasks.
+The class diagram created by Pyreverse shows the classes used. The biggest one is the `NextActionArgumentParser` class,
+responsible for parsing the command-line arguments. The other two relevant classes are the `Task` class for holding
+information about an individual task and the `Tasks` class that contains a collection of tasks.
 
 ![png](https://raw.githubusercontent.com/fniessink/next-action/master/docs/classes.png)
