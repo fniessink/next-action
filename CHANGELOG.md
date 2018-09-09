@@ -64,7 +64,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Allow for using `--config` when generating a configuration file with `--write-config-file` so it is possible to ignore the existing configuration file when generating a new one. Fixes #161.
+- Allow for using `--config` when generating a configuration file with `--write-config-file` so it is possible to
+  ignore the existing configuration file when generating a new one. Fixes #161.
 
 ## [1.5.2] - 2018-07-07
 
@@ -76,22 +77,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- When generating a configuration file with `--write-config-file` also include context and project filters passed on the command-line. Fixes #141.
-- When generating a configuration file with `--write-config-file` also include the minimum priority if passed on the command-line. Fixes #142.
+- When generating a configuration file with `--write-config-file` also include context and project filters passed on
+  the command-line. Fixes #141.
+- When generating a configuration file with `--write-config-file` also include the minimum priority if passed on the
+  command-line. Fixes #142.
 - Accept other arguments after excluded contexts and projects. Fixes #143.
 
 ## [1.5.0] - 2018-06-30
 
 ### Added
 
-- When generating a configuration file with `--write-config-file` add any other options on the command-line to the generated configuration file. Closes #78.
+- When generating a configuration file with `--write-config-file` add any other options on the command-line to the
+  generated configuration file. Closes #78.
 
 ## [1.4.0] - 2018-06-25
 
 ### Added
 
-- Tasks are considered to have a priority that's the maximum of their own priority and the priorities of the task(s) they block, recursively. Closes #114.
-- Tasks are considered to have a due date that's the minimum of their own due date and the due dates of the task(s) they block, recursively. Closes #115.
+- Tasks are considered to have a priority that's the maximum of their own priority and the priorities of the task(s)
+  they block, recursively. Closes #114.
+- Tasks are considered to have a due date that's the minimum of their own due date and the due dates of the task(s)
+  they block, recursively. Closes #115.
 
 ## [1.3.0] - 2018-06-19
 
@@ -134,7 +140,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Mention how to deal with options with optional arguments followed by positional arguments in the help information and README. Closes #100.
+- Mention how to deal with options with optional arguments followed by positional arguments in the help information
+  and README. Closes #100.
 - Short options immediately followed by a value weren't parsed correctly. Fixes #84.
 
 ## [0.16.1] - 2018-06-04
@@ -175,11 +182,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Using the `--style` option without arguments ignores the style specified in the configuration file, if any. Closes #83.
+- Using the `--style` option without arguments ignores the style specified in the configuration file, if any.
+  Closes #83.
 
 ### Changed
 
-- The `--no-config-file` option was removed. To not read any configuration file, use the `--config-file` option without specifying a configuration filename. Closes #82.
+- The `--no-config-file` option was removed. To not read any configuration file, use the `--config-file` option without
+  specifying a configuration filename. Closes #82.
 
 ## [0.12.0] - 2018-05-28
 
@@ -248,13 +257,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Add the README file to the package description on the [Python Package Index](https://pypi.org/project/next-action/). Closes #59.
+- Add the README file to the package description on the [Python Package Index](https://pypi.org/project/next-action/).
+  Closes #59.
 
 ## [0.5.0] - 2018-05-19
 
 ### Added
 
-- Other properties being equal, task with more projects get precedence over tasks with fewer projects when selecting the next action. Closes #57.
+- Other properties being equal, task with more projects get precedence over tasks with fewer projects when selecting
+  the next action. Closes #57.
 
 ## [0.4.0] - 2018-05-19
 
@@ -295,7 +306,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Next-action can now read multiple todo.txt files to select the next action from. For example: `next-action --file todo.txt --file big-project-todo.txt`. Closes #35.
+- Next-action can now read multiple todo.txt files to select the next action from. For example:
+  `next-action --file todo.txt --file big-project-todo.txt`. Closes #35.
 
 ### Changed
 
@@ -326,7 +338,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Renamed Next-action's binary from `next_action` to `next-action` for consistency with the application and project name.
+- Renamed Next-action's binary from `next_action` to `next-action` for consistency with the application and project
+  name.
 
 ## [0.0.4] - 2018-05-10
 
@@ -338,7 +351,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 
 - Runing tests with "python setup.py test" would result in test failures. Fixes #15.
-- Move development dependencies to requirements-dev.txt so they don't get installed when a user installs Next-action. Fixes #14.
+- Move development dependencies to requirements-dev.txt so they don't get installed when a user installs Next-action.
+  Fixes #14.
 - Make Travis generate a wheel distribution in addition to the source distribution. Fixes #14.
 
 ## [0.0.3] - 2018-05-10
@@ -358,4 +372,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- `next_action` script that reads a todo.txt file and prints the next action the user should work on, based on the priorities of the tasks.
+- `next_action` script that reads a todo.txt file and prints the next action the user should work on, based on the
+  priorities of the tasks.

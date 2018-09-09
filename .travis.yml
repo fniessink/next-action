@@ -11,9 +11,12 @@ jobs:
       sudo: true
       before_script:
       - npm install -g gherkin-lint
+      - npm install -g markdownlint-cli
       - sudo apt-get install shellcheck
       script:
       - gherkin-lint tests/features/*.feature
+      - markdownlint README.md
+      - markdownlint -c .markdownlint-changelog.json CHANGELOG.md
       - shellcheck extra/.next-action-completion.bash
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100

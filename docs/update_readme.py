@@ -18,7 +18,7 @@ def do_command(line):
     command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                     universal_newlines=True)
     stdout = command_output.stdout.strip()
-    if command[0] in ("bandit", "shellcheck", "gherkin-lint", "mypy", "pycodestyle", "pydocstyle",
+    if command[0] in ("bandit", "shellcheck", "gherkin-lint", "markdownlint", "mypy", "pycodestyle", "pydocstyle",
                       "vulture") and stdout == "":
         stdout = "(no findings hence no output)"
     if command[0] in ("pydeps",) and stdout == "":
