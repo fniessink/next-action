@@ -434,7 +434,12 @@ Specifying a value on the command line overrides the priority in the configurati
 
 #### Configuring the output
 
-Whether the next actions should have a reference to the todo.txt file from which they were read can be configured using the reference keyword:
+Whether the next actions
+should have a reference
+to the todo.txt file
+from which they were
+read can be configured
+using the reference keyword:
 
 ```yaml
 reference: always
