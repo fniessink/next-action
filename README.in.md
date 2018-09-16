@@ -15,27 +15,6 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
 
 ## Table of contents
 
-- [Demo](#demo)
-- [Installation](#installation)
-  - [*Next-action*](#next-action)
-  - [Tab completion for *Next-action*](#tab-completion-for-next-action)
-- [Usage](#usage)
-  - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
-  - [Showing more than one next action](#showing-more-than-one-next-action)
-  - [Task dependencies](#task-dependencies)
-  - [Styling the output](#styling-the-output)
-  - [Time travel](#time-travel)
-  - [Configuring *Next-action*](#configuring-next-action)
-  - [Option details](#option-details)
-- [Recent changes](#recent-changes)
-- [Developing *Next-action*](#developing-next-action)
-  - [Installing the development environment and dependencies](#installing-the-development-environment-and-dependencies)
-  - [Running unit tests](#running-unit-tests)
-  - [Running feature tests](#running-feature-tests)
-  - [Running quality checks](#running-quality-checks)
-  - [Generating documentation](#generating-documentation)
-  - [Source code structure and dependencies](#source-code-structure-and-dependencies)
-
 ## Demo
 
 ![gif](https://raw.githubusercontent.com/fniessink/next-action/master/docs/demo.gif)
@@ -561,9 +540,9 @@ To run the unit tests while generating coverage information:
 
 ```console
 $ python -m coverage run --branch -m unittest
-..........................................................................................................................................................................................................................................................
+re: \.+
 ----------------------------------------------------------------------
-Ran 250 tests in 3.702s
+Ran \d+ tests in \d+\.\d+s
 
 OK
 ```
@@ -572,12 +551,12 @@ The unit tests should have 100% coverage:
 
 ```console
 $ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
-Name    Stmts   Miss Branch BrPart  Cover
+re: Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL    1601      0    226      0   100%
+TOTAL    \d+      0    \d+      0   100%
 
-29 files skipped due to complete coverage.
+\d+ files skipped due to complete coverage.
 ```
 
 Running `python -m unittest` and `python setup.py test` should give the same results, without generating the
@@ -588,23 +567,23 @@ coverage information.
 To run the feature tests:
 
 ```console
-$ behave --format null tests/features
-16 features passed, 0 failed, 0 skipped
-107 scenarios passed, 0 failed, 0 skipped
-355 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m16.088s
+$ behave --format plain tests/features
+re: \d+ features passed, 0 failed, 0 skipped
+\d+ scenarios passed, 0 failed, 0 skipped
+\d+ steps passed, 0 failed, 0 skipped, 0 undefined
+Took \d+m\d+\.\d+s
 ```
 
 The feature tests should have 100% coverage:
 
 ```console
 $ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" --skip-covered
-Name    Stmts   Miss Branch BrPart  Cover
+re: Name    Stmts   Miss Branch BrPart  Cover
 -----------------------------------------
 -----------------------------------------
-TOTAL     479      0    206      0   100%
+TOTAL     \d+      0    \d+      0   100%
 
-12 files skipped due to complete coverage.
+\d+ files skipped due to complete coverage.
 ```
 
 ### Running quality checks
