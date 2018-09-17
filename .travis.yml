@@ -15,7 +15,7 @@ jobs:
       - sudo apt-get install shellcheck
       script:
       - gherkin-lint tests/features/*.feature
-      - markdownlint README.md
+      - markdownlint README*.md
       - markdownlint -c .markdownlint-changelog.json CHANGELOG.md
       - shellcheck extra/.next-action-completion.bash
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest

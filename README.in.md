@@ -668,7 +668,7 @@ $ gherkin-lint tests/features/*.feature
 Markdownlint should not complain about the Markdown files:
 
 ```console
-$ markdownlint README.md
+$ markdownlint README*.md
 (no findings hence no output)
 $ markdownlint -c .markdownlint-changelog.json CHANGELOG.md
 (no findings hence no output)
