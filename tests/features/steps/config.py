@@ -13,18 +13,27 @@ def config_file(context):
     """Add the contents to the temporary configuration file."""
     context.config_file = tempfile.NamedTemporaryFile(mode="w")
     text = []
+    in_file_list = False
     for line in context.text.split("\n"):
         if line.startswith("file: "):
             filename = line[len("file: "):]
-            for file in context.files:
-                if file.given_filename == filename:
-                    text.append("file: " + file.name)
-                    break
+            text.append("file: " + temporary_filename(context, filename))
+        elif in_file_list and line.startswith("- "):
+            filename = line[len("- "):]
+            text.append("- " + temporary_filename(context, filename))
         else:
             text.append(line)
+        in_file_list = line.startswith("file:") or in_file_list and line.startswith("- ")
     context.config_file.write("\n".join(text))
     context.config_file.seek(0)
     context.arguments.extend(["--config-file", context.config_file.name])
+
+
+def temporary_filename(context, filename):
+    """Match the filenames in the config file to the temporary files' names."""
+    for file in context.files:
+        if file.given_filename == filename:
+            return file.name
 
 
 @when("the user asks for a configuration file")
