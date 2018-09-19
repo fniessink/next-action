@@ -12,7 +12,7 @@ Feature: select todo.txt file(s) to read
     When the user asks for the next action
     Then Next-action shows the next action "A task"
 
- Scenario: configure files in configuration file
+  Scenario: configure files in configuration file
     Given a todo.txt named configured_todo.txt with
       """
       A task
