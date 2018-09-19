@@ -19,8 +19,8 @@ def before_scenario(context, scenario):  # pylint: disable=unused-argument
     """Set up arguments."""
     context.files = []
     next_action = shutil.which("next-action")
-    context.arguments = ["coverage", "run", "--omit", ".venv/*", "--branch", "--parallel-mode", next_action,
-                         "--config-file"]
+    context.arguments = ["coverage", "run", "--omit", ".venv/*", "--branch", "--parallel-mode",
+                         "--rcfile=.coveragerc-behave", next_action, "--config-file"]
 
 
 def after_all(context):  # pylint: disable=unused-argument
