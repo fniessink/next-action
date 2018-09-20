@@ -542,7 +542,10 @@ See the [change log](https://github.com/fniessink/next-action/blob/master/CHANGE
 
 ### Installing the development environment and dependencies
 
-To work on the software, follow these steps to install the development environment and the dependencies:
+#### Local install
+
+To work on the software, make sure you have Git, Python (>=3.6), and Node/npm installed and follow these steps to
+install the development environment and the dependencies:
 
 - Clone the repository: `git clone https://github.com/fniessink/next-action.git`.
 - Enter the folder: `cd next-action`.
@@ -555,6 +558,17 @@ To work on the software, follow these steps to install the development environme
 - Install Markdownlint with `npm install -g markdownlint-cli`.
 - Follow the instructions on [graphviz.org](http://graphviz.org) to install Graphviz.
 
+#### Docker image
+
+If you have Git and Docker installed, you can build a Docker image with all the development dependencies:
+
+- Clone the repository: `git clone https://github.com/fniessink/next-action.git`.
+- Enter the folder: `cd next-action`.
+- Build the Docker image: `docker build . -t next-action-dev`.
+
+The `docker-compose.yml` defines services for each of the tests and checks below. For example,
+instead of `python -m unittest` run the unit tests in the container with `docker-compose up unittest`.
+
 ### Running unit tests
 
 To run the unit tests while generating coverage information:
@@ -563,7 +577,7 @@ To run the unit tests while generating coverage information:
 $ python -m coverage run --branch -m unittest
 ..........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 250 tests in 3.702s
+Ran 250 tests in 4.482s
 
 OK
 ```
@@ -583,6 +597,8 @@ TOTAL    1601      0    226      0   100%
 Running `python -m unittest` and `python setup.py test` should give the same results, without generating the
 coverage information.
 
+The Docker command is `docker-compose up unittest`.
+
 ### Running feature tests
 
 To run the feature tests:
@@ -590,9 +606,9 @@ To run the feature tests:
 ```console
 $ behave --format null tests/features
 16 features passed, 0 failed, 0 skipped
-107 scenarios passed, 0 failed, 0 skipped
-355 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 1m16.088s
+108 scenarios passed, 0 failed, 0 skipped
+362 steps passed, 0 failed, 0 skipped, 0 undefined
+Took 2m26.796s
 ```
 
 The feature tests should have 100% coverage:
@@ -606,6 +622,8 @@ TOTAL     479      0    206      0   100%
 
 12 files skipped due to complete coverage.
 ```
+
+The Docker command is `docker-compose up behave`.
 
 ### Running quality checks
 
@@ -622,6 +640,8 @@ $ mypy --no-incremental --ignore-missing-import next_action
 (no findings hence no output)
 ```
 
+Run Mypy in the Docker container with `docker-compose up mypy`.
+
 Pylint should score 10 out of 10:
 
 ```console
@@ -629,6 +649,8 @@ $ pylint next_action tests
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 ```
+
+Run Pylint in the Docker container with `docker-compose up pylint`.
 
 Both Pycodestyle and Pydocstyle should give no warnings or errors:
 
@@ -639,6 +661,8 @@ $ pydocstyle .
 (no findings hence no output)
 ```
 
+Run Pycodestyle and Pydocstyle in the Docker container with `docker-compose up pycodestyle pydocstyle`.
+
 Bandit should find no security issues:
 
 ```console
@@ -646,12 +670,16 @@ $ bandit -r next_action --format custom
 (no findings hence no output)
 ```
 
+Run Bandit in the Docker container with `docker-compose up bandit`.
+
 Vulture should find no dead code:
 
 ```console
 $ vulture next_action .vulture-whitelist.py
 (no findings hence no output)
 ```
+
+Run Vulture in the Docker container with `docker-compose up vulture`.
 
 And Pyroma should score 10 out of 10:
 
@@ -666,6 +694,8 @@ Your cheese is so fresh most people think it's a cream: Mascarpone
 ------------------------------
 ```
 
+Run Pyroma in the Docker container with, you guessed it, `docker-compose up pyroma`.
+
 #### Bash
 
 Shellcheck should not complain about the Bash code:
@@ -674,6 +704,8 @@ Shellcheck should not complain about the Bash code:
 $ shellcheck extra/.next-action-completion.bash
 (no findings hence no output)
 ```
+
+Run Shellcheck in the Docker container with `docker-compose up shellcheck`.
 
 #### Gherkin
 
@@ -684,26 +716,33 @@ $ gherkin-lint tests/features/*.feature
 (no findings hence no output)
 ```
 
+Run Gherkin-lint in the Docker container with `docker-compose up gherkin-lint`.
+
 #### Markdown
 
 Markdownlint should not complain about the Markdown files:
 
 ```console
-$ markdownlint README.md
+$ markdownlint README*.md
 (no findings hence no output)
 $ markdownlint -c .markdownlint-changelog.json CHANGELOG.md
 (no findings hence no output)
 ```
 
+Run Markdown-lint in the Docker container with `docker-compose up markdown-lint`.
+
 ### Generating documentation
 
-This `README.md` file is generated with `python docs/update_readme.py`. The dependency graph below is created with
-Pydeps:
+This `README.md` file is generated with `python docs/update_readme.py` or `docker-compose up update_readme`.
+
+The dependency graph below is created with Pydeps:
 
 ```console
 $ pydeps --noshow -T png -o docs/dependencies.png next_action
 (no output on stdout)
 ```
+
+Run Pydeps in the Docker container with `docker-compose up pydeps`.
 
 The package and class diagrams below are creted with Pyreverse (part of Pylint):
 
@@ -711,6 +750,8 @@ The package and class diagrams below are creted with Pyreverse (part of Pylint):
 $ pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action
 (stdout suppressed)
 ```
+
+Run Pyreverse in the Docker container with `docker-compose up pyreverse`.
 
 ### Source code structure and dependencies
 

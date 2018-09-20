@@ -1,0 +1,73 @@
+version: '3'
+services:
+  unittest:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'python -m coverage run --branch -m unittest --quiet; coverage report --fail-under=100 --skip-covered'
+  behave:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'python setup.py --quiet develop; behave --format null tests/features; coverage report --rcfile=.coveragerc-behave --fail-under=100 --skip-covered'
+  pylint:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'pylint next_action tests docs'
+  pycodestyle:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'pycodestyle .'
+  pydocstyle:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'pydocstyle .'
+  bandit:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'bandit -r next_action --format custom'
+  vulture:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'vulture next_action .vulture-whitelist.py'
+  pyroma:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'pyroma --min=10 .'
+  shellcheck:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'shellcheck extra/.next-action-completion.bash'
+  gherkin-lint:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'gherkin-lint tests/features/*.feature'
+  markdown-lint:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'markdownlint README*.md; markdownlint -c .markdownlint-changelog.json CHANGELOG.md'
+  pydeps:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'pydeps --noshow -T png -o docs/dependencies.png next_action'
+  pyreverse:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action; mv packages.png docs; mv classes.png docs'
+  update_readme:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py'
+

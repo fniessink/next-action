@@ -18,20 +18,19 @@ def do_command(line):
         command.insert(1, "--config")
         if "--write-config-file" not in command:
             command.insert(2, "docs/.next-action.cfg")
-    command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                    universal_newlines=True)
+    command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     stdout = command_output.stdout.strip()
-    if command[0] in ("bandit", "shellcheck", "gherkin-lint", "markdownlint", "mypy", "pycodestyle", "pydocstyle",
-                      "vulture") and stdout == "":
+    if set(command) & set(["bandit", "shellcheck", "gherkin-lint", "markdownlint", "mypy", "pycodestyle", "pydocstyle",
+                           "vulture"]) and stdout == "":
         stdout = "(no findings hence no output)"
-    if command[0] in ("pydeps",) and stdout == "":
+    if set(command) & set(["pydeps"]) and stdout == "":
         stdout = "(no output on stdout)"
-    if command[0] in ("pyreverse",):
+    if set(command) & set(["pyreverse"]):
         stdout = "(stdout suppressed)"
         for diagram in ("packages", "classes"):
             filename = pathlib.Path(diagram + ".png")
             filename.replace(pathlib.Path("docs") / filename)
-    stderr = "" if command[0] in ("pylint", "pyroma", "bandit") else command_output.stderr.strip()
+    stderr = "" if set(command) & set(["pylint", "pyroma", "bandit"]) else command_output.stderr.strip()
     return stdout, stderr
 
 
@@ -49,7 +48,7 @@ def create_toc(lines, toc_header, min_level=2, max_level=3):
     return "\n".join(result) + "\n"
 
 
-class StateMachine(object):
+class StateMachine():
     """State machine for processing the lines in the README.md.
 
     Console commands are executed and the output is inserted. The table of contents is inserted and the old

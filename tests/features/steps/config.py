@@ -1,7 +1,5 @@
 """Generate the configuration file."""
 
-import os
-import stat
 import tempfile
 
 from asserts import assert_equal, assert_in
@@ -51,8 +49,7 @@ def non_existing_config_file(context):
 @when("the user specifies a configuration file that can't be read")
 def unreadable_config_file(context):
     """Specify an unreadable configuration file."""
-    context.config_file = tempfile.NamedTemporaryFile(mode="w")
-    os.chmod(context.config_file.name, ~stat.S_IREAD)
+    context.config_file = tempfile.TemporaryDirectory()
     context.arguments.extend(["--config", context.config_file.name])
 
 
