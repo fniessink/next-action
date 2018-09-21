@@ -553,10 +553,12 @@ install the development environment and the dependencies:
 - Activate the virtual environment: `. .venv/bin/activate`.
 - Install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`.
 - Install *Next-action* in development mode using `python setup.py develop`.
-- Follow the instructions on [shellcheck.net](https://www.shellcheck.net) to install Shellcheck.
 - Install Gherkin-lint with `npm install -g gherkin-lint`.
 - Install Markdownlint with `npm install -g markdownlint-cli`.
+- Follow the instructions on [shellcheck.net](https://www.shellcheck.net) to install Shellcheck.
 - Follow the instructions on [graphviz.org](http://graphviz.org) to install Graphviz.
+- Follow the instructions on [https://github.com/hadolint/hadolint](https://github.com/hadolint/hadolint) to install
+  Hadolint.
 
 #### Docker image
 
@@ -577,7 +579,7 @@ To run the unit tests while generating coverage information:
 $ python -m coverage run --branch -m unittest
 ..........................................................................................................................................................................................................................................................
 ----------------------------------------------------------------------
-Ran 250 tests in 4.482s
+Ran 250 tests in 4.704s
 
 OK
 ```
@@ -608,7 +610,7 @@ $ behave --format null tests/features
 16 features passed, 0 failed, 0 skipped
 108 scenarios passed, 0 failed, 0 skipped
 362 steps passed, 0 failed, 0 skipped, 0 undefined
-Took 2m26.796s
+Took 1m56.753s
 ```
 
 The feature tests should have 100% coverage:
@@ -629,7 +631,7 @@ The Docker command is `docker-compose up behave`.
 
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
 the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are chcked with Gherkin-lint.
-And the Markdown files are evaluated with Markdownlint.
+The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint.
 
 #### Python
 
@@ -730,6 +732,15 @@ $ markdownlint -c .markdownlint-changelog.json CHANGELOG.md
 ```
 
 Run Markdown-lint in the Docker container with `docker-compose up markdown-lint`.
+
+#### Docker
+
+Hadolint should not complain about the Dockerfile:
+
+```console
+$ hadolint Dockerfile
+(no findings hence no output)
+```
 
 ### Generating documentation
 

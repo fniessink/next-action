@@ -8,7 +8,7 @@ RUN apk --no-cache add musl-dev=1.1.18-r3 gcc=6.4.0-r5 nodejs=8.9.3-r1 nodejs-np
 # hadolint ignore=DL3022
 COPY --from=koalaman/shellcheck /bin/shellcheck /usr/local/bin/
 # hadolint ignore=DL3022
-COPY --from=hadolint/hadolint /bin/hadolint /usr/local/bin
+COPY --from=hadolint/hadolint /bin/hadolint /usr/local/bin/
  
 RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0
 RUN pip install pip==18.0
