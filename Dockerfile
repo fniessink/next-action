@@ -1,24 +1,17 @@
-FROM python:3.6-alpine as base
+FROM python:3.6-alpine 
 
-MAINTAINER Frank Niessink <frank@niessink.com>
+LABEL maintainer="Frank Niessink <frank@niessink.com>"
+LABEL description="Development dependencies for Next-action."
 
-RUN apk --no-cache add musl-dev
+RUN apk --no-cache add musl-dev=1.1.18-r3 gcc=6.4.0-r5 nodejs=8.9.3-r1 nodejs-npm=8.9.3-r1 graphviz=2.40.1-r0
 
-# Build shellcheck
-FROM base AS shellcheck
-
-RUN apk --no-cache add cabal ghc 
-RUN cabal update
-RUN cabal install ShellCheck
-
-# Install development dependencies
-FROM base AS python
-
-COPY --from=shellcheck /root/.cabal/bin/shellcheck /usr/local/bin/
+# hadolint ignore=DL3022
+COPY --from=koalaman/shellcheck /bin/shellcheck /usr/local/bin/
+# hadolint ignore=DL3022
+COPY --from=hadolint/hadolint /bin/hadolint /usr/local/bin
  
-RUN apk --no-cache add gcc nodejs nodejs-npm graphviz docker
-RUN npm install -g gherkin-lint markdownlint-cli
-RUN pip install --upgrade pip
+RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0
+RUN pip install pip==18.0
 WORKDIR /work
 COPY requirements*.txt /work/
 RUN pip install -r requirements.txt -r requirements-dev.txt

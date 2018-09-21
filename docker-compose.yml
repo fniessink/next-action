@@ -65,6 +65,11 @@ services:
     volumes:
     - .:/work
     command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action; mv packages.png docs; mv classes.png docs'
+  hadolint:
+    build: .
+    volumes:
+    - .:/work
+    command: sh -c 'hadolint Dockerfile' 
   update_readme:
     build: .
     volumes:
