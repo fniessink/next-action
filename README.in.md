@@ -521,38 +521,18 @@ See the [change log](https://github.com/fniessink/next-action/blob/master/CHANGE
 
 ### Installing the development environment and dependencies
 
-#### Local install
-
-To work on the software, make sure you have Git, Python (>=3.6), and Node/npm installed and follow these steps to
-install the development environment and the dependencies:
-
-- Clone the repository: `git clone https://github.com/fniessink/next-action.git`.
-- Enter the folder: `cd next-action`.
-- Create a virtual environment: `python -m venv .venv`.
-- Activate the virtual environment: `. .venv/bin/activate`.
-- Install the dependencies with `pip install -r requirements-dev.txt -r requirements.txt`.
-- Install *Next-action* in development mode using `python setup.py develop`.
-- Install Gherkin-lint with `npm install -g gherkin-lint`.
-- Install Markdownlint with `npm install -g markdownlint-cli`.
-- Follow the instructions on [shellcheck.net](https://www.shellcheck.net) to install Shellcheck.
-- Follow the instructions on [graphviz.org](http://graphviz.org) to install Graphviz.
-- Follow the instructions on [https://github.com/hadolint/hadolint](https://github.com/hadolint/hadolint) to install
-  Hadolint.
-
-#### Docker image
-
-If you have Git and Docker installed, you can build a Docker image with all the development dependencies:
+We use Docker as development environment. To build the Docker image with all the development dependencies make sure
+you have Git and Docker installed. Then, follow these steps:
 
 - Clone the repository: `git clone https://github.com/fniessink/next-action.git`.
 - Enter the folder: `cd next-action`.
 - Build the Docker image: `docker build . -t next-action-dev`.
 
-The `docker-compose.yml` defines services for each of the tests and checks below. For example,
-instead of `python -m unittest` run the unit tests in the container with `docker-compose up unittest`.
+The `docker-compose.yml` contains services for each of the development tools. These are described below.
 
 ### Running unit tests
 
-To run the unit tests while generating coverage information:
+To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
