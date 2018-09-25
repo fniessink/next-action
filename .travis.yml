@@ -19,30 +19,10 @@ jobs:
       python: 3.7
       dist: xenial
       sudo: true
-      before_script:
-      - npm install -g gherkin-lint
-      - npm install -g markdownlint-cli
-      - sudo apt-get install shellcheck
       script:
-      - gherkin-lint tests/features/*.feature
-      - markdownlint README*.md
-      - markdownlint -c .markdownlint-changelog.json CHANGELOG.md
-      - shellcheck extra/.next-action-completion.bash
       - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
       - coverage xml --fail-under=100
       - python-codacy-coverage -r coverage.xml
-    - stage: test
-      python: 3.6
-      dist: trusty
-      sudo: false
-      script:
-      - bandit -r next_action
-      - mypy --no-incremental --ignore-missing-import next_action
-      - pycodestyle .
-      - pydocstyle .
-      - vulture next_action .vulture-whitelist.py
-      - pyroma --min=10 .
-      - pylint *.py next_action tests
     - stage: test
       python: 3.6
       dist: trusty
