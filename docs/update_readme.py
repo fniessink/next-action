@@ -18,20 +18,8 @@ def do_command(line):
         command.insert(1, "--config")
         if "--write-config-file" not in command:
             command.insert(2, "docs/.next-action.cfg")
-    command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    stdout = command_output.stdout.strip()
-    if set(command) & set(["bandit", "shellcheck", "gherkin-lint", "markdownlint", "mypy", "pycodestyle", "pydocstyle",
-                           "vulture", "hadolint"]) and stdout == "":
-        stdout = "(no findings hence no output)"
-    if set(command) & set(["pydeps"]) and stdout == "":
-        stdout = "(no output on stdout)"
-    if set(command) & set(["pyreverse"]):
-        stdout = "(stdout suppressed)"
-        for diagram in ("packages", "classes"):
-            filename = pathlib.Path(diagram + ".png")
-            filename.replace(pathlib.Path("docs") / filename)
-    stderr = "" if set(command) & set(["pylint", "pyroma", "bandit"]) else command_output.stderr.strip()
-    return stdout, stderr
+    command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+    return "\n".join([line.rstrip() for line in command_output.stdout.rstrip().split("\n")])
 
 
 def create_toc(lines, toc_header, min_level=2, max_level=3):
@@ -60,8 +48,7 @@ class StateMachine():
         self.toc = toc
         self.toc_header = toc_header
         self.lines = []
-        self.stdout = ""
-        self.stderr = ""
+        self.output = ""
         self.expected_output = ""
 
     def default(self, line):
@@ -78,18 +65,16 @@ class StateMachine():
         if line.startswith("$ "):
             self.expected_output = ""  # Reset the expected output
             self.write_lines(line)
-            self.stdout, self.stderr = do_command(line)
-            if self.stdout:
-                self.write_lines(self.stdout)
-            if self.stderr:
-                self.write_lines(self.stderr)
+            self.output = do_command(line)
+            if self.output:
+                self.write_lines(self.output)
             return self.in_console
         if line == "```":
             if self.expected_output.strip().startswith("re: "):
                 regex = re.compile(self.expected_output[len("re: "):].strip(), re.MULTILINE)
-                assert_regex(self.stdout.strip() + self.stderr.strip(), regex)
+                assert_regex(self.output.strip(), regex)
             else:
-                assert_equal(self.expected_output.strip(), self.stdout.strip() + self.stderr.strip())
+                assert_equal(self.expected_output.strip(), self.output.strip())
             self.write_lines(line)
             return self.default
         self.expected_output += "\n" + line

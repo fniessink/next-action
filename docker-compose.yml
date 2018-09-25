@@ -1,78 +1,106 @@
 version: '3'
 services:
   unittest:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'python -m coverage run --branch -m unittest --quiet; coverage report --fail-under=100 --skip-covered'
   behave:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'python setup.py --quiet develop; behave --format null tests/features; coverage report --rcfile=.coveragerc-behave --fail-under=100 --skip-covered'
-  pylint:
-    build: .
+  mypy:
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
+    command: sh -c 'mypy --no-incremental --ignore-missing-import next_action'
+  pylint:
+    image: next-action-dev
+    working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
     command: sh -c 'pylint next_action tests docs'
   pycodestyle:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'pycodestyle .'
   pydocstyle:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'pydocstyle .'
   bandit:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
-    command: sh -c 'bandit -r next_action --format custom'
+    - ${PWD}:${PWD}
+    command: sh -c 'bandit -r next_action --format custom 2> /dev/null'  # Ignore boiler plate output
   vulture:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'vulture next_action .vulture-whitelist.py'
   pyroma:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
-    command: sh -c 'pyroma --min=10 .'
+    - ${PWD}:${PWD}
+    command: sh -c 'pyroma --min=10 . 2> /dev/null'  # Ignore the error messages on stderr about the README file because pyroma doesn't accept Markdown.
   shellcheck:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'shellcheck extra/.next-action-completion.bash'
   gherkin-lint:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'gherkin-lint tests/features/*.feature'
   markdown-lint:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'markdownlint README*.md; markdownlint -c .markdownlint-changelog.json CHANGELOG.md'
   pydeps:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'pydeps --noshow -T png -o docs/dependencies.png next_action'
   pyreverse:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
-    command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action; mv packages.png docs; mv classes.png docs'
+    - ${PWD}:${PWD}
+    command: sh -c 'cd docs; pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png ../next_action > /dev/null'
   hadolint:
-    build: .
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
     command: sh -c 'hadolint Dockerfile' 
-  update_readme:
-    build: .
+  docker-compose-config:
+    image: next-action-dev
+    working_dir: ${PWD}
     volumes:
-    - .:/work
+    - ${PWD}:${PWD}
+    command: sh -c 'docker-compose config --quiet' 
+  update_readme:
+    image: next-action-dev
+    working_dir: ${PWD}
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ${PWD}:${PWD}
     command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py'
 

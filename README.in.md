@@ -555,170 +555,186 @@ instead of `python -m unittest` run the unit tests in the container with `docker
 To run the unit tests while generating coverage information:
 
 ```console
-$ python -m coverage run --branch -m unittest
-re: \.+
-----------------------------------------------------------------------
-Ran \d+ tests in \d+\.\d+s
-
-OK
+$ docker-compose --no-ansi up unittest
+re: Recreating next-action_unittest_1 ...
+Recreating next-action_unittest_1 ... done
+Attaching to next-action_unittest_1
+unittest_1               | ----------------------------------------------------------------------
+unittest_1               | Ran [1-9]\d* tests in \d+.\d+s
+unittest_1               |
+unittest_1               | OK
+unittest_1               | Name    Stmts   Miss Branch BrPart  Cover
+unittest_1               | -----------------------------------------
+unittest_1               | -----------------------------------------
+unittest_1               | TOTAL    [1-9]\d*      0    \d+      0   100%
+unittest_1               |
+unittest_1               | \d+ files skipped due to complete coverage.
+next-action_unittest_1 exited with code 0
 ```
-
-The unit tests should have 100% coverage:
-
-```console
-$ coverage report --fail-under=100 --omit=".venv/*" --skip-covered
-re: Name    Stmts   Miss Branch BrPart  Cover
------------------------------------------
------------------------------------------
-TOTAL    \d+      0    \d+      0   100%
-
-\d+ files skipped due to complete coverage.
-```
-
-Running `python -m unittest` and `python setup.py test` should give the same results, without generating the
-coverage information.
-
-The Docker command is `docker-compose up unittest`.
 
 ### Running feature tests
 
-To run the feature tests:
+To run the feature tests and measure their code coverage:
 
 ```console
-$ behave --format null tests/features
-re: \d+ features passed, 0 failed, 0 skipped
-\d+ scenarios passed, 0 failed, 0 skipped
-\d+ steps passed, 0 failed, 0 skipped, 0 undefined
-Took \d+m\d+\.\d+s
+$ docker-compose --no-ansi up behave
+re: Creating next-action_behave_1 ...
+Creating next-action_behave_1 ... done
+Attaching to next-action_behave_1
+behave_1                 | [1-9]\d* features passed, 0 failed, 0 skipped
+behave_1                 | [1-9]\d* scenarios passed, 0 failed, 0 skipped
+behave_1                 | [1-9]\d* steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                 | Took \d+m\d+.\d+s
+behave_1                 | Name    Stmts   Miss Branch BrPart  Cover
+behave_1                 | -----------------------------------------
+behave_1                 | -----------------------------------------
+behave_1                 | TOTAL     \d+      0    \d+      0   100%
+behave_1                 |
+behave_1                 | \d+ files skipped due to complete coverage.
+next-action_behave_1 exited with code 0
 ```
-
-The feature tests should have 100% coverage:
-
-```console
-$ coverage report --rcfile=.coveragerc-behave --fail-under=100 --omit=".venv/*" --skip-covered
-re: Name    Stmts   Miss Branch BrPart  Cover
------------------------------------------
------------------------------------------
-TOTAL     \d+      0    \d+      0   100%
-
-\d+ files skipped due to complete coverage.
-```
-
-The Docker command is `docker-compose up behave`.
 
 ### Running quality checks
 
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
 the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are chcked with Gherkin-lint.
-The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint.
+The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
+checked with Docker-compose.
 
 #### Python
 
 Mypy should give no warnings or errors:
 
 ```console
-$ mypy --no-incremental --ignore-missing-import next_action
-(no findings hence no output)
+$ docker-compose --no-ansi up mypy
+re: (Creating|Starting) next-action_mypy_1 ...
+(Creating|Starting) next-action_mypy_1 ... done
+Attaching to next-action_mypy_1
+next-action_mypy_1 exited with code 0
 ```
-
-Run Mypy in the Docker container with `docker-compose up mypy`.
 
 Pylint should score 10 out of 10:
 
 ```console
-$ pylint next_action tests
-re: --------------------------------------------------------------------
-Your code has been rated at 10.00/10.*
+$ docker-compose --no-ansi up pylint
+re: (Creating|Starting) next-action_pylint_1 ...
+(Creating|Starting) next-action_pylint_1 ... done
+Attaching to next-action_pylint_1
+pylint_1                 |
+pylint_1                 | ------------------------------------
+pylint_1                 | Your code has been rated at 10.00/10
+pylint_1                 |
+next-action_pylint_1 exited with code 0
 ```
-
-Run Pylint in the Docker container with `docker-compose up pylint`.
 
 Both Pycodestyle and Pydocstyle should give no warnings or errors:
 
 ```console
-$ pycodestyle .
-(no findings hence no output)
-$ pydocstyle .
-(no findings hence no output)
+$ docker-compose --no-ansi up pycodestyle
+re: (Creating|Starting) next-action_pycodestyle_1 ...
+(Creating|Starting) next-action_pycodestyle_1 ... done
+Attaching to next-action_pycodestyle_1
+next-action_pycodestyle_1 exited with code 0
+$ docker-compose --no-ansi up pydocstyle
+re: (Creating|Starting) next-action_pydocstyle_1 ...
+(Creating|Starting) next-action_pydocstyle_1 ... done
+Attaching to next-action_pydocstyle_1
+next-action_pydocstyle_1 exited with code 0
 ```
-
-Run Pycodestyle and Pydocstyle in the Docker container with `docker-compose up pycodestyle pydocstyle`.
 
 Bandit should find no security issues:
 
 ```console
-$ bandit -r next_action --format custom
-(no findings hence no output)
+$ docker-compose --no-ansi up bandit
+re: (Creating|Starting) next-action_bandit_1 ...
+(Creating|Starting) next-action_bandit_1 ... done
+Attaching to next-action_bandit_1
+next-action_bandit_1 exited with code 0
 ```
-
-Run Bandit in the Docker container with `docker-compose up bandit`.
 
 Vulture should find no dead code:
 
 ```console
-$ vulture next_action .vulture-whitelist.py
-(no findings hence no output)
+$ docker-compose --no-ansi up vulture
+re: (Creating|Starting) next-action_vulture_1 ...
+(Creating|Starting) next-action_vulture_1 ... done
+Attaching to next-action_vulture_1
+next-action_vulture_1 exited with code 0
 ```
-
-Run Vulture in the Docker container with `docker-compose up vulture`.
 
 And Pyroma should score 10 out of 10:
 
 ```console
-$ pyroma --min=10 .
-------------------------------
-Checking .
-Found next-action
-------------------------------
-Final rating: 10/10
-Your cheese is so fresh most people think it's a cream: Mascarpone
-------------------------------
+$ docker-compose --no-ansi up pyroma
+re: (Creating|Starting) next-action_pyroma_1 ...
+(Creating|Starting) next-action_pyroma_1 ... done
+Attaching to next-action_pyroma_1
+pyroma_1                 | ------------------------------
+pyroma_1                 | Checking .
+pyroma_1                 | Found next-action
+pyroma_1                 | ------------------------------
+pyroma_1                 | Final rating: 10/10
+pyroma_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
+pyroma_1                 | ------------------------------
+next-action_pyroma_1 exited with code 0
 ```
-
-Run Pyroma in the Docker container with, you guessed it, `docker-compose up pyroma`.
 
 #### Bash
 
 Shellcheck should not complain about the Bash code:
 
 ```console
-$ shellcheck extra/.next-action-completion.bash
-(no findings hence no output)
+$ docker-compose --no-ansi up shellcheck
+re: (Creating|Starting) next-action_shellcheck_1 ...
+(Creating|Starting) next-action_shellcheck_1 ... done
+Attaching to next-action_shellcheck_1
+next-action_shellcheck_1 exited with code 0
 ```
-
-Run Shellcheck in the Docker container with `docker-compose up shellcheck`.
 
 #### Gherkin
 
 Gherkin-lint should not complain about the Gherkin feature files:
 
 ```console
-$ gherkin-lint tests/features/*.feature
-(no findings hence no output)
+$ docker-compose --no-ansi up gherkin-lint
+re: (Creating|Starting) next-action_gherkin-lint_1 ...
+(Creating|Starting) next-action_gherkin-lint_1 ... done
+Attaching to next-action_gherkin-lint_1
+next-action_gherkin-lint_1 exited with code 0
 ```
-
-Run Gherkin-lint in the Docker container with `docker-compose up gherkin-lint`.
 
 #### Markdown
 
 Markdownlint should not complain about the Markdown files:
 
 ```console
-$ markdownlint README*.md
-(no findings hence no output)
-$ markdownlint -c .markdownlint-changelog.json CHANGELOG.md
-(no findings hence no output)
+$ docker-compose --no-ansi up markdown-lint
+re: (Creating|Starting) next-action_markdown-lint_1 ...
+(Creating|Starting) next-action_markdown-lint_1 ... done
+Attaching to next-action_markdown-lint_1
+next-action_markdown-lint_1 exited with code 0
 ```
-
-Run Markdown-lint in the Docker container with `docker-compose up markdown-lint`.
 
 #### Docker
 
 Hadolint should not complain about the Dockerfile:
 
 ```console
-$ hadolint Dockerfile
-(no findings hence no output)
+$ docker-compose --no-ansi up hadolint
+re: (Creating|Starting) next-action_hadolint_1 ...
+(Creating|Starting) next-action_hadolint_1 ... done
+Attaching to next-action_hadolint_1
+next-action_hadolint_1 exited with code 0
+```
+
+Docker-compose should be happy with the docker-compose.yml:
+
+```console
+$ docker-compose --no-ansi up docker-compose-config
+re: (Creating|Starting) next-action_docker-compose-config_1 ...
+(Creating|Starting) next-action_docker-compose-config_1 ... done
+Attaching to next-action_docker-compose-config_1
+next-action_docker-compose-config_1 exited with code 0
 ```
 
 ### Generating documentation
@@ -728,20 +744,22 @@ This `README.md` file is generated with `python docs/update_readme.py` or `docke
 The dependency graph below is created with Pydeps:
 
 ```console
-$ pydeps --noshow -T png -o docs/dependencies.png next_action
-(no output on stdout)
+$ docker-compose --no-ansi up pydeps
+re: (Creating|Starting) next-action_pydeps_1 ...
+(Creating|Starting) next-action_pydeps_1 ... done
+Attaching to next-action_pydeps_1
+next-action_pydeps_1 exited with code 0
 ```
-
-Run Pydeps in the Docker container with `docker-compose up pydeps`.
 
 The package and class diagrams below are creted with Pyreverse (part of Pylint):
 
 ```console
-$ pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action
-(stdout suppressed)
+$ docker-compose --no-ansi up pyreverse
+re: (Creating|Starting) next-action_pyreverse_1 ...
+(Creating|Starting) next-action_pyreverse_1 ... done
+Attaching to next-action_pyreverse_1
+next-action_pyreverse_1 exited with code 0
 ```
-
-Run Pyreverse in the Docker container with `docker-compose up pyreverse`.
 
 ### Source code structure and dependencies
 
