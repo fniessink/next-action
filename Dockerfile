@@ -3,8 +3,11 @@ FROM python:3.6-alpine
 LABEL maintainer="Frank Niessink <frank@niessink.com>"
 LABEL description="Development dependencies for Next-action."
 
+# Hadolint wants pinned versions but that breaks the build of the Docker image on Travis
+# hadolint ignore=DL3018
 RUN apk --no-cache add musl-dev gcc nodejs nodejs-npm graphviz docker
 
+# Hadolint wants copying to be from a "FROM" image, but we're copying from a remote image
 # hadolint ignore=DL3022
 COPY --from=koalaman/shellcheck /bin/shellcheck /usr/local/bin/
 # hadolint ignore=DL3022
