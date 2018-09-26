@@ -5,7 +5,15 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'python -m coverage run --branch -m unittest --quiet; coverage report --fail-under=100 --skip-covered'
+    command: sh -c 'coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
+  unittest-coverage-upload:
+    image: next-action-dev
+    working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
+    command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
+    environment:
+      - CODACY_PROJECT_TOKEN
   behave:
     image: next-action-dev
     working_dir: ${PWD}
@@ -89,13 +97,13 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'hadolint Dockerfile' 
+    command: sh -c 'hadolint Dockerfile'
   docker-compose-config:
     image: next-action-dev
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'docker-compose config --quiet' 
+    command: sh -c 'docker-compose config --quiet'
   update_readme:
     image: next-action-dev
     working_dir: ${PWD}

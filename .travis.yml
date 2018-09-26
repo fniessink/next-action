@@ -12,17 +12,10 @@ jobs:
       dist: trusty
       sudo: true
       before_install:
-      - docker build -t next-action-dev . 
+      - docker build -t next-action-dev .
       script:
       - docker-compose up update_readme
-    - stage: test
-      python: 3.7
-      dist: xenial
-      sudo: true
-      script:
-      - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
-      - coverage xml --fail-under=100
-      - python-codacy-coverage -r coverage.xml
+      - docker-compose up unittest-coverage-upload
     - stage: test
       python: 3.6
       dist: trusty

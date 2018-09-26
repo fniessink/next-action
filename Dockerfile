@@ -7,7 +7,7 @@ LABEL description="Development dependencies for Next-action."
 
 # Hadolint wants pinned versions but that breaks the build of the Docker image on Travis
 # hadolint ignore=DL3018
-RUN apk --no-cache add musl-dev gcc nodejs nodejs-npm graphviz docker
+RUN apk --no-cache add musl-dev gcc nodejs nodejs-npm graphviz docker git
 
 COPY --from=shellcheck /bin/shellcheck /usr/local/bin/
 COPY --from=hadolint /bin/hadolint /usr/local/bin/
