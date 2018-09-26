@@ -1,4 +1,6 @@
-FROM python:3.6-alpine 
+FROM koalaman/shellcheck:v0.5.0 AS shellcheck
+FROM hadolint/hadolint:v1.13.0 AS hadolint
+FROM python:3.6-alpine
 
 LABEL maintainer="Frank Niessink <frank@niessink.com>"
 LABEL description="Development dependencies for Next-action."
@@ -7,12 +9,9 @@ LABEL description="Development dependencies for Next-action."
 # hadolint ignore=DL3018
 RUN apk --no-cache add musl-dev gcc nodejs nodejs-npm graphviz docker
 
-# Hadolint wants copying to be from a "FROM" image, but we're copying from a remote image
-# hadolint ignore=DL3022
-COPY --from=koalaman/shellcheck /bin/shellcheck /usr/local/bin/
-# hadolint ignore=DL3022
-COPY --from=hadolint/hadolint /bin/hadolint /usr/local/bin/
- 
+COPY --from=shellcheck /bin/shellcheck /usr/local/bin/
+COPY --from=hadolint /bin/hadolint /usr/local/bin/
+
 RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0
 RUN pip install pip==18.0
 WORKDIR /next-action
