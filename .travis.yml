@@ -15,16 +15,10 @@ jobs:
       - docker build -t next-action-dev .
       script:
       - docker-compose up update_readme
-      - docker-compose up unittest-coverage-upload
-    - stage: test
-      python: 3.6
-      dist: trusty
-      sudo: false
-      script:
-      - coverage run --omit=/home/travis/virtualenv/* --branch -m unittest
-      - coverage xml --fail-under=100
-      - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
+      - docker-compose up codacy-upload
+      - docker-compose up sonarqube-prepare
       - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+      - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
       addons:
         sonarcloud:
           organization: "fniessink-github"

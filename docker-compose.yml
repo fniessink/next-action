@@ -6,7 +6,7 @@ services:
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
-  unittest-coverage-upload:
+  codacy-upload:
     image: next-action-dev
     working_dir: ${PWD}
     volumes:
@@ -14,6 +14,13 @@ services:
     command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
     environment:
       - CODACY_PROJECT_TOKEN
+  sonarqube-prepare:
+    # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
+    image: next-action-dev
+    working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
+    command: sh -c 'nosetests --nocapture --with-xunit tests/unittests'
   behave:
     image: next-action-dev
     working_dir: ${PWD}
