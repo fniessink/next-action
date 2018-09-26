@@ -3,6 +3,7 @@ __pycache__
 .coverage
 .mypy_cache
 .sonarlint
+.scannerwork
 .vscode
 .DS_Store
 build

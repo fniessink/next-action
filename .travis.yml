@@ -15,12 +15,8 @@ jobs:
       - docker build -t next-action-dev .
       script:
       - docker-compose up update_readme
-      - docker-compose up codacy-upload
-      - docker-compose up sonarqube-prepare
-      - sonar-scanner -Dsonar.login=$SONAR_TOKEN
-      addons:
-        sonarcloud:
-          organization: "fniessink-github"
+      - docker-compose up codacy
+      - docker-compose up sonarqube
     - stage: deploy
       python: 3.6
       dist: trusty
