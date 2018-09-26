@@ -18,7 +18,6 @@ jobs:
       - docker-compose up codacy-upload
       - docker-compose up sonarqube-prepare
       - sonar-scanner -Dsonar.login=$SONAR_TOKEN
-      - nosetests --nocapture --with-xunit tests/unittests/  # For SonarQube, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
       addons:
         sonarcloud:
           organization: "fniessink-github"
