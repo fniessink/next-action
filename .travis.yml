@@ -2,29 +2,14 @@ sudo: required
 services:
   - docker
 language: python
-cache: pip
 install:
-  - pip install -r requirements-dev.txt -r requirements.txt
-jobs:
-  include:
-    - stage: test
-      python: 3.6
-      dist: trusty
-      sudo: true
-      before_install:
-      - docker build -t next-action-dev .
-      script:
-      - docker-compose up update_readme
-      - docker-compose up codacy
-      - docker-compose up sonarqube
-    - stage: deploy
-      python: 3.6
-      dist: trusty
-      sudo: false
-      script: true
-      deploy:
-        provider: pypi
-        user: fniessink
-        distributions: "sdist bdist_wheel"
-        on:
-          tags: true
+- docker build -t next-action-dev .
+script:
+- docker-compose up update_readme
+- docker-compose up codacy
+- docker-compose up sonarqube
+deploy:
+  provider: script
+  script: docker-compose up release
+  on:
+    tags: true
