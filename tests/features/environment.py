@@ -1,5 +1,6 @@
 """Code to run before and after certain events during testing."""
 
+import shutil
 import subprocess  # nosec
 
 
@@ -17,11 +18,12 @@ def before_all(context):
 def before_scenario(context, scenario):  # pylint: disable=unused-argument
     """Set up arguments."""
     context.files = []
-    context.arguments = ["coverage", "run", "--omit", ".venv/*", "--branch", "--parallel-mode", ".venv/bin/next-action",
-                         "--config-file"]
+    next_action = shutil.which("next-action")
+    context.arguments = ["coverage", "run", "--branch", "--parallel-mode",
+                         "--rcfile=.coveragerc-behave", next_action, "--config-file"]
 
 
 def after_all(context):  # pylint: disable=unused-argument
     """Create coverage report."""
     subprocess.run(["coverage", "combine"])
-    subprocess.run(["coverage", "html", "--rcfile", ".coveragerc-behave", "--directory", "build/htmlcov"])
+    subprocess.run(["coverage", "html", "--rcfile", ".coveragerc-behave", "--directory", "build/feature-coverage"])

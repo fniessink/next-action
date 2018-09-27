@@ -39,6 +39,13 @@ Feature: limit the next actions by due date
       """
       number: 3
       """
+    And a todo.txt with
+      """
+      (A) Task A
+      (B) Task B @home +GarageSale
+      Task C @work +PaintHouse
+      Task D @home @work +PaintHouse
+      """
     When the user asks for the next action
     Then Next-action shows the user 3 next actions
 
@@ -46,6 +53,13 @@ Feature: limit the next actions by due date
     Given a configuration file with
       """
       number: 3
+      """
+    And a todo.txt with
+      """
+      (A) Task A
+      (B) Task B @home +GarageSale
+      Task C @work +PaintHouse
+      Task D @home @work +PaintHouse
       """
     When the user asks for 2 next actions
     Then Next-action shows the user 2 next actions
