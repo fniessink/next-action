@@ -15,15 +15,14 @@ services:
     environment:
       - CODACY_PROJECT_TOKEN
   sonarqube:
-    # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
     image: next-action-dev
     working_dir: ${PWD}
     environment:
       - SONAR_TOKEN
     volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
     - ${PWD}:${PWD}
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetest.xml tests/unittests; docker run -v ${PWD}:/root/src -v ${PWD}/sonar-project.properties:/root/sonar-scanner/conf/sonar-scanner.properties newtmitch/sonar-scanner sonar-scanner -Dsonar.login=$${SONAR_TOKEN}'
+    # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.login=$${SONAR_TOKEN}'
   behave:
     image: next-action-dev
     working_dir: ${PWD}
