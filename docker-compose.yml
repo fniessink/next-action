@@ -35,7 +35,6 @@ services:
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'mypy next_action'
-    #command: sh -c 'mypy --no-incremental --ignore-missing-import --html-report build/mypy next_action'
   pylint:
     image: next-action-dev
     working_dir: ${PWD}
