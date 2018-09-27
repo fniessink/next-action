@@ -32,6 +32,7 @@ def temporary_filename(context, filename):
     for file in context.files:
         if file.given_filename == filename:
             return file.name
+    return "Unknown filename"  # pragma: no cover
 
 
 @when("the user asks for a configuration file")
