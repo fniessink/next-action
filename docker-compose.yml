@@ -101,7 +101,7 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'cd docs; pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png ../next_action > /dev/null'
+    command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action > /dev/null; mv classes.png docs/; mv packages.png docs/'
   hadolint:
     image: next-action-dev
     working_dir: ${PWD}
