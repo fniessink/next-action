@@ -92,7 +92,7 @@ class Task:
         """Return whether a task is blocked, i.e. whether it has (uncompleted) child tasks."""
         return self.__is_blocked
 
-    def set_is_blocked(self):
+    def set_is_blocked(self) -> None:
         """Set the blocked status."""
         self.__is_blocked = True
 
