@@ -5,7 +5,7 @@ language: python
 install:
 - docker build -t next-action-dev .
 script:
-- docker-compose up update_readme
+- docker-compose up --exit-code-from update_readme update_readme
 - docker-compose up codacy
 - docker-compose up sonarqube
 deploy:
