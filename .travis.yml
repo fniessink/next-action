@@ -3,7 +3,7 @@ services:
   - docker
 language: python
 install:
-- docker build -t next-action-dev .
+- docker pull fniessink/next-action-dev .
 script:
 - docker-compose up --exit-code-from update_readme update_readme
 - docker-compose up codacy
