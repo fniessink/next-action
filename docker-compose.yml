@@ -1,13 +1,13 @@
 version: '3'
 services:
   unittest:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
   codacy:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
@@ -15,7 +15,7 @@ services:
     environment:
       - CODACY_PROJECT_TOKEN
   sonarqube:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     environment:
       - SONAR_TOKEN
@@ -24,104 +24,104 @@ services:
     # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
     command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.login=$${SONAR_TOKEN}'
   behave:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'python setup.py --quiet develop; behave --format null tests/features; coverage report --rcfile=.coveragerc-behave --fail-under=100 --skip-covered'
   mypy:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'mypy next_action'
   pylint:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pylint next_action tests docs'
   pycodestyle:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pycodestyle .'
   pydocstyle:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pydocstyle .'
   bandit:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'bandit -r next_action --format custom 2> /dev/null'  # Ignore boiler plate output
   vulture:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'vulture next_action .vulture-whitelist.py'
   pyroma:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pyroma --min=10 . 2> /dev/null'  # Ignore the error messages on stderr about the README file because pyroma doesn't accept Markdown.
   shellcheck:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'shellcheck extra/.next-action-completion.bash'
   gherkin-lint:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'gherkin-lint tests/features/*.feature'
   markdown-lint:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'markdownlint README*.md; markdownlint -c .markdownlint-changelog.json CHANGELOG.md'
   pydeps:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pydeps --noshow -T png -o docs/dependencies.png next_action'
   pyreverse:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action > /dev/null; mv classes.png docs/; mv packages.png docs/'
   hadolint:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'hadolint Dockerfile'
   docker-compose-config:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'docker-compose config --quiet'
   update_readme:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     - ${PWD}:${PWD}
     command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py'
   release:
-    image: next-action-dev
+    image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
