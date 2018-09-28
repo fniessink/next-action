@@ -552,6 +552,8 @@ unittest_1               | \d+ files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
 ```
 
+The HTML coverage report is written to `build/unittest-coverage/`.
+
 ### Running feature tests
 
 To run the feature tests and measure their code coverage:
@@ -574,6 +576,8 @@ behave_1                 | \d+ files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
 ```
 
+The HTML coverage report is written to `build/feature-coverage/`.
+
 ### Running quality checks
 
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
@@ -590,6 +594,7 @@ $ docker-compose --no-ansi up mypy
 re: (Creating|Recreating|Starting) next-action_mypy_1 ...
 (Creating|Recreating|Starting) next-action_mypy_1 ... done
 Attaching to next-action_mypy_1
+mypy_1                   | Generated HTML report (via XSLT): /.*/build/mypy/index.html
 next-action_mypy_1 exited with code 0
 ```
 
