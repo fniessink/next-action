@@ -7,7 +7,7 @@ install:
 script:
 - docker-compose up --exit-code-from update_readme update_readme
 - docker-compose up codacy
-- docker-compose up sonarqube
+- docker-compose up sonarcloud-scanner
 deploy:
   provider: script
   script: docker-compose up release

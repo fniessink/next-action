@@ -18,8 +18,9 @@ RUN sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /sonar-scanner/bin
 COPY --from=shellcheck /bin/shellcheck /usr/local/bin/
 COPY --from=hadolint /bin/hadolint /usr/local/bin/
 
-RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0 
+RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0
 RUN pip install pip==18.0
 WORKDIR /next-action
 COPY requirements*.txt /next-action/
 RUN pip install -r requirements.txt -r requirements-dev.txt
+
