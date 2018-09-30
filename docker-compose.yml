@@ -28,11 +28,9 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    environment:
-      - SONAR_TOKEN
     depends_on:
       - sonarqube-server
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$${SONAR_TOKEN}'
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=`python sonarqube_token.py http://sonarqube.:9000`'
   sonarqube-server:
     image: sonarqube:7.1-alpine
     container_name: sonarqube
