@@ -14,7 +14,7 @@ services:
     command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
     environment:
       - CODACY_PROJECT_TOKEN
-  sonarqube:
+  sonarcloud-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     environment:
@@ -22,7 +22,21 @@ services:
     volumes:
     - ${PWD}:${PWD}
     # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.login=$${SONAR_TOKEN}'
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarcloud.io -Dsonar.organization=fniessink-github -Dsonar.login=$${SONAR_TOKEN}'
+  sonarqube-scanner:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
+    depends_on:
+      - sonarqube-server
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=`python sonarqube_token.py http://sonarqube.:9000`'
+  sonarqube-server:
+    image: sonarqube:7.1-alpine
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+      - "9002:9002"
   behave:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
