@@ -13,3 +13,5 @@ dist
 .venv
 .hypothesis
 .tox
+.owasp-dependency-check-data
+
