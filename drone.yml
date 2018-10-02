@@ -1,0 +1,6 @@
+pipeline:
+  build:
+    image: fniessink/next-action-dev:latest
+    commands:
+      - python -m unittest
+
