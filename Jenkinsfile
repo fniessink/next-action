@@ -6,6 +6,7 @@ pipeline {
                 sh 'pwd'
                 sh 'ls'
                 sh 'docker-compose up unittest-jenkins'
+                sh 'docker-compose up unittest'
             }
         }
     }
