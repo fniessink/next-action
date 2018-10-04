@@ -9,7 +9,7 @@ pipeline {
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
                     reportDir: 'build/unittest-coverage',
-                    reportFiles: '*',
+                    reportFiles: 'index.html',
                     reportName: 'Unit test coverage report'
                 ]
             }
