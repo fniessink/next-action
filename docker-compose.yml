@@ -5,7 +5,7 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
+    command: sh -c 'pwd;ls;coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
   codacy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -37,6 +37,15 @@ services:
     ports:
       - "9000:9000"
       - "9002:9002"
+  jenkins:
+    image: trion/jenkins-docker-client
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:5000"
+    volumes:
+      - ${PWD}/.jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
   behave:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
