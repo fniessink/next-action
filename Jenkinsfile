@@ -1,9 +1,9 @@
 pipeline {
     agent any 
     stages {
-        stage('Stage 1') {
+        stage('Stage unit tests') {
             steps {
-                echo 'Hello world!' 
+                docker-compose up unittest
             }
         }
     }
