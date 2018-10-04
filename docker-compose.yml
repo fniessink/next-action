@@ -5,6 +5,7 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
     command: sh -c 'pwd;ls -la;coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
   unittest-jenkins:
     image: fniessink/next-action-dev:latest
