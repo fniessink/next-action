@@ -5,8 +5,7 @@ pipeline {
             steps {
                 sh 'pwd'
                 sh 'ls'
-                sh 'docker-compose up unittest-jenkins'
-                sh 'docker-compose up unittest'
+                sh 'docker-compose up -f docker-compose.yml -f docker-compose-jenkins.yml unittest'
             }
         }
     }

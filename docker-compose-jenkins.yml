@@ -1,11 +1,8 @@
 version: '3'
 services:
   unittest:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
     volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'pwd;ls -la;coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   codacy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
