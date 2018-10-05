@@ -27,9 +27,15 @@ pipeline {
                 ]
             }
         }
-        stage('Quality tests')
+        stage('Security checks') {
             steps {
-                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy'
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
+            }
+        }
+        stage('Quality checks') {
+            steps {
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,

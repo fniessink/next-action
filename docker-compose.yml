@@ -8,10 +8,25 @@ services:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     command: sh -c 'python setup.py --quiet develop; behave --format null tests/features; coverage report --rcfile=.coveragerc-behave --fail-under=100 --skip-covered'
+  bandit:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    command: sh -c 'bandit -r next_action --format custom 2> /dev/null; bandit -r next_action --format html --output build/bandit.html 2> /dev/null'  # Ignore boiler plate output
+  owasp-dependency-check:
+    image: owasp/dependency-check:latest
+    volumes:
+    - ${PWD}:/src
+    - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
+    - ${PWD}/build/owasp-dependency-check-report:/report
+    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report
   mypy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     command: sh -c 'mypy next_action'
+  pylint:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    command: sh -c 'pylint next_action tests docs'
   codacy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -54,12 +69,6 @@ services:
     volumes:
       - ${PWD}/.jenkins:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-  pylint:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'pylint next_action tests docs'
   pycodestyle:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -72,19 +81,6 @@ services:
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pydocstyle .'
-  bandit:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'bandit -r next_action --format custom 2> /dev/null; bandit -r next_action --format html --output build/bandit.html 2> /dev/null'  # Ignore boiler plate output
-  owasp-dependency-check:
-    image: owasp/dependency-check:latest
-    volumes:
-    - ${PWD}:/src
-    - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
-    - ${PWD}/build/owasp-dependency-check-report:/report
-    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report
   vulture:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}

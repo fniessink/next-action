@@ -6,6 +6,17 @@ services:
   behave:
     volumes:
     - ${PWD}:${PWD}
+  bandit:
+    volumes:
+    - ${PWD}:${PWD}
+  owasp-dependency-check:
+    volumes:
+    - ${PWD}:/src
+    - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
+    - ${PWD}/build/owasp-dependency-check-report:/report
   mypy:
+    volumes:
+    - ${PWD}:${PWD}
+  pylint:
     volumes:
     - ${PWD}:${PWD}
