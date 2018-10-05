@@ -3,4 +3,6 @@ services:
   unittest:
     volumes:
     - ${PWD}:${PWD}
-
+  behave:
+    volumes:
+    - ${PWD}:${PWD}

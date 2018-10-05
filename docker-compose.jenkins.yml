@@ -3,4 +3,6 @@ services:
   unittest:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-
+  behave:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
