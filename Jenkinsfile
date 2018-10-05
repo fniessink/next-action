@@ -31,6 +31,14 @@ pipeline {
             steps {
                 sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
                 sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
+                    reportDir: 'build/owasp-dependency-check-report',
+                    reportFiles: 'index.html',
+                    reportName: 'OWASP dependency check report'
+                ]
             }
         }
         stage('Quality checks') {
