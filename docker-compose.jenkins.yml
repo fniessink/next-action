@@ -6,3 +6,6 @@ services:
   behave:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  mypy:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

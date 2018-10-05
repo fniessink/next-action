@@ -1,7 +1,7 @@
 pipeline {
-    agent any 
+    agent any
     stages {
-        stage('Stage unit tests') {
+        stage('Unit tests') {
             steps {
                 sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up unittest'
                 publishHTML target: [
@@ -14,7 +14,7 @@ pipeline {
                 ]
             }
         }
-        stage('Stage feature tests') {
+        stage('Feature tests') {
             steps {
                 sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up behave'
                 publishHTML target: [
@@ -24,6 +24,19 @@ pipeline {
                     reportDir: 'build/feature-coverage',
                     reportFiles: 'index.html',
                     reportName: 'Feature test coverage report'
+                ]
+            }
+        }
+        stage('Quality tests')
+            steps {
+                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy'
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
+                    reportDir: 'build/mypy',
+                    reportFiles: 'index.html',
+                    reportName: 'Mypy report'
                 ]
             }
         }

@@ -8,6 +8,10 @@ services:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     command: sh -c 'python setup.py --quiet develop; behave --format null tests/features; coverage report --rcfile=.coveragerc-behave --fail-under=100 --skip-covered'
+  mypy:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    command: sh -c 'mypy next_action'
   codacy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -50,12 +54,6 @@ services:
     volumes:
       - ${PWD}/.jenkins:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-  mypy:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'mypy next_action'
   pylint:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}

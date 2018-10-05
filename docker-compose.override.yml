@@ -6,3 +6,6 @@ services:
   behave:
     volumes:
     - ${PWD}:${PWD}
+  mypy:
+    volumes:
+    - ${PWD}:${PWD}
