@@ -30,13 +30,21 @@ pipeline {
         stage('Security checks') {
             steps {
                 sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
+                    reportDir: 'build',
+                    reportFiles: 'bandit.html',
+                    reportName: 'Bandit report'
+                ]
                 sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
                     reportDir: 'build/owasp-dependency-check-report',
-                    reportFiles: 'index.html',
+                    reportFiles: 'dependency-check-report.html',
                     reportName: 'OWASP dependency check report'
                 ]
             }
