@@ -14,10 +14,6 @@ services:
     command: sh -c 'bandit -r next_action --format custom 2> /dev/null; bandit -r next_action --format html --output build/bandit.html 2> /dev/null'  # Ignore boiler plate output
   owasp-dependency-check:
     image: owasp/dependency-check:latest
-    volumes:
-    - ${PWD}:/src
-    - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
-    - ${PWD}/build/owasp-dependency-check-report:/report
     command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report
   mypy:
     image: fniessink/next-action-dev:latest
