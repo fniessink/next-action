@@ -26,3 +26,9 @@ services:
   pycodestyle:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  vulture:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pyroma:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

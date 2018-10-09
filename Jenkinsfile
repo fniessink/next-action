@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Quality checks') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle vulture pyroma'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
