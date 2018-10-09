@@ -20,3 +20,9 @@ services:
   pylint:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pydocstyle:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pycodestyle:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

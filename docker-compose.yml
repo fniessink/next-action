@@ -68,14 +68,10 @@ services:
   pycodestyle:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'pycodestyle .'
   pydocstyle:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'pydocstyle .'
   vulture:
     image: fniessink/next-action-dev:latest

@@ -20,3 +20,9 @@ services:
   pylint:
     volumes:
     - ${PWD}:${PWD}
+  pydocstyle:
+    volumes:
+    - ${PWD}:${PWD}
+  pycodestyle:
+    volumes:
+    - ${PWD}:${PWD}
