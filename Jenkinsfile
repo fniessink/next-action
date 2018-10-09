@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Unit tests') {
             steps {
-                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up unittest'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up unittest'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'build/unittest-coverage',
+                    reportDir: 'src/build/unittest-coverage',
                     reportFiles: 'index.html',
                     reportName: 'Unit test coverage report'
                 ]
@@ -16,12 +16,12 @@ pipeline {
         }
         stage('Feature tests') {
             steps {
-                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up behave'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up behave'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'build/feature-coverage',
+                    reportDir: 'src/build/feature-coverage',
                     reportFiles: 'index.html',
                     reportName: 'Feature test coverage report'
                 ]
@@ -29,21 +29,21 @@ pipeline {
         }
         stage('Security checks') {
             steps {
-                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'build',
+                    reportDir: 'src/build',
                     reportFiles: 'bandit.html',
                     reportName: 'Bandit report'
                 ]
-                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'build/owasp-dependency-check-report',
+                    reportDir: 'owasp-dependency-check-report',
                     reportFiles: 'dependency-check-report.html',
                     reportName: 'OWASP dependency check report'
                 ]
@@ -51,12 +51,12 @@ pipeline {
         }
         stage('Quality checks') {
             steps {
-                sh 'docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'build/mypy',
+                    reportDir: 'src/build/mypy',
                     reportFiles: 'index.html',
                     reportName: 'Mypy report'
                 ]
