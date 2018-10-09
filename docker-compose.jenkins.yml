@@ -11,8 +11,8 @@ services:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   owasp-dependency-check:
     volumes:
-    - ${JENKINS_HOME_ON_HOST}:/src
     - ${JENKINS_HOME_ON_HOST}/.owasp-dependency-check-data:/usr/share/dependency-check/data
+    - ${JENKINS_HOME_ON_HOST}/workspace/$JOB_NAME:/src
     - ${JENKINS_HOME_ON_HOST}/workspace/$JOB_NAME/build/owasp-dependency-check-report:/report
   mypy:
     volumes:
