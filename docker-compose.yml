@@ -108,8 +108,6 @@ services:
   pyreverse:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action > /dev/null; mv classes.png docs/; mv packages.png docs/'
   update_readme:
     image: fniessink/next-action-dev:latest

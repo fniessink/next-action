@@ -50,3 +50,6 @@ services:
   pydeps:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pyreverse:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

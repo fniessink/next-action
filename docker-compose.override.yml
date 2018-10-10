@@ -50,3 +50,6 @@ services:
   pydeps:
     volumes:
     - ${PWD}:${PWD}
+  pyreverse:
+    volumes:
+    - ${PWD}:${PWD}
