@@ -56,3 +56,6 @@ services:
   update_readme:
     volumes:
     - ${PWD}:${PWD}
+  sonarqube-scanner:
+    volumes:
+    - ${PWD}:${PWD}

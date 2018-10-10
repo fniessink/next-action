@@ -61,3 +61,6 @@ services:
       - COMPOSE_FILE=docker-compose.yml:docker-compose.jenkins.yml
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  sonarqube-scanner:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

@@ -51,7 +51,7 @@ pipeline {
         }
         stage('Quality checks') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle vulture pyroma shellcheck gherkin-lint markdown-lint hadolint docker-compose-config'
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle vulture pyroma shellcheck gherkin-lint markdown-lint hadolint docker-compose-config sonarqube-scanner'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
