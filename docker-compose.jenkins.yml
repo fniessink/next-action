@@ -32,3 +32,12 @@ services:
   pyroma:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  shellcheck:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  gherkin-lint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  markdown-lint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

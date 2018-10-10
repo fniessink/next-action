@@ -84,20 +84,14 @@ services:
   shellcheck:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'shellcheck extra/.next-action-completion.bash'
   gherkin-lint:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'gherkin-lint tests/features/*.feature'
   markdown-lint:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'markdownlint README*.md; markdownlint -c .markdownlint-changelog.json CHANGELOG.md'
   pydeps:
     image: fniessink/next-action-dev:latest

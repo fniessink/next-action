@@ -32,3 +32,12 @@ services:
   pyroma:
     volumes:
     - ${PWD}:${PWD}
+  shellcheck:
+    volumes:
+    - ${PWD}:${PWD}
+  gherkin-lint:
+    volumes:
+    - ${PWD}:${PWD}
+  markdown-lint:
+    volumes:
+    - ${PWD}:${PWD}
