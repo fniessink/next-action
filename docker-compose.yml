@@ -114,7 +114,6 @@ services:
     working_dir: ${PWD}
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    - ${PWD}:${PWD}
     command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py'
   release:
     image: fniessink/next-action-dev:latest
