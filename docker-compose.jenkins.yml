@@ -55,12 +55,14 @@ services:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   update_readme:
     environment:
-      - JENKINS_HOME_ON_HOST=${JENKINS_HOME_ON_HOST}
-      - JENKINS_HOME=${JENKINS_HOME}
-      - JOB_NAME=${JOB_NAME}
-      - COMPOSE_FILE=docker-compose.yml:docker-compose.jenkins.yml
+    - JENKINS_HOME_ON_HOST=${JENKINS_HOME_ON_HOST}
+    - JENKINS_HOME=${JENKINS_HOME}
+    - JOB_NAME=${JOB_NAME}
+    - COMPOSE_FILE=docker-compose.yml:docker-compose.jenkins.yml
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   sonarqube-scanner:
+    environment:
+    - SONARQUBE_URL=http://localhost:9000
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

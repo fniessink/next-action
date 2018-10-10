@@ -57,5 +57,7 @@ services:
     volumes:
     - ${PWD}:${PWD}
   sonarqube-scanner:
+    environment:
+    - SONARQUBE_URL=http://sonarqube:9000
     volumes:
     - ${PWD}:${PWD}
