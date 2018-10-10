@@ -65,6 +65,14 @@ pipeline {
         stage('Documentation') {
             steps {
                 sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up pydeps pyreverse update_readme'
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
+                    reportDir: 'src/build/',
+                    reportFiles: 'README.html',
+                    reportName: 'README'
+                ]
             }
         }
     }

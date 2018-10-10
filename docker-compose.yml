@@ -72,7 +72,7 @@ services:
     working_dir: ${PWD}
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py'
+    command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py; markdown README.md > build/README.html'
   codacy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
