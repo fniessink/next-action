@@ -62,5 +62,9 @@ pipeline {
                 ]
             }
         }
+        stage('Documentation') {
+            steps {
+                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up pydeps'
+        }
     }
 }

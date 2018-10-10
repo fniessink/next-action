@@ -47,3 +47,6 @@ services:
   docker-compose-config:
     volumes:
     - ${PWD}:${PWD}
+  pydeps:
+    volumes:
+    - ${PWD}:${PWD}

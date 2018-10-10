@@ -104,8 +104,6 @@ services:
   pydeps:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
     command: sh -c 'pydeps --noshow -T png -o docs/dependencies.png next_action'
   pyreverse:
     image: fniessink/next-action-dev:latest

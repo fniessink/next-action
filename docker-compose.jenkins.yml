@@ -47,3 +47,6 @@ services:
   docker-compose-config:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pydeps:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
