@@ -538,7 +538,7 @@ To run the unit tests and check their code coverage:
 $ docker-compose --no-ansi up unittest
 re: (Creating|Recreating|Starting) \S+_unittest_1 ...
 (Creating|Recreating|Starting) \S+_unittest_1 ... done
-Attaching to \S+*_unittest_1
+Attaching to \S+_unittest_1
 unittest_1               | ----------------------------------------------------------------------
 unittest_1               | Ran [1-9]\d* tests in \d+.\d+s
 unittest_1               |
