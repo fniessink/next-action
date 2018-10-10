@@ -93,7 +93,7 @@ services:
   sonarqube-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=$$SONARQUBE_URL -Dsonar.login=`python sonarqube_token.py $$SONARQUBE_URL`'
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=$$SONARQUBE_URL -Dsonar.login=`python utils/sonarqube_token.py $$SONARQUBE_URL`'
   sonarqube-server:
     image: sonarqube:7.1-alpine
     container_name: sonarqube
