@@ -23,48 +23,6 @@ services:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     command: sh -c 'pylint next_action tests docs'
-  codacy:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
-    environment:
-      - CODACY_PROJECT_TOKEN
-  sonarcloud-scanner:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    environment:
-      - SONAR_TOKEN
-    volumes:
-    - ${PWD}:${PWD}
-    # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarcloud.io -Dsonar.organization=fniessink-github -Dsonar.login=$${SONAR_TOKEN}'
-  sonarqube-scanner:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    depends_on:
-      - sonarqube-server
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=`python sonarqube_token.py http://sonarqube.:9000`'
-  sonarqube-server:
-    image: sonarqube:7.1-alpine
-    container_name: sonarqube
-    ports:
-      - "9000:9000"
-      - "9002:9002"
-  jenkins:
-    image: trion/jenkins-docker-client
-    container_name: jenkins
-    ports:
-      - "8080:8080"
-      - "50000:5000"
-    environment:
-      - JENKINS_HOME_ON_HOST=${PWD}/.jenkins
-    volumes:
-      - ${PWD}/.jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
   pycodestyle:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -115,6 +73,48 @@ services:
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
     command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py'
+  codacy:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
+    command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
+    environment:
+      - CODACY_PROJECT_TOKEN
+  sonarcloud-scanner:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    environment:
+      - SONAR_TOKEN
+    volumes:
+    - ${PWD}:${PWD}
+    # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarcloud.io -Dsonar.organization=fniessink-github -Dsonar.login=$${SONAR_TOKEN}'
+  sonarqube-scanner:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
+    depends_on:
+      - sonarqube-server
+    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=`python sonarqube_token.py http://sonarqube.:9000`'
+  sonarqube-server:
+    image: sonarqube:7.1-alpine
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+      - "9002:9002"
+  jenkins:
+    image: trion/jenkins-docker-client
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:5000"
+    environment:
+      - JENKINS_HOME_ON_HOST=${PWD}/.jenkins
+    volumes:
+      - ${PWD}/.jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
   release:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
