@@ -93,6 +93,14 @@ services:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     command: sh -c 'markdownlint README*.md; markdownlint -c .markdownlint-changelog.json CHANGELOG.md'
+  hadolint:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    command: sh -c 'hadolint Dockerfile'
+  docker-compose-config:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    command: sh -c 'docker-compose config --quiet'
   pydeps:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -105,18 +113,6 @@ services:
     volumes:
     - ${PWD}:${PWD}
     command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action > /dev/null; mv classes.png docs/; mv packages.png docs/'
-  hadolint:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'hadolint Dockerfile'
-  docker-compose-config:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    command: sh -c 'docker-compose config --quiet'
   update_readme:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}

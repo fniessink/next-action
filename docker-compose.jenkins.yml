@@ -41,3 +41,9 @@ services:
   markdown-lint:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  hadolint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  docker-compose-config:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

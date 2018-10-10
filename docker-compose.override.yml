@@ -41,3 +41,9 @@ services:
   markdown-lint:
     volumes:
     - ${PWD}:${PWD}
+  hadolint:
+    volumes:
+    - ${PWD}:${PWD}
+  docker-compose-config:
+    volumes:
+    - ${PWD}:${PWD}
