@@ -57,6 +57,7 @@ services:
     environment:
       - JENKINS_HOME_ON_HOST=${JENKINS_HOME_ON_HOST}
       - JENKINS_HOME=${JENKINS_HOME}
+      - JOB_NAME=${JOB_NAME}
       - COMPOSE_FILE=docker-compose.yml:docker-compose.jenkins.yml
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
