@@ -627,7 +627,7 @@ Attaching to \S+_pydocstyle_1
 \S+_pydocstyle_1 exited with code 0
 ```
 
-Bandit should find no security issues:
+Bandit and Safety should find no security issues:
 
 ```console
 $ docker-compose --no-ansi up bandit
@@ -635,6 +635,11 @@ re: (Creating|Recreating|Starting) \S+_bandit_1 ...
 (Creating|Recreating|Starting) \S+_bandit_1 ... done
 Attaching to \S+_bandit_1
 \S+_bandit_1 exited with code 0
+$ docker-compose --no-ansi up safety
+re: (Creating|Recreating|Starting) \S+_safety_1 ...
+(Creating|Recreating|Starting) \S+_safety_1 ... done
+Attaching to \S+_safety_1
+\S+_safety_1 exited with code 0
 ```
 
 Vulture should find no dead code:
