@@ -80,12 +80,12 @@ services:
     - ${PWD}:${PWD}
     command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
     environment:
-      - CODACY_PROJECT_TOKEN
+    - CODACY_PROJECT_TOKEN
   sonarcloud-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     environment:
-      - SONAR_TOKEN
+    - SONAR_TOKEN
     volumes:
     - ${PWD}:${PWD}
     # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
@@ -98,19 +98,21 @@ services:
     image: sonarqube:7.1-alpine
     container_name: sonarqube
     ports:
-      - "9000:9000"
-      - "9002:9002"
+    - "9000:9000"
+    - "9002:9002"
   jenkins:
     image: trion/jenkins-docker-client
     container_name: jenkins
     ports:
-      - "8080:8080"
-      - "50000:5000"
+    - "8080:8080"
+    - "50000:5000"
     environment:
-      - JENKINS_HOME_ON_HOST=${PWD}/.jenkins
+    - JENKINS_HOME_ON_HOST=${PWD}/.jenkins
     volumes:
-      - ${PWD}/.jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
+    - ${PWD}/.jenkins:/var/jenkins_home
+    - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+    - sonarqube-server
   release:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -118,5 +120,5 @@ services:
     - ${PWD}:${PWD}
     command: sh -c 'rm -rf dist; python setup.py sdist bdist_wheel; twine check dist/*; twine upload dist/*'
     environment:
-      - TWINE_USERNAME
-      - TWINE_PASSWORD
+    - TWINE_USERNAME
+    - TWINE_PASSWORD

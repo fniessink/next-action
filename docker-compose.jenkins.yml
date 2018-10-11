@@ -63,6 +63,6 @@ services:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   sonarqube-scanner:
     environment:
-    - SONARQUBE_URL=http://localhost:9000
+    - SONARQUBE_URL=http://sonarqube:9000
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
