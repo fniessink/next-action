@@ -12,6 +12,10 @@ services:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     command: sh -c 'bandit -r next_action --format custom 2> /dev/null; bandit -r next_action --format html --output build/bandit.html 2> /dev/null'  # Ignore boiler plate output
+  safety:
+    image: fniessink/next-action-dev:latest
+    working_dir: ${PWD}
+    command: sh -c 'safety -r requirements.txt -r requirements-dev.txt --bare'
   owasp-dependency-check:
     image: owasp/dependency-check:latest
     command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report

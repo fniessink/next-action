@@ -9,6 +9,9 @@ services:
   bandit:
     volumes:
     - ${PWD}:${PWD}
+  safety:
+    volumes:
+    - ${PWD}:${PWD}
   owasp-dependency-check:
     volumes:
     - ${PWD}:/src
