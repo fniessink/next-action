@@ -15,7 +15,7 @@ services:
   safety:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    command: sh -c 'safety -r requirements.txt -r requirements-dev.txt --bare'
+    command: sh -c 'safety check -r requirements.txt -r requirements-dev.txt --bare'
   owasp-dependency-check:
     image: owasp/dependency-check:latest
     command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report
