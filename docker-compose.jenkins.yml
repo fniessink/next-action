@@ -64,6 +64,5 @@ services:
   sonarqube-scanner:
     environment:
     - SONARQUBE_URL=http://sonarqube:9000
-    - COMPOSE_PROJECT_NAME=next-action
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

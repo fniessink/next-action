@@ -3,12 +3,12 @@ pipeline {
     stages {
         stage('Unit tests') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up unittest'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up unittest'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'src/build/unittest-coverage',
+                    reportDir: 'next-action/build/unittest-coverage',
                     reportFiles: 'index.html',
                     reportName: 'Unit test coverage report'
                 ]
@@ -16,12 +16,12 @@ pipeline {
         }
         stage('Feature tests') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up behave'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up behave'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'src/build/feature-coverage',
+                    reportDir: 'next-action/build/feature-coverage',
                     reportFiles: 'index.html',
                     reportName: 'Feature test coverage report'
                 ]
@@ -29,16 +29,16 @@ pipeline {
         }
         stage('Security checks') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'src/build',
+                    reportDir: 'next-action/build',
                     reportFiles: 'bandit.html',
                     reportName: 'Bandit report'
                 ]
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
@@ -51,12 +51,12 @@ pipeline {
         }
         stage('Quality checks') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle vulture pyroma shellcheck gherkin-lint markdown-lint hadolint docker-compose-config sonarqube-scanner'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle vulture pyroma shellcheck gherkin-lint markdown-lint hadolint docker-compose-config sonarqube-scanner'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'src/build/mypy',
+                    reportDir: 'next-action/build/mypy',
                     reportFiles: 'index.html',
                     reportName: 'Mypy report'
                 ]
@@ -64,12 +64,12 @@ pipeline {
         }
         stage('Documentation') {
             steps {
-                sh 'cd src; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up pydeps pyreverse update_readme'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up pydeps pyreverse update_readme'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
                     keepAll: false,
-                    reportDir: 'src/build/',
+                    reportDir: 'next-action/build/',
                     reportFiles: 'README.html',
                     reportName: 'README'
                 ]
