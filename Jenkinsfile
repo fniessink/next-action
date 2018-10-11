@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Security checks') {
             steps {
-                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit safety'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,

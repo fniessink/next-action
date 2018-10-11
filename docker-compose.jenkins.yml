@@ -9,6 +9,9 @@ services:
   bandit:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  safety:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   owasp-dependency-check:
     volumes:
     - ${JENKINS_HOME_ON_HOST}/.owasp-dependency-check-data:/usr/share/dependency-check/data

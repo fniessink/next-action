@@ -557,11 +557,11 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
-Creating next-action_unittest_1 ...
-Creating next-action_unittest_1 ... done
+Starting next-action_unittest_1 ...
+Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 250 tests in 1.674s
+unittest_1                | Ran 250 tests in 1.718s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
@@ -581,13 +581,13 @@ To run the feature tests and measure their code coverage:
 
 ```console
 $ docker-compose --no-ansi up behave
-Creating next-action_behave_1 ...
-Creating next-action_behave_1 ... done
+Starting next-action_behave_1 ...
+Starting next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 108 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 362 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m29.159s
+behave_1                  | Took 1m22.838s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
@@ -648,7 +648,7 @@ Attaching to next-action_pydocstyle_1
 next-action_pydocstyle_1 exited with code 0
 ```
 
-Bandit should find no security issues:
+Bandit and Safety should find no security issues:
 
 ```console
 $ docker-compose --no-ansi up bandit
@@ -656,6 +656,12 @@ Creating next-action_bandit_1 ...
 Creating next-action_bandit_1 ... done
 Attaching to next-action_bandit_1
 next-action_bandit_1 exited with code 0
+$ docker-compose --no-ansi up safety
+Creating next-action_safety_1 ...
+Creating next-action_safety_1 ... done
+Attaching to next-action_safety_1
+safety_1                  |
+next-action_safety_1 exited with code 0
 ```
 
 Vulture should find no dead code:
