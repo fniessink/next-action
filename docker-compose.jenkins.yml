@@ -1,0 +1,68 @@
+version: '3'
+services:
+  unittest:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  behave:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  bandit:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  owasp-dependency-check:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}/.owasp-dependency-check-data:/usr/share/dependency-check/data
+    - ${JENKINS_HOME_ON_HOST}/workspace/$JOB_NAME:/src
+    - ${JENKINS_HOME_ON_HOST}/workspace/$JOB_NAME/owasp-dependency-check-report:/report
+  mypy:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pylint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pydocstyle:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pycodestyle:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  vulture:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pyroma:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  shellcheck:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  gherkin-lint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  markdown-lint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  hadolint:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  docker-compose-config:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pydeps:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  pyreverse:
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  update_readme:
+    environment:
+    - JENKINS_HOME_ON_HOST=${JENKINS_HOME_ON_HOST}
+    - JENKINS_HOME=${JENKINS_HOME}
+    - JOB_NAME=${JOB_NAME}
+    - COMPOSE_FILE=docker-compose.yml:docker-compose.jenkins.yml
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
+  sonarqube-scanner:
+    environment:
+    - SONARQUBE_URL=http://sonarqube:9000
+    volumes:
+    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}

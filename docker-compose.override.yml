@@ -1,0 +1,63 @@
+version: '3'
+services:
+  unittest:
+    volumes:
+    - ${PWD}:${PWD}
+  behave:
+    volumes:
+    - ${PWD}:${PWD}
+  bandit:
+    volumes:
+    - ${PWD}:${PWD}
+  owasp-dependency-check:
+    volumes:
+    - ${PWD}:/src
+    - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
+    - ${PWD}/build/owasp-dependency-check-report:/report
+  mypy:
+    volumes:
+    - ${PWD}:${PWD}
+  pylint:
+    volumes:
+    - ${PWD}:${PWD}
+  pydocstyle:
+    volumes:
+    - ${PWD}:${PWD}
+  pycodestyle:
+    volumes:
+    - ${PWD}:${PWD}
+  vulture:
+    volumes:
+    - ${PWD}:${PWD}
+  pyroma:
+    volumes:
+    - ${PWD}:${PWD}
+  shellcheck:
+    volumes:
+    - ${PWD}:${PWD}
+  gherkin-lint:
+    volumes:
+    - ${PWD}:${PWD}
+  markdown-lint:
+    volumes:
+    - ${PWD}:${PWD}
+  hadolint:
+    volumes:
+    - ${PWD}:${PWD}
+  docker-compose-config:
+    volumes:
+    - ${PWD}:${PWD}
+  pydeps:
+    volumes:
+    - ${PWD}:${PWD}
+  pyreverse:
+    volumes:
+    - ${PWD}:${PWD}
+  update_readme:
+    volumes:
+    - ${PWD}:${PWD}
+  sonarqube-scanner:
+    environment:
+    - SONARQUBE_URL=http://sonarqube:9000
+    volumes:
+    - ${PWD}:${PWD}
