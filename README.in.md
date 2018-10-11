@@ -639,6 +639,7 @@ $ docker-compose --no-ansi up safety
 re: (Creating|Recreating|Starting) \S+_safety_1 ...
 (Creating|Recreating|Starting) \S+_safety_1 ... done
 Attaching to \S+_safety_1
+\S+safety_1\s+|
 \S+_safety_1 exited with code 0
 ```
 
