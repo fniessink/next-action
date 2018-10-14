@@ -6,10 +6,7 @@ services:
   behave:
     volumes:
     - ${PWD}:${PWD}
-  bandit:
-    volumes:
-    - ${PWD}:${PWD}
-  safety:
+  security:
     volumes:
     - ${PWD}:${PWD}
   owasp-dependency-check:
@@ -17,46 +14,10 @@ services:
     - ${PWD}:/src
     - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
     - ${PWD}/build/owasp-dependency-check-report:/report
-  mypy:
+  quality:
     volumes:
     - ${PWD}:${PWD}
-  pylint:
-    volumes:
-    - ${PWD}:${PWD}
-  pydocstyle:
-    volumes:
-    - ${PWD}:${PWD}
-  pycodestyle:
-    volumes:
-    - ${PWD}:${PWD}
-  vulture:
-    volumes:
-    - ${PWD}:${PWD}
-  pyroma:
-    volumes:
-    - ${PWD}:${PWD}
-  shellcheck:
-    volumes:
-    - ${PWD}:${PWD}
-  gherkin-lint:
-    volumes:
-    - ${PWD}:${PWD}
-  markdown-lint:
-    volumes:
-    - ${PWD}:${PWD}
-  hadolint:
-    volumes:
-    - ${PWD}:${PWD}
-  docker-compose-config:
-    volumes:
-    - ${PWD}:${PWD}
-  pydeps:
-    volumes:
-    - ${PWD}:${PWD}
-  pyreverse:
-    volumes:
-    - ${PWD}:${PWD}
-  update_readme:
+  docs:
     volumes:
     - ${PWD}:${PWD}
   sonarqube-scanner:

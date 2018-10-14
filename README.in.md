@@ -585,172 +585,34 @@ the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature file
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
 checked with Docker-compose.
 
-#### Python
-
-Mypy should give no warnings or errors:
+To run the quality checks:
 
 ```console
-$ docker-compose --no-ansi up mypy
-re: (Creating|Recreating|Starting) \S+_mypy_1 ...
-(Creating|Recreating|Starting) \S+_mypy_1 ... done
-Attaching to \S+_mypy_1
-mypy_1                   | Generated HTML report (via XSLT): /.*/build/mypy/index.html
-\S+_mypy_1 exited with code 0
-```
-
-Pylint should score 10 out of 10:
-
-```console
-$ docker-compose --no-ansi up pylint
-re: (Creating|Recreating|Starting) \S+_pylint_1 ...
-(Creating|Recreating|Starting) \S+_pylint_1 ... done
-Attaching to \S+_pylint_1
-pylint_1                 |
-pylint_1                 | ------------------------------------
-pylint_1                 | Your code has been rated at 10.00/10
-pylint_1                 |
-\S+_pylint_1 exited with code 0
-```
-
-Both Pycodestyle and Pydocstyle should give no warnings or errors:
-
-```console
-$ docker-compose --no-ansi up pycodestyle
-re: (Creating|Recreating|Starting) \S+_pycodestyle_1 ...
-(Creating|Recreating|Starting) \S+_pycodestyle_1 ... done
-Attaching to \S+_pycodestyle_1
-\S+_pycodestyle_1 exited with code 0
-$ docker-compose --no-ansi up pydocstyle
-re: (Creating|Recreating|Starting) \S+_pydocstyle_1 ...
-(Creating|Recreating|Starting) \S+_pydocstyle_1 ... done
-Attaching to \S+_pydocstyle_1
-\S+_pydocstyle_1 exited with code 0
-```
-
-Bandit and Safety should find no security issues:
-
-```console
-$ docker-compose --no-ansi up bandit
-re: (Creating|Recreating|Starting) \S+_bandit_1 ...
-(Creating|Recreating|Starting) \S+_bandit_1 ... done
-Attaching to \S+_bandit_1
-\S+_bandit_1 exited with code 0
-$ docker-compose --no-ansi up safety
-re: (Creating|Recreating|Starting) \S+_safety_1 ...
-(Creating|Recreating|Starting) \S+_safety_1 ... done
-Attaching to \S+_safety_1
-\S+safety_1\s+|
-\S+_safety_1 exited with code 0
-```
-
-Vulture should find no dead code:
-
-```console
-$ docker-compose --no-ansi up vulture
-re: (Creating|Recreating|Starting) \S+_vulture_1 ...
-(Creating|Recreating|Starting) \S+_vulture_1 ... done
-Attaching to \S+_vulture_1
-\S+_vulture_1 exited with code 0
-```
-
-And Pyroma should score 10 out of 10:
-
-```console
-$ docker-compose --no-ansi up pyroma
-re: (Creating|Recreating|Starting) \S+_pyroma_1 ...
-(Creating|Recreating|Starting) \S+_pyroma_1 ... done
-Attaching to \S+_pyroma_1
-pyroma_1                 | ------------------------------
-pyroma_1                 | Checking .
-pyroma_1                 | Found next-action
-pyroma_1                 | ------------------------------
-pyroma_1                 | Final rating: 10/10
-pyroma_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
-pyroma_1                 | ------------------------------
-\S+_pyroma_1 exited with code 0
-```
-
-#### Bash
-
-Shellcheck should not complain about the Bash code:
-
-```console
-$ docker-compose --no-ansi up shellcheck
-re: (Creating|Recreating|Starting) \S+_shellcheck_1 ...
-(Creating|Recreating|Starting) \S+_shellcheck_1 ... done
-Attaching to \S+_shellcheck_1
-\S+_shellcheck_1 exited with code 0
-```
-
-#### Gherkin
-
-Gherkin-lint should not complain about the Gherkin feature files:
-
-```console
-$ docker-compose --no-ansi up gherkin-lint
-re: (Creating|Recreating|Starting) \S+_gherkin-lint_1 ...
-(Creating|Recreating|Starting) \S+_gherkin-lint_1 ... done
-Attaching to \S+_gherkin-lint_1
-\S+_gherkin-lint_1 exited with code 0
-```
-
-#### Markdown
-
-Markdownlint should not complain about the Markdown files:
-
-```console
-$ docker-compose --no-ansi up markdown-lint
-re: (Creating|Recreating|Starting) \S+_markdown-lint_1 ...
-(Creating|Recreating|Starting) \S+_markdown-lint_1 ... done
-Attaching to \S+_markdown-lint_1
-\S+_markdown-lint_1 exited with code 0
-```
-
-#### Docker
-
-Hadolint should not complain about the Dockerfile:
-
-```console
-$ docker-compose --no-ansi up hadolint
-re: (Creating|Recreating|Starting) \S+_hadolint_1 ...
-(Creating|Recreating|Starting) \S+_hadolint_1 ... done
-Attaching to \S+_hadolint_1
-\S+_hadolint_1 exited with code 0
-```
-
-Docker-compose should be happy with the docker-compose.yml:
-
-```console
-$ docker-compose --no-ansi up docker-compose-config
-re: (Creating|Recreating|Starting) \S+_docker-compose-config_1 ...
-(Creating|Recreating|Starting) \S+_docker-compose-config_1 ... done
-Attaching to \S+_docker-compose-config_1
-\S+_docker-compose-config_1 exited with code 0
+$ docker-compose --no-ansi up quality
+re: (Creating|Recreating|Starting) \S+_quality_1 ...
+(Creating|Recreating|Starting) \S+_quality_1 ... done
+Attaching to \S+_quality_1
+\S+quality_1\s+| Generated HTML report (via XSLT): /.*/build/mypy/index.html
+\S+quality_1\s+|
+\S+quality_1\s+| ------------------------------------
+\S+quality_1\s+| Your code has been rated at 10.00/10
+\S+quality_1\s+|
+\S+quality_1\s+|
+\S+quality_1\s+| ------------------------------
+\S+quality_1\s+| Checking .
+\S+quality_1\s+| Found next-action
+\S+quality_1\s+| ------------------------------
+\S+quality_1\s+| Final rating: 10/10
+\S+quality_1\s+| Your cheese is so fresh most people think it's a cream: Mascarpone
+\S+quality_1\s+| ------------------------------
+\S+_quality_1 exited with code 0
 ```
 
 ### Generating documentation
 
-This `README.md` file is generated with `python docs/update_readme.py` or `docker-compose up update_readme`.
+This `README.md` file is generated with `docker-compose up docs`.
 
-The dependency graph below is created with Pydeps:
-
-```console
-$ docker-compose --no-ansi up pydeps
-re: (Creating|Recreating|Starting) \S+_pydeps_1 ...
-(Creating|Recreating|Starting) \S+_pydeps_1 ... done
-Attaching to \S+_pydeps_1
-\S+_pydeps_1 exited with code 0
-```
-
-The package and class diagrams below are creted with Pyreverse (part of Pylint):
-
-```console
-$ docker-compose --no-ansi up pyreverse
-re: (Creating|Recreating|Starting) \S+_pyreverse_1 ...
-(Creating|Recreating|Starting) \S+_pyreverse_1 ... done
-Attaching to \S+_pyreverse_1
-\S+_pyreverse_1 exited with code 0
-```
+The dependency graph below is created with Pydeps and the package and class diagrams below are created with Pyreverse (part of Pylint).
 
 ### Source code structure and dependencies
 

@@ -561,7 +561,7 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 250 tests in 1.718s
+unittest_1                | Ran 250 tests in 1.796s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
@@ -587,7 +587,7 @@ Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 108 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 362 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m22.838s
+behave_1                  | Took 1m28.147s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
@@ -606,172 +606,34 @@ the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature file
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
 checked with Docker-compose.
 
-#### Python
-
-Mypy should give no warnings or errors:
+To run the quality checks:
 
 ```console
-$ docker-compose --no-ansi up mypy
-Creating next-action_mypy_1 ...
-Creating next-action_mypy_1 ... done
-Attaching to next-action_mypy_1
-mypy_1                    | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
-next-action_mypy_1 exited with code 0
-```
-
-Pylint should score 10 out of 10:
-
-```console
-$ docker-compose --no-ansi up pylint
-Creating next-action_pylint_1 ...
-Creating next-action_pylint_1 ... done
-Attaching to next-action_pylint_1
-pylint_1                  |
-pylint_1                  | ------------------------------------
-pylint_1                  | Your code has been rated at 10.00/10
-pylint_1                  |
-next-action_pylint_1 exited with code 0
-```
-
-Both Pycodestyle and Pydocstyle should give no warnings or errors:
-
-```console
-$ docker-compose --no-ansi up pycodestyle
-Creating next-action_pycodestyle_1 ...
-Creating next-action_pycodestyle_1 ... done
-Attaching to next-action_pycodestyle_1
-next-action_pycodestyle_1 exited with code 0
-$ docker-compose --no-ansi up pydocstyle
-Creating next-action_pydocstyle_1 ...
-Creating next-action_pydocstyle_1 ... done
-Attaching to next-action_pydocstyle_1
-next-action_pydocstyle_1 exited with code 0
-```
-
-Bandit and Safety should find no security issues:
-
-```console
-$ docker-compose --no-ansi up bandit
-Creating next-action_bandit_1 ...
-Creating next-action_bandit_1 ... done
-Attaching to next-action_bandit_1
-next-action_bandit_1 exited with code 0
-$ docker-compose --no-ansi up safety
-Creating next-action_safety_1 ...
-Creating next-action_safety_1 ... done
-Attaching to next-action_safety_1
-safety_1                  |
-next-action_safety_1 exited with code 0
-```
-
-Vulture should find no dead code:
-
-```console
-$ docker-compose --no-ansi up vulture
-Creating next-action_vulture_1 ...
-Creating next-action_vulture_1 ... done
-Attaching to next-action_vulture_1
-next-action_vulture_1 exited with code 0
-```
-
-And Pyroma should score 10 out of 10:
-
-```console
-$ docker-compose --no-ansi up pyroma
-Creating next-action_pyroma_1 ...
-Creating next-action_pyroma_1 ... done
-Attaching to next-action_pyroma_1
-pyroma_1                  | ------------------------------
-pyroma_1                  | Checking .
-pyroma_1                  | Found next-action
-pyroma_1                  | ------------------------------
-pyroma_1                  | Final rating: 10/10
-pyroma_1                  | Your cheese is so fresh most people think it's a cream: Mascarpone
-pyroma_1                  | ------------------------------
-next-action_pyroma_1 exited with code 0
-```
-
-#### Bash
-
-Shellcheck should not complain about the Bash code:
-
-```console
-$ docker-compose --no-ansi up shellcheck
-Creating next-action_shellcheck_1 ...
-Creating next-action_shellcheck_1 ... done
-Attaching to next-action_shellcheck_1
-next-action_shellcheck_1 exited with code 0
-```
-
-#### Gherkin
-
-Gherkin-lint should not complain about the Gherkin feature files:
-
-```console
-$ docker-compose --no-ansi up gherkin-lint
-Creating next-action_gherkin-lint_1 ...
-Creating next-action_gherkin-lint_1 ... done
-Attaching to next-action_gherkin-lint_1
-next-action_gherkin-lint_1 exited with code 0
-```
-
-#### Markdown
-
-Markdownlint should not complain about the Markdown files:
-
-```console
-$ docker-compose --no-ansi up markdown-lint
-Creating next-action_markdown-lint_1 ...
-Creating next-action_markdown-lint_1 ... done
-Attaching to next-action_markdown-lint_1
-next-action_markdown-lint_1 exited with code 0
-```
-
-#### Docker
-
-Hadolint should not complain about the Dockerfile:
-
-```console
-$ docker-compose --no-ansi up hadolint
-Creating next-action_hadolint_1 ...
-Creating next-action_hadolint_1 ... done
-Attaching to next-action_hadolint_1
-next-action_hadolint_1 exited with code 0
-```
-
-Docker-compose should be happy with the docker-compose.yml:
-
-```console
-$ docker-compose --no-ansi up docker-compose-config
-Creating next-action_docker-compose-config_1 ...
-Creating next-action_docker-compose-config_1 ... done
-Attaching to next-action_docker-compose-config_1
-next-action_docker-compose-config_1 exited with code 0
+$ docker-compose --no-ansi up quality
+Starting next-action_quality_1 ...
+Starting next-action_quality_1 ... done
+Attaching to next-action_quality_1
+quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
+quality_1                 |
+quality_1                 | --------------------------------------------------------------------
+quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+quality_1                 |
+quality_1                 | ------------------------------
+quality_1                 | Checking .
+quality_1                 | Found next-action
+quality_1                 | ------------------------------
+quality_1                 | Final rating: 10/10
+quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
+quality_1                 | ------------------------------
+quality_1                 | README.in.md: 615: MD013/line-length Line length [Expected: 120; Actual: 135]
+next-action_quality_1 exited with code 0
 ```
 
 ### Generating documentation
 
-This `README.md` file is generated with `python docs/update_readme.py` or `docker-compose up update_readme`.
+This `README.md` file is generated with `docker-compose up docs`.
 
-The dependency graph below is created with Pydeps:
-
-```console
-$ docker-compose --no-ansi up pydeps
-Creating next-action_pydeps_1 ...
-Creating next-action_pydeps_1 ... done
-Attaching to next-action_pydeps_1
-next-action_pydeps_1 exited with code 0
-```
-
-The package and class diagrams below are creted with Pyreverse (part of Pylint):
-
-```console
-$ docker-compose --no-ansi up pyreverse
-Creating next-action_pyreverse_1 ...
-Creating next-action_pyreverse_1 ... done
-Attaching to next-action_pyreverse_1
-next-action_pyreverse_1 exited with code 0
-```
+The dependency graph below is created with Pydeps and the package and class diagrams below are created with Pyreverse (part of Pylint).
 
 ### Source code structure and dependencies
 
