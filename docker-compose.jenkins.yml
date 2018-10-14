@@ -6,10 +6,7 @@ services:
   behave:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  bandit:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  safety:
+  security:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
   owasp-dependency-check:
@@ -17,46 +14,12 @@ services:
     - ${JENKINS_HOME_ON_HOST}/.owasp-dependency-check-data:/usr/share/dependency-check/data
     - ${JENKINS_HOME_ON_HOST}/workspace/$JOB_NAME:/src
     - ${JENKINS_HOME_ON_HOST}/workspace/$JOB_NAME/owasp-dependency-check-report:/report
-  mypy:
+  quality:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  pylint:
+  docs:
     volumes:
     - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  pydocstyle:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  pycodestyle:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  vulture:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  pyroma:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  shellcheck:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  gherkin-lint:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  markdown-lint:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  hadolint:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  docker-compose-config:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  pydeps:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  pyreverse:
-    volumes:
-    - ${JENKINS_HOME_ON_HOST}:${JENKINS_HOME}
-  update_readme:
     environment:
     - JENKINS_HOME_ON_HOST=${JENKINS_HOME_ON_HOST}
     - JENKINS_HOME=${JENKINS_HOME}

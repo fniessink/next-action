@@ -3,80 +3,28 @@ services:
   unittest:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    command: sh -c 'coverage run --branch -m unittest --quiet; coverage xml -o build/unittest-coverage.xml; coverage html --directory build/unittest-coverage; coverage report --fail-under=100 --skip-covered'
+    command: ci/unittest.sh
   behave:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    command: sh -c 'python setup.py --quiet develop; behave --format null tests/features; coverage report --rcfile=.coveragerc-behave --fail-under=100 --skip-covered'
-  bandit:
+    command: ci/behave.sh
+  security:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    command: sh -c 'bandit -r next_action --format custom 2> /dev/null; bandit -r next_action --format html --output build/bandit.html 2> /dev/null'  # Ignore boiler plate output
-  safety:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'safety check -r requirements.txt -r requirements-dev.txt --bare'
+    command: ci/security.sh
   owasp-dependency-check:
     image: owasp/dependency-check:latest
     command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report
-  mypy:
+  quality:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
-    command: sh -c 'mypy next_action'
-  pylint:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'pylint next_action tests docs'
-  pycodestyle:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'pycodestyle .'
-  pydocstyle:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'pydocstyle .'
-  vulture:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'vulture next_action .vulture-whitelist.py'
-  pyroma:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'pyroma --min=10 . 2> /dev/null'  # Ignore the error messages on stderr about the README file because pyroma doesn't accept Markdown.
-  shellcheck:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'shellcheck extra/.next-action-completion.bash'
-  gherkin-lint:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'gherkin-lint tests/features/*.feature'
-  markdown-lint:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'markdownlint README*.md; markdownlint -c .markdownlint-changelog.json CHANGELOG.md'
-  hadolint:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'hadolint Dockerfile'
-  docker-compose-config:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'docker-compose config --quiet'
-  pydeps:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'pydeps --noshow -T png -o docs/dependencies.png next_action'
-  pyreverse:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    command: sh -c 'pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png next_action > /dev/null; mv classes.png docs/; mv packages.png docs/'
-  update_readme:
+    command: ci/quality.sh
+  docs:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - /var/run/docker.sock:/var/run/docker.sock
-    command: sh -c 'python setup.py --quiet develop; python docs/update_readme.py; markdown README.md > build/README.html'
+    command: ci/docs.sh
   codacy:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}

@@ -29,7 +29,7 @@ pipeline {
         }
         stage('Security checks') {
             steps {
-                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up bandit safety'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up security owasp-dependency-check'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
@@ -38,7 +38,6 @@ pipeline {
                     reportFiles: 'bandit.html',
                     reportName: 'Bandit report'
                 ]
-                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up owasp-dependency-check'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
@@ -51,7 +50,7 @@ pipeline {
         }
         stage('Quality checks') {
             steps {
-                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up mypy pylint pydocstyle pycodestyle vulture pyroma shellcheck gherkin-lint markdown-lint hadolint docker-compose-config sonarqube-scanner'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up quality sonarqube-scanner'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
@@ -64,7 +63,7 @@ pipeline {
         }
         stage('Documentation') {
             steps {
-                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up pydeps pyreverse update_readme'
+                sh 'cd next-action; docker-compose -f docker-compose.yml -f docker-compose.jenkins.yml up docs'
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: true,
