@@ -1,0 +1,6 @@
+image: fniessink/next-action-dev:latest
+
+unittest:
+  script:
+    docker-compose up unittest
+
