@@ -1,6 +1,8 @@
 image: fniessink/next-action-dev:latest
 
 unittest:
+  services:
+    - docker:stable-dind
   script:
     docker-compose up unittest
 
