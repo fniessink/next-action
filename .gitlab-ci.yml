@@ -1,4 +1,4 @@
-image: fniessink/next-action-dev:latest
+image: docker-stable
 
 unittest:
   services:
