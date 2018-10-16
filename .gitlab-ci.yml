@@ -34,3 +34,25 @@ behave:
   artifacts:
     paths:
       - build/feature-coverage
+
+security:
+  stage: test
+  script: docker-compose up security owasp-dependency-check
+  artifacts:
+    paths:
+      - build/bandit.html
+      - build/owasp-dependency-check-report
+
+quality:
+  stage: test
+  script: docker-compose up quality
+  artifacts:
+    paths:
+      - build/mypy
+
+docs:
+  stage: test
+  script: docker-compose up docs
+  artifacts:
+    paths:
+      - build/README.html
