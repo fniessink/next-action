@@ -23,3 +23,7 @@ unittest:
   script:
     docker-compose up unittest
 
+behave:
+  script:
+    docker-compose up behave
+
