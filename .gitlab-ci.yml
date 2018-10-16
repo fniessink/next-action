@@ -20,10 +20,17 @@ services:
   - docker:dind
 
 unittest:
-  script:
-    docker-compose up unittest
+  stage: test
+  script: docker-compose up unittest
+  coverage: '/ \d+%/'
+  artifacts:
+    paths:
+      - build/unittest-coverage
 
 behave:
-  script:
-    docker-compose up behave
-
+  stage: test
+  script: docker-compose up behave
+  coverage: '/ \d+%/'
+  artifacts:
+    paths:
+      - build/feature-coverage
