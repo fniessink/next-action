@@ -1,7 +1,7 @@
 image: fniessink/next-action-dev:latest
 
 services: 
-  - docker:latest
+  - docker:stable-dind
 
 unittest:
   script:
