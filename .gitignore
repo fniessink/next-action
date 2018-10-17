@@ -4,7 +4,6 @@ __pycache__
 .mypy_cache
 .sonarlint
 .scannerwork
-.jenkins
 .vscode
 .DS_Store
 build

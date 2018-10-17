@@ -2,7 +2,6 @@
 .git/
 .gitignore
 .hypothesis/
-.jenkins/
 .mypy_cache/
 .sonarlint/
 .venv/

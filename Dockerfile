@@ -23,4 +23,3 @@ RUN pip install pip==18.0
 WORKDIR /next-action
 COPY requirements*.txt /next-action/
 RUN pip install -r requirements.txt -r requirements-dev.txt
-
