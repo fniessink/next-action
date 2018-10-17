@@ -3,26 +3,39 @@ services:
   unittest:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
     command: ci/unittest.sh
   behave:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
     command: ci/behave.sh
   security:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
     command: ci/security.sh
   owasp-dependency-check:
     image: owasp/dependency-check:latest
-    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /report
+    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /src/build/owasp-dependency-check-report/
+    volumes:
+    - ${PWD}:/src
+    - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
+    - ${PWD}/build/owasp-dependency-check-report:/report
   quality:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
     command: ci/quality.sh
   docs:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
+    - ${PWD}:${PWD}
     - /var/run/docker.sock:/var/run/docker.sock
     command: ci/docs.sh
   codacy:
@@ -45,6 +58,10 @@ services:
   sonarqube-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
+    volumes:
+    - ${PWD}:${PWD}
+    environment:
+    - SONARQUBE_URL=http://sonarqube:9000
     command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=$$SONARQUBE_URL -Dsonar.login=`python utils/sonarqube_token.py $$SONARQUBE_URL`'
   sonarqube-server:
     image: sonarqube:7.1-alpine
@@ -52,19 +69,6 @@ services:
     ports:
     - "9000:9000"
     - "9002:9002"
-  jenkins:
-    image: trion/jenkins-docker-client
-    container_name: jenkins
-    ports:
-    - "8080:8080"
-    - "50000:5000"
-    environment:
-    - JENKINS_HOME_ON_HOST=${PWD}/.jenkins
-    volumes:
-    - ${PWD}/.jenkins:/var/jenkins_home
-    - /var/run/docker.sock:/var/run/docker.sock
-    depends_on:
-    - sonarqube-server
   release:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
