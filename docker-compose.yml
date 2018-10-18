@@ -24,7 +24,7 @@ services:
     - ${PWD}:/src
     - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
     - ${PWD}/build/owasp-dependency-check-report:/report
-    command: ci/owasp-dependency-check.sh
+    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /src/build/owasp-dependency-check-report/
   quality:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
