@@ -633,7 +633,8 @@ next-action_quality_1 exited with code 0
 
 This `README.md` file is generated with `docker-compose up docs`.
 
-The dependency graph below is created with Pydeps and the package and class diagrams below are created with Pyreverse (part of Pylint).
+The dependency graph below is created with Pydeps and the package and class diagrams below are created with
+Pyreverse (part of Pylint).
 
 ### Source code structure and dependencies
 

@@ -99,7 +99,7 @@ class StateMachine():
 def update_readme():
     """Read the README markdown template line by line and update table of contents and console commands."""
     start = datetime.datetime.now()
-    with open("README.in.md") as readme_in:
+    with open("docs/README.in.md") as readme_in:
         lines = readme_in.readlines()
     toc_header = "## Table of contents"
     machine = StateMachine(create_toc(lines, toc_header), toc_header)

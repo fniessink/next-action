@@ -20,11 +20,11 @@ services:
     command: ci/security.sh
   owasp-dependency-check:
     image: owasp/dependency-check:latest
-    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /src/build/owasp-dependency-check-report/
     volumes:
     - ${PWD}:/src
     - ${PWD}/.owasp-dependency-check-data:/usr/share/dependency-check/data
     - ${PWD}/build/owasp-dependency-check-report:/report
+    command: /usr/share/dependency-check/bin/dependency-check.sh --scan /src --format "ALL" --project "OWASP Dependency Check" --out /src/build/owasp-dependency-check-report/
   quality:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -43,9 +43,9 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'python-codacy-coverage -r build/unittest-coverage.xml'
     environment:
     - CODACY_PROJECT_TOKEN
+    command: ci/codacy.sh
   sonarcloud-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
@@ -53,17 +53,16 @@ services:
     - SONAR_TOKEN
     volumes:
     - ${PWD}:${PWD}
-    # SonarQube needs Xunit format, see https://docs.sonarqube.org/display/PLUG/Python+Unit+Tests+Execution+Reports+Import
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=http://sonarcloud.io -Dsonar.organization=fniessink-github -Dsonar.login=$${SONAR_TOKEN}'
+    command: ci/sonarcloud-scanner.sh
   sonarqube-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
     environment:
-    - SONARQUBE_URL=http://sonarqube:9000
-    command: sh -c 'nosetests --nocapture --with-xunit --xunit-file=build/nosetests.xml tests/unittests; sonar-scanner -Dsonar.host.url=$$SONARQUBE_URL -Dsonar.login=`python utils/sonarqube_token.py $$SONARQUBE_URL`'
-  sonarqube-server:
+    - SONARQUBE_URL=http://sonarqube:9000/
+    command: ci/sonarqube-scanner.sh
+  sonarqube:
     image: sonarqube:7.1-alpine
     container_name: sonarqube
     ports:
@@ -74,7 +73,7 @@ services:
     working_dir: ${PWD}
     volumes:
     - ${PWD}:${PWD}
-    command: sh -c 'rm -rf dist; python setup.py sdist bdist_wheel; twine check dist/*; twine upload dist/*'
+    command: ci/release.sh
     environment:
     - TWINE_USERNAME
     - TWINE_PASSWORD

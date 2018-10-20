@@ -612,7 +612,8 @@ Attaching to \S+_quality_1
 
 This `README.md` file is generated with `docker-compose up docs`.
 
-The dependency graph below is created with Pydeps and the package and class diagrams below are created with Pyreverse (part of Pylint).
+The dependency graph below is created with Pydeps and the package and class diagrams below are created with
+Pyreverse (part of Pylint).
 
 ### Source code structure and dependencies
 

@@ -5,5 +5,5 @@ pyreverse --module-names=yes --show-associated=1 --show-ancestors=1 --output=png
 mv classes.png docs/
 mv packages.png docs/
 python setup.py --quiet develop
-python docs/update_readme.py
+python docs/update_readme.py 
 markdown README.md > build/README.html
