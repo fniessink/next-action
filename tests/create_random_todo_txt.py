@@ -6,27 +6,32 @@ import string
 
 def random_bool():
     """Random True/False choice."""
-    return random.choice([True, False])
+    return random.choice([True, False])  # nosec
+
+
+def random_string():
+    """Return a random string."""
+    return random.choice(string.ascii_lowercase)  # nosec
 
 
 def context():
     """Return a random context."""
-    return " @" + random.choice(string.ascii_lowercase) if random_bool() else ""
+    return " @" + random_string() if random_bool() else ""
 
 
 def project():
     """Return a random project."""
-    return " +" + random.choice(string.ascii_lowercase) if random_bool() else ""
+    return " +" + random_string() if random_bool() else ""
 
 
 def prio():
     """Return a random priority."""
-    return f"({random.choice(string.ascii_uppercase)}) " if random_bool() else ""
+    return f"({random.choice(string.ascii_uppercase)}) " if random_bool() else ""  # nosec
 
 
 def due_date():
     """Return a random due date."""
-    return f" due:2018-{random.randint(1, 12)}-1" if random_bool() else ""
+    return f" due:2018-{random.randint(1, 12)}-1" if random_bool() else ""  # nosec
 
 
 def task_id(index):
