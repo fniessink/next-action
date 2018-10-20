@@ -38,7 +38,8 @@ def render_tasks(tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
 
 def render_nothing_todo(tasks: todotxt.Tasks, namespace: argparse.Namespace):
     """Tell the user there's nothing to do and warn about invalid arguments, if any."""
-    return "Nothing to do!" + invalid_arguments(namespace, tasks)
+    warning = invalid_arguments(namespace, tasks)
+    return "Nothing to do!" + (warning if warning else " 😴")
 
 
 def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
