@@ -18,8 +18,8 @@ def do_command(line):
         command.insert(1, "--config")
         if "--write-config-file" not in command:
             command.insert(2, "docs/.next-action.cfg")
-    command_output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
-    return "\n".join([line.rstrip() for line in command_output.stdout.rstrip().split("\n")])
+    output = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)  # nosec
+    return "\n".join([line.rstrip() for line in output.stdout.rstrip().split("\n")])
 
 
 def create_toc(lines, toc_header, min_level=2, max_level=3):
