@@ -190,7 +190,7 @@ If no tasks match the combination of tasks and projects, it's time to get some c
 
 ```console
 $ next-action +DogHouse @weekend
-Nothing to do!
+Nothing to do! 😴
 ```
 
 If there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action*
@@ -561,13 +561,13 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 250 tests in 1.796s
+unittest_1                | Ran 250 tests in 1.869s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1601      0    226      0   100%
+unittest_1                | TOTAL    1602      0    226      0   100%
 unittest_1                |
 unittest_1                | 29 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -587,11 +587,11 @@ Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 108 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 362 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m28.147s
+behave_1                  | Took 1m32.291s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     479      0    206      0   100%
+behave_1                  | TOTAL     480      0    206      0   100%
 behave_1                  |
 behave_1                  | 12 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -625,7 +625,6 @@ quality_1                 | ------------------------------
 quality_1                 | Final rating: 10/10
 quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
 quality_1                 | ------------------------------
-quality_1                 | README.in.md: 615: MD013/line-length Line length [Expected: 120; Actual: 135]
 next-action_quality_1 exited with code 0
 ```
 
