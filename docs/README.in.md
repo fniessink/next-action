@@ -169,7 +169,7 @@ If no tasks match the combination of tasks and projects, it's time to get some c
 
 ```console
 $ next-action +DogHouse @weekend
-Nothing to do!
+Nothing to do! 😴
 ```
 
 If there's nothing to do because you use contexts or projects that aren't present in the todo.txt file, *Next-action*
