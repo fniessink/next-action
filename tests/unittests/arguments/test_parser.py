@@ -256,8 +256,13 @@ class DueDateTest(ParserTestCase):
 
     @patch.object(sys, "argv", ["next-action", "--due", "2018-01-01"])
     def test_due_date(self):
-        """Test that the default value for due date is None."""
+        """Test that a valid value for due date can be parsed."""
         self.assertEqual(datetime.date(2018, 1, 1), parse_arguments()[1].due)
+
+    @patch.object(sys, "argv", ["next-action", "--due", "today"])
+    def test_relative_due_date(self):
+        """Test that a valid relative value for due date can be parsed."""
+        self.assertEqual(datetime.date.today(), parse_arguments()[1].due)
 
     @patch.object(sys, "argv", ["next-action", "--due", "not_a_date"])
     @patch.object(sys.stderr, "write")
