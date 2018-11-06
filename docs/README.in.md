@@ -48,8 +48,8 @@ arguments, shows the possible arguments.
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s [<style>]] [-a |
+-n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -70,9 +70,6 @@ Input options:
   -f <todo.txt>, --file <todo.txt>
                         filename of todo.txt file to read; can be '-' to read from standard input; argument
                         can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
-  -t [<date>], --time-travel [<date>]
-                        time travel to the given date and show the next action(s) at that date (default:
-                        tomorrow)
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
@@ -315,16 +312,6 @@ section below on how to configure *Next-action*.
 
 Not passing an argument to `--style` cancels the style that is configured in the configuration file, if any.
 
-### Time travel
-
-If you want to know what the next action would be if it were tomorrow, Monday, or a specific date, you can tell
-*Next-action* to pretend it's that day.
-
-```console
-$ next-action --time-travel 3000
-(A) Start preparing for emigration to Mars t:3000-01-01 due:3500-12-31
-```
-
 ### Configuring *Next-action*
 
 In addition to specifying options on the command-line, you can also configure options in a configuration file. The
@@ -494,8 +481,8 @@ will interpret the positional argument as the argument to the option and complai
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s [<style>]] [-a |
+-n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 

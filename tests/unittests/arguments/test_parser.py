@@ -11,7 +11,7 @@ from next_action.arguments import config, parse_arguments
 
 
 USAGE_MESSAGE = textwrap.fill(
-    "Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-t [<date>]] [-b] [-r <ref>] "
+    "Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] "
     "[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]", 120) + \
     "\n"
 
@@ -329,29 +329,3 @@ class ReferenceTest(ParserTestCase):
                           call("next-action: error: argument -r/--reference: invalid choice: 'not_an_option' "
                                "(choose from 'always', 'never', 'multiple')\n")],
                          mock_stderr_write.call_args_list)
-
-
-@patch.object(config, "open", mock_open(read_data=""))
-class TimeTravelTest(ParserTestCase):
-    """Unit tests for the --time-travel option."""
-
-    @patch.object(sys, "argv", ["next-action"])
-    def test_default(self):
-        """Test that the value for time travel date is None if the option is not present."""
-        self.assertEqual(None, parse_arguments()[1].time_travel)
-
-    @patch.object(sys, "argv", ["next-action", "--time-travel"])
-    def test_default_value(self):
-        """Test that the value for time travel date is tomorrow if the option has no argument."""
-        tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-        self.assertEqual(tomorrow, parse_arguments()[1].time_travel)
-
-    @patch.object(sys, "argv", ["next-action", "--time-travel", "2018-8-29"])
-    def test_specific_date(self):
-        """Test that the value for time travel date is the date that is given."""
-        self.assertEqual(datetime.date(2018, 8, 29), parse_arguments()[1].time_travel)
-
-    @patch.object(sys, "argv", ["next-action", "--time-travel", "tomorrow", "--due", "today"])
-    def test_due_date_is_corrected(self):
-        """Test that the value for due date is adapted when time traveling."""
-        self.assertEqual(datetime.date.today() + datetime.timedelta(days=1), parse_arguments()[1].due)
