@@ -15,7 +15,7 @@ from .config import read_config_file, write_config_file, validate_config_file
 
 ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--config-file", "-d", "--due",
              "-f", "--file", "-h", "--help", "-n", "--number", "-o", "--overdue", "-p", "--priority", "-r",
-             "--reference", "-s", "--style", "-t", "--time-travel", "-V", "--version")
+             "--reference", "-s", "--style", "-V", "--version")
 REFERENCE_CHOICES = ("always", "never", "multiple")
 
 
@@ -26,8 +26,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """Initialize the parser."""
         super().__init__(
             usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
-                                "[-t [<date>]] [-b] [-r <ref>] [-s [<style>]] [-a | -n <number>] "
-                                "[-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]",
+                                "[-b] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+                                "[-p [<priority>]] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
@@ -67,9 +67,6 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-f", "--file", action="append", metavar="<todo.txt>", default=self.__default_filenames[:], type=str,
             help="filename of todo.txt file to read; can be '-' to read from standard input; argument can be "
                  "repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)")
-        input_group.add_argument(
-            "-t", "--time-travel", metavar="<date>", type=date_type, nargs="?", const="tomorrow",
-            help="time travel to the given date and show the next action(s) at that date (default: tomorrow)")
 
     def add_output_options(self) -> None:
         """Add the output/styling options to the parser."""
@@ -138,9 +135,6 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         namespace.excluded_contexts = subset(namespace.filters, "-@")
         namespace.excluded_projects = subset(namespace.filters, "-+")
         self.validate_arguments(namespace)
-        if namespace.time_travel and namespace.due:
-            # Apply time travel to options that take a date argument (which currently is only --due)
-            namespace.due += namespace.time_travel - datetime.date.today()
         if getattr(namespace, "config_file", self.get_default("config_file")) is not None:
             self.process_config_file(namespace)
         self.fix_filenames(namespace)

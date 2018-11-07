@@ -41,7 +41,6 @@ security:
   artifacts:
     paths:
       - build/bandit.html
-      - build/owasp-dependency-check-report
 
 quality:
   stage: test

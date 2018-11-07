@@ -76,7 +76,7 @@ def next_action_from_file(context, filename):
 @when("the user asks for the next action due {due_date}")
 def next_action_due(context, due_date):
     """Add the due argument."""
-    context.arguments.extend(["--due", today() if due_date == "today" else tomorrow()])
+    context.arguments.extend(["--due", due_date])
 
 
 @when("the user asks for the next action over due")
@@ -179,12 +179,6 @@ def next_action_not_for_project(context, projects):
     """Add the excluded projects to the command line arguments."""
     projects = projects.split(" and not for ")
     context.arguments.extend([f"-+{p}" for p in projects])
-
-
-@when("the user wants to pretend it's {some_date}")
-def time_travel_tomorrow(context, some_date):
-    """Add the time travel argument."""
-    context.arguments.extend(["--time-travel", some_date])
 
 
 @when("the user asks for {number} next actions")

@@ -18,6 +18,15 @@ Feature: limit the next actions by due date
     When the user asks for the next action over due
     Then Next-action shows the user the next action over due
 
+  Scenario: one task due on specific date
+    Given a todo.txt with
+      """
+      (A) Task A
+      (B) Task B due:2018-11-01
+      """
+    When the user asks for the next action due 2018-11-01
+    Then Next-action shows the user the next action "(B) Task B due:2018-11-01"
+
   Scenario: invalid date
     When the user asks for the next action with an invalid due date
     Then Next-action tells the user the due date is invalid

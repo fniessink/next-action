@@ -84,19 +84,13 @@ class RenderArgumentsTest(unittest.TestCase):
     def test_arguments(self):
         """Test that the base arguments are rendered correctly."""
         self.assertEqual("+ -+ --all --blocked --config-file --due --file --help --number --overdue --priority "
-                         "--reference --style --time-travel --version -@ -V -a -b -c -d -f -h -n -o -p -r -s -t @",
+                         "--reference --style --version -@ -V -a -b -c -d -f -h -n -o -p -r -s @",
                          render_arguments("all", todotxt.Tasks()))
 
     @given(strategies.sampled_from(["__reference", "_r"]))
     def test_reference(self, argument):
         """Test that the reference arguments are rendered correctly."""
         self.assertEqual("always multiple never", render_arguments(argument, todotxt.Tasks()))
-
-    @given(strategies.sampled_from(["__time_travel", "_t"]))
-    def test_time_travel(self, argument):
-        """Test that the time-travel arguments are rendered correctly."""
-        self.assertEqual("tomorrow yesterday Monday Tuesday Wednesday Thursday Friday Saturday Sunday",
-                         render_arguments(argument, todotxt.Tasks()))
 
     @given(strategies.sampled_from(["__style", "_s"]))
     def test_style(self, argument):
