@@ -40,7 +40,3 @@ Feature: list command line options and arguments for tab completion
   Scenario: list styles
     When the user asks for the list of --style arguments
     Then Next-action shows the user the list of styles: abap algol algol_nu ...
-
-  Scenario: list time travel options
-    When the user asks for the list of --time-travel arguments
-    Then Next-action shows the user the list of time travel arguments: tomorrow yesterday Monday Tuesday ...

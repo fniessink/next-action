@@ -1,6 +1,7 @@
 __pycache__
 *.py[cod]
 .coverage*
+!.coveragerc*
 .mypy_cache
 .sonarlint
 .scannerwork
