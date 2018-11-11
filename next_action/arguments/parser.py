@@ -14,9 +14,10 @@ from .config import read_config_file, write_config_file, validate_config_file
 
 
 ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--config-file", "-d", "--due",
-             "-f", "--file", "-h", "--help", "-n", "--number", "-o", "--overdue", "-p", "--priority", "-r",
-             "--reference", "-s", "--style", "-V", "--version")
+             "-f", "--file", "-g", "--groupby", "-h", "--help", "-n", "--number", "-o", "--overdue", 
+             "-p", "--priority", "-r", "--reference", "-s", "--style", "-V", "--version")
 REFERENCE_CHOICES = ("always", "never", "multiple")
+GROUPBY_CHOICES = ("context", "duedate", "priority", "project")
 
 
 class NextActionArgumentParser(argparse.ArgumentParser):
@@ -74,6 +75,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         output_group.add_argument(
             "-b", "--blocked", help="show the tasks blocked by the next action, if any (default: %(default)s)",
             action="store_true")
+        output_group.add_argument(
+            "-g", "--groupby", choices=GROUPBY_CHOICES, default=None,
+            help="group the next actions by context, due date, priority, or project (default: %(default)s)")
         output_group.add_argument(
             "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "

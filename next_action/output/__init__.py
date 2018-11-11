@@ -36,6 +36,26 @@ def render_tasks(tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
     return "\n".join(render_task(task, namespace) for task in tasks)
 
 
+def render_grouped_tasks(tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
+    """Render the tasks grouped using the options in the namespace."""
+    get_groups = dict(
+        project=lambda task: task.projects() or [None],
+        context=lambda task: task.contexts() or [None],
+        priority=lambda task: [task.priority() or None],
+        duedate=lambda task: [task.due_date() or None])[namespace.groupby]
+    no_group_label = f"No {namespace.groupby}".replace("duedate", "due date")
+    groups = []
+    for task in tasks:
+        for group in get_groups(task):
+            if group not in groups:
+                groups.append(group)
+    lines = []
+    for group in groups:
+        lines.append(f"{group or no_group_label}:")
+        lines.extend(render_task(task, namespace, level=1) for task in tasks if group in get_groups(task))
+    return "\n".join(lines)
+
+
 def render_nothing_todo(tasks: todotxt.Tasks, namespace: argparse.Namespace):
     """Tell the user there's nothing to do and warn about invalid arguments, if any."""
     warning = invalid_arguments(namespace, tasks)
@@ -44,14 +64,17 @@ def render_nothing_todo(tasks: todotxt.Tasks, namespace: argparse.Namespace):
 
 def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
     """Render the next action(s) or, if there are none, tell the user there's nothing to do."""
-    return render_tasks(next_actions, namespace) if next_actions else render_nothing_todo(tasks, namespace)
+    render = (render_grouped_tasks if namespace.groupby else render_tasks) if next_actions else render_nothing_todo
+    return render(tasks, namespace)
 
 
 def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
     """Return the argument for tab completion."""
     argument_type = argument_type.replace("_", "-")  # Undo escaping
     argument_values: Iterable[str]
-    if argument_type in ("--reference", "-r"):
+    if argument_type in ("--groupby", "-g"):
+        argument_values = arguments.parser.GROUPBY_CHOICES
+    elif argument_type in ("--reference", "-r"):
         argument_values = arguments.parser.REFERENCE_CHOICES
     elif argument_type in ("--style", "-s"):
         argument_values = get_all_styles()
