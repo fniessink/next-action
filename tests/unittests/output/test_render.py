@@ -7,7 +7,7 @@ from hypothesis import given, strategies
 from pygments.styles import get_all_styles
 
 from next_action import todotxt
-from next_action.output import render_next_action, render_arguments
+from next_action.output import render_next_action, render_arguments, render_grouped_tasks
 
 
 class RenderNextActionTest(unittest.TestCase):
@@ -78,6 +78,46 @@ class RenderNextActionTest(unittest.TestCase):
             "Lather before:rinse\nblocks:\n- Rinse id:rinse before:repeat\n  blocks:\n  - Repeat id:repeat",
             render_next_action([lather], [], self.namespace))
 
+    def test_groupby_context(self):
+        """Test that next actions can be grouped by context."""
+        self.namespace.groupby = "context"
+        no_context = todotxt.Task("Call mom")
+        paint_house = todotxt.Task("Paint house @home")
+        fix_lamp = todotxt.Task("Fix lamp @home")
+        self.assertEqual(
+            "No context:\n- Call mom\nhome:\n- Paint house @home\n- Fix lamp @home",
+            render_grouped_tasks([no_context, paint_house, fix_lamp], self.namespace))
+
+    def test_groupby_project(self):
+        """Test that next actions can be grouped by project."""
+        self.namespace.groupby = "project"
+        no_project = todotxt.Task("Call mom")
+        paint_house = todotxt.Task("Paint house +HomeImprovement")
+        fix_lamp = todotxt.Task("Fix lamp +HomeImprovement")
+        self.assertEqual(
+            "No project:\n- Call mom\nHomeImprovement:\n- Paint house +HomeImprovement\n- Fix lamp +HomeImprovement",
+            render_grouped_tasks([no_project, paint_house, fix_lamp], self.namespace))
+
+    def test_groupby_priority(self):
+        """Test that next actions can be grouped by priority."""
+        self.namespace.groupby = "priority"
+        no_priority = todotxt.Task("Call mom")
+        paint_house = todotxt.Task("(A) Paint house")
+        fix_lamp = todotxt.Task("(A) Fix lamp")
+        self.assertEqual(
+            "No priority:\n- Call mom\nA:\n- (A) Paint house\n- (A) Fix lamp",
+            render_grouped_tasks([no_priority, paint_house, fix_lamp], self.namespace))
+
+    def test_groupby_due_date(self):
+        """Test that next actions can be grouped by due date."""
+        self.namespace.groupby = "duedate"
+        no_due_date = todotxt.Task("Call mom")
+        paint_house = todotxt.Task("Paint house due:2018-10-10")
+        fix_lamp = todotxt.Task("Fix lamp due:2018-10-10")
+        self.assertEqual(
+            "No due date:\n- Call mom\n2018-10-10:\n- Paint house due:2018-10-10\n- Fix lamp due:2018-10-10",
+            render_grouped_tasks([no_due_date, paint_house, fix_lamp], self.namespace))
+
 
 class RenderArgumentsTest(unittest.TestCase):
     """Unit tests for the render arguments method."""
@@ -87,6 +127,11 @@ class RenderArgumentsTest(unittest.TestCase):
         self.assertEqual("+ -+ --all --blocked --config-file --due --file --groupby --help --number --overdue --priority "
                          "--reference --style --version -@ -V -a -b -c -d -f -g -h -n -o -p -r -s @",
                          render_arguments("all", todotxt.Tasks()))
+
+    @given(strategies.sampled_from(["__groupby", "_g"]))
+    def test_groupby(self, argument):
+        """Test that the groupby arguments are rendered correctly."""
+        self.assertEqual("context duedate priority project", render_arguments(argument, todotxt.Tasks()))
 
     @given(strategies.sampled_from(["__reference", "_r"]))
     def test_reference(self, argument):

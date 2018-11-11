@@ -64,8 +64,10 @@ def render_nothing_todo(tasks: todotxt.Tasks, namespace: argparse.Namespace):
 
 def render_next_action(next_actions: todotxt.Tasks, tasks: todotxt.Tasks, namespace: argparse.Namespace) -> str:
     """Render the next action(s) or, if there are none, tell the user there's nothing to do."""
-    render = (render_grouped_tasks if namespace.groupby else render_tasks) if next_actions else render_nothing_todo
-    return render(next_actions, namespace)
+    if next_actions:
+        render = render_grouped_tasks if namespace.groupby else render_tasks
+        return render(next_actions, namespace)
+    return render_nothing_todo(tasks, namespace)
 
 
 def render_arguments(argument_type: str, tasks: todotxt.Tasks) -> str:
