@@ -20,6 +20,7 @@ class RenderNextActionTest(unittest.TestCase):
         self.namespace.file = ["todo.txt"]
         self.namespace.style = None
         self.namespace.blocked = False
+        self.namespace.groupby = None
 
     def test_reference_always(self):
         """Test that the source filename is added if reference is always."""
@@ -83,8 +84,8 @@ class RenderArgumentsTest(unittest.TestCase):
 
     def test_arguments(self):
         """Test that the base arguments are rendered correctly."""
-        self.assertEqual("+ -+ --all --blocked --config-file --due --file --help --number --overdue --priority "
-                         "--reference --style --version -@ -V -a -b -c -d -f -h -n -o -p -r -s @",
+        self.assertEqual("+ -+ --all --blocked --config-file --due --file --groupby --help --number --overdue --priority "
+                         "--reference --style --version -@ -V -a -b -c -d -f -g -h -n -o -p -r -s @",
                          render_arguments("all", todotxt.Tasks()))
 
     @given(strategies.sampled_from(["__reference", "_r"]))

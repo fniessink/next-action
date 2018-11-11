@@ -26,8 +26,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def __init__(self, version: str = "?") -> None:
         """Initialize the parser."""
         super().__init__(
-            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
-                                "[-b] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] "
+                                "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
                                 "[-p [<priority>]] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
