@@ -106,7 +106,7 @@ def next_action_with_invalid_prio(context):
 @when("the user asks for all next actions grouped by {groupby}")
 def next_action_groupby(context, groupby):
     """Add the groupby argument."""
-    context.arguments.extend(["--all", "--groupby", groupby])
+    context.arguments.extend(["--all", "--groupby", groupby.replace("due date", "duedate")])
 
 
 @when("the user asks for the blocked tasks")
@@ -315,7 +315,7 @@ def show_next_action_with_style(context, style):
 @then("Next-action shows all next actions grouped by {groupby}")
 def show_all_next_actions_grouped_by(context, groupby):
     """Show all next actions grouped by context, project, ..."""
-    assert_in(f"No {groupby}:\n- Task A\n", context.next_action())
+    assert_in(f"No {groupby.replace('due date', 'due date')}:\n- Task A\n", context.next_action())
 
 
 @then("Next-action shows the user the list of {argument_type}: {arguments}")
