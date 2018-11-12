@@ -314,6 +314,26 @@ section below on how to configure *Next-action*.
 
 Not passing an argument to `--style` cancels the style that is configured in the configuration file, if any.
 
+When showing multiple next actions, these can be grouped by passing the `--groupby` option:
+
+```console
+$ next-action --number 5 --groupby context
+phone:
+- (A) Call mom @phone
+weekend:
+- (B) Buy paint to +PaintHouse @store @weekend
+store:
+- (B) Buy paint to +PaintHouse @store @weekend
+- (G) Buy wood for new +DogHouse @store
+work:
+- (C) Finish proposal for important client @work
+home:
+- (K) Pay October invoice @home due:2019-10-28
+```
+
+*Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
+if they belong to multiple groups, as is the case with the `Buy paint` task above.
+
 ### Configuring *Next-action*
 
 In addition to specifying options on the command-line, you can also configure options in a configuration file. The
