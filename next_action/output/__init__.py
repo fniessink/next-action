@@ -46,7 +46,7 @@ def render_grouped_tasks(tasks: todotxt.Tasks, namespace: argparse.Namespace) ->
     no_group_label = f"No {namespace.groupby}".replace("duedate", "due date")
     groups: List[str] = []
     for task in tasks:
-        for group in get_groups(task):
+        for group in sorted(get_groups(task)):
             if group not in groups:
                 groups.append(group)
     lines = []

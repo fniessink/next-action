@@ -189,6 +189,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-r", "--reference"):
             reference = config.get("reference", self.get_default("reference"))
             setattr(namespace, "reference", reference)
+        if self.arguments_not_specified("-g", "--groupby"):
+            groupby = config.get("groupby", self.get_default("groupby"))
+            setattr(namespace, "groupby", groupby)
         if self.arguments_not_specified("-s", "--style"):
             style = config.get("style", self.get_default("style"))
             setattr(namespace, "style", style)

@@ -160,6 +160,16 @@ class WriteConfigFileTest(ConfigTestCase):
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
         expected += "blocked: true\nfile: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+    
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--groupby", "priority"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    @patch.object(sys.stdout, "write")
+    def test_groupby(self, mock_stdout_write):
+        """Test that the groupby argument is processed correctly."""
+        self.assertRaises(SystemExit, parse_arguments)
+        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        expected += "file: ~/todo.txt\ngroupby: priority\nnumber: 1\nreference: multiple\nstyle: default\n"
+        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
@@ -401,6 +411,33 @@ class ReferenceTest(ConfigTestCase):
         self.assertEqual(
             [call(USAGE_MESSAGE),
              call("next-action: error: ~/.next-action.cfg is invalid: reference: unallowed value invalid\n")],
+            mock_stderr_write.call_args_list)
+
+
+class GroupByTest(ConfigTestCase):
+    """Unit tests for the group by parameter."""
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="groupby: context"))
+    def test_valid_group(self):
+        """Test that a valid group value changes the group by argument."""
+        self.assertEqual("context", parse_arguments()[1].groupby)
+
+    @patch.object(sys, "argv", ["next-action", "--groupby", "duedate"])
+    @patch.object(config, "open", mock_open(read_data="groupby: project"))
+    def test_override(self):
+        """Test that a command line argument overrides the configured value."""
+        self.assertEqual("duedate", parse_arguments()[1].groupby)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="groupby: invalid"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_group(self, mock_stderr_write):
+        """Test that an invalid value raises an error."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: groupby: unallowed value invalid\n")],
             mock_stderr_write.call_args_list)
 
 

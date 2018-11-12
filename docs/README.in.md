@@ -320,11 +320,11 @@ When showing multiple next actions, these can be grouped by passing the `--group
 $ next-action --number 5 --groupby context
 phone:
 - (A) Call mom @phone
-weekend:
-- (B) Buy paint to +PaintHouse @store @weekend
 store:
 - (B) Buy paint to +PaintHouse @store @weekend
 - (G) Buy wood for new +DogHouse @store
+weekend:
+- (B) Buy paint to +PaintHouse @store @weekend
 work:
 - (C) Finish proposal for important client @work
 home:
@@ -333,6 +333,9 @@ home:
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
 if they belong to multiple groups, as is the case with the `Buy paint` task above.
+
+If you always want to group next actions, you can configure this in the configuration file. See the section
+below on how to configure *Next-action*.
 
 ### Configuring *Next-action*
 
@@ -359,12 +362,13 @@ this: `next-action --write-config-file > ~/.next-action.cfg`.
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --blocked --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
+$ next-action --write-config-file --blocked --groupby context --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 blocked: true
 file: ~/tasks.txt
 filters:
 - -@waiting
+groupby: context
 number: 3
 priority: Z
 reference: multiple

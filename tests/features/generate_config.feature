@@ -38,3 +38,8 @@ Feature: generate a Next-action configuration file
     When the user asks for a configuration file
     And the user specifies the blocked-option
     Then Next-action includes the blocked-option in the configuration file
+
+  Scenario: add groupby-argument
+    When the user asks for a configuration file
+    And the user specifies the groupby-argument with value context
+    Then Next-action includes the groupby-argument with value context in the configuration file

@@ -24,3 +24,19 @@ Feature: group next actions by context, project, due date or priority
   Scenario: group by project
     When the user asks for all next actions grouped by project
     Then Next-action shows all next actions grouped by project
+
+  Scenario: group by context configured
+    Given a configuration file with
+      """
+      groupby: context
+      """
+    When the user asks for all next actions grouped by context
+    Then Next-action shows all next actions grouped by context
+
+  Scenario: override group by context configuration
+    Given a configuration file with
+      """
+      groupby: context
+      """
+    When the user asks for all next actions grouped by project
+    Then Next-action shows all next actions grouped by project

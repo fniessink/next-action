@@ -340,11 +340,11 @@ When showing multiple next actions, these can be grouped by passing the `--group
 $ next-action --number 5 --groupby context
 phone:
 - (A) Call mom @phone
-weekend:
-- (B) Buy paint to +PaintHouse @store @weekend
 store:
 - (B) Buy paint to +PaintHouse @store @weekend
 - (G) Buy wood for new +DogHouse @store
+weekend:
+- (B) Buy paint to +PaintHouse @store @weekend
 work:
 - (C) Finish proposal for important client @work
 home:
@@ -352,7 +352,10 @@ home:
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
-if they belong to multiple groups, as is the case with the `Buy paint` task.
+if they belong to multiple groups, as is the case with the `Buy paint` task above.
+
+If you always want to group next actions, you can configure this in the configuration file. See the section
+below on how to configure *Next-action*.
 
 ### Configuring *Next-action*
 
@@ -379,12 +382,13 @@ this: `next-action --write-config-file > ~/.next-action.cfg`.
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --blocked --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
+$ next-action --write-config-file --blocked --groupby context --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 blocked: true
 file: ~/tasks.txt
 filters:
 - -@waiting
+groupby: context
 number: 3
 priority: Z
 reference: multiple
@@ -569,13 +573,13 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 251 tests in 2.149s
+unittest_1                | Ran 255 tests in 1.820s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1629      0    239      0   100%
+unittest_1                | TOTAL    1653      0    243      0   100%
 unittest_1                |
 unittest_1                | 29 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -593,13 +597,13 @@ Starting next-action_behave_1 ...
 Starting next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
-behave_1                  | 110 scenarios passed, 0 failed, 0 skipped
-behave_1                  | 361 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m37.457s
+behave_1                  | 113 scenarios passed, 0 failed, 0 skipped
+behave_1                  | 372 steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                  | Took 1m35.123s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     493      0    221      0   100%
+behave_1                  | TOTAL     498      0    225      0   100%
 behave_1                  |
 behave_1                  | 12 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -622,10 +626,13 @@ Starting next-action_quality_1 ...
 Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
+quality_1                 | ************* Module tests.unittests.arguments.test_config
+quality_1                 | tests/unittests/arguments/test_config.py:163:0: C0303: Trailing whitespace (trailing-whitespace)
 quality_1                 |
-quality_1                 | --------------------------------------------------------------------
-quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+quality_1                 | -------------------------------------------------------------------
+quality_1                 | Your code has been rated at 9.99/10 (previous run: 10.00/10, -0.01)
 quality_1                 |
+quality_1                 | ./tests/unittests/arguments/test_config.py:163:1: W293 blank line contains whitespace
 quality_1                 | ------------------------------
 quality_1                 | Checking .
 quality_1                 | Found next-action
