@@ -1,7 +1,7 @@
 """Package for formatting output."""
 
 import argparse
-from typing import Iterable
+from typing import Iterable, List
 
 from pygments.styles import get_all_styles
 
@@ -44,7 +44,7 @@ def render_grouped_tasks(tasks: todotxt.Tasks, namespace: argparse.Namespace) ->
         priority=lambda task: [task.priority() or None],
         duedate=lambda task: [task.due_date() or None])[namespace.groupby]
     no_group_label = f"No {namespace.groupby}".replace("duedate", "due date")
-    groups = []
+    groups: List[str] = []
     for task in tasks:
         for group in get_groups(task):
             if group not in groups:

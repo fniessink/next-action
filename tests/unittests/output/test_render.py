@@ -124,8 +124,8 @@ class RenderArgumentsTest(unittest.TestCase):
 
     def test_arguments(self):
         """Test that the base arguments are rendered correctly."""
-        self.assertEqual("+ -+ --all --blocked --config-file --due --file --groupby --help --number --overdue --priority "
-                         "--reference --style --version -@ -V -a -b -c -d -f -g -h -n -o -p -r -s @",
+        self.assertEqual("+ -+ --all --blocked --config-file --due --file --groupby --help --number --overdue "
+                         "--priority --reference --style --version -@ -V -a -b -c -d -f -g -h -n -o -p -r -s @",
                          render_arguments("all", todotxt.Tasks()))
 
     @given(strategies.sampled_from(["__groupby", "_g"]))

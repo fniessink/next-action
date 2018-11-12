@@ -17,10 +17,10 @@ Feature: group next actions by context, project, due date or priority
     When the user asks for all next actions grouped by due date
     Then Next-action shows all next actions grouped by due date
 
-  Scenario: group by priority 
+  Scenario: group by priority
     When the user asks for all next actions grouped by priority
     Then Next-action shows all next actions grouped by priority
 
-  Scenario: group by project 
+  Scenario: group by project
     When the user asks for all next actions grouped by project
     Then Next-action shows all next actions grouped by project

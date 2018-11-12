@@ -14,7 +14,7 @@ from .config import read_config_file, write_config_file, validate_config_file
 
 
 ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--config-file", "-d", "--due",
-             "-f", "--file", "-g", "--groupby", "-h", "--help", "-n", "--number", "-o", "--overdue", 
+             "-f", "--file", "-g", "--groupby", "-h", "--help", "-n", "--number", "-o", "--overdue",
              "-p", "--priority", "-r", "--reference", "-s", "--style", "-V", "--version")
 REFERENCE_CHOICES = ("always", "never", "multiple")
 GROUPBY_CHOICES = ("context", "duedate", "priority", "project")
