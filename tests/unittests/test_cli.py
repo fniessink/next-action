@@ -89,8 +89,8 @@ Input options:
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
-  -g {context,duedate,priority,project}, --groupby {context,duedate,priority,project}
-                        group the next actions by context, due date, priority, or project (default: None)
+  -g {context,duedate,priority,project,source}, --groupby {context,duedate,priority,project,source}
+                        group the next actions by context, due date, priority, project, or source (default: None)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading multiple
                         todo.txt files)

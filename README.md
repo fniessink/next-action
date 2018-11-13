@@ -93,8 +93,9 @@ Input options:
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
-  -g {context,duedate,priority,project}, --groupby {context,duedate,priority,project}
-                        group the next actions by context, due date, priority, or project (default: None)
+  -g {context,duedate,priority,project,source}, --groupby {context,duedate,priority,project,source}
+                        group the next actions by context, due date, priority, project, or source (default:
+                        None)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
                         multiple todo.txt files)
@@ -573,13 +574,13 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 255 tests in 1.820s
+unittest_1                | Ran 256 tests in 1.571s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1653      0    243      0   100%
+unittest_1                | TOTAL    1659      0    244      0   100%
 unittest_1                |
 unittest_1                | 29 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -597,13 +598,13 @@ Starting next-action_behave_1 ...
 Starting next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
-behave_1                  | 113 scenarios passed, 0 failed, 0 skipped
-behave_1                  | 372 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m35.123s
+behave_1                  | 114 scenarios passed, 0 failed, 0 skipped
+behave_1                  | 376 steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                  | Took 1m35.558s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     498      0    225      0   100%
+behave_1                  | TOTAL     498      0    226      0   100%
 behave_1                  |
 behave_1                  | 12 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -626,13 +627,10 @@ Starting next-action_quality_1 ...
 Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
-quality_1                 | ************* Module tests.unittests.arguments.test_config
-quality_1                 | tests/unittests/arguments/test_config.py:163:0: C0303: Trailing whitespace (trailing-whitespace)
 quality_1                 |
-quality_1                 | -------------------------------------------------------------------
-quality_1                 | Your code has been rated at 9.99/10 (previous run: 10.00/10, -0.01)
+quality_1                 | --------------------------------------------------------------------
+quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 quality_1                 |
-quality_1                 | ./tests/unittests/arguments/test_config.py:163:1: W293 blank line contains whitespace
 quality_1                 | ------------------------------
 quality_1                 | Checking .
 quality_1                 | Found next-action

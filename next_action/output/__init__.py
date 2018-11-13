@@ -42,7 +42,8 @@ def render_grouped_tasks(tasks: todotxt.Tasks, namespace: argparse.Namespace) ->
         project=lambda task: task.projects() or [None],
         context=lambda task: task.contexts() or [None],
         priority=lambda task: [task.priority() or None],
-        duedate=lambda task: [task.due_date() or None])[namespace.groupby]
+        duedate=lambda task: [task.due_date() or None],
+        source=lambda task: [task.filename])[namespace.groupby]
     no_group_label = f"No {namespace.groupby}".replace("duedate", "due date")
     groups: List[str] = []
     for task in tasks:

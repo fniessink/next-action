@@ -35,7 +35,7 @@ Feature: list command line options and arguments for tab completion
 
   Scenario: list groupby options
     When the user asks for the list of --groupby arguments
-    Then Next-action shows the user the list of groupby arguments: context duedate priority project
+    Then Next-action shows the user the list of groupby arguments: context duedate priority project source
 
   Scenario: list reference options
     When the user asks for the list of --reference arguments

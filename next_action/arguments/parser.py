@@ -17,7 +17,7 @@ ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--co
              "-f", "--file", "-g", "--groupby", "-h", "--help", "-n", "--number", "-o", "--overdue",
              "-p", "--priority", "-r", "--reference", "-s", "--style", "-V", "--version")
 REFERENCE_CHOICES = ("always", "never", "multiple")
-GROUPBY_CHOICES = ("context", "duedate", "priority", "project")
+GROUPBY_CHOICES = ("context", "duedate", "priority", "project", "source")
 
 
 class NextActionArgumentParser(argparse.ArgumentParser):
@@ -77,7 +77,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             action="store_true")
         output_group.add_argument(
             "-g", "--groupby", choices=GROUPBY_CHOICES, default=None,
-            help="group the next actions by context, due date, priority, or project (default: %(default)s)")
+            help="group the next actions by context, due date, priority, project, or source (default: %(default)s)")
         output_group.add_argument(
             "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "

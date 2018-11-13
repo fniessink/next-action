@@ -118,6 +118,16 @@ class RenderNextActionTest(unittest.TestCase):
             "No due date:\n- Call mom\n2018-10-10:\n- Paint house due:2018-10-10\n- Fix lamp due:2018-10-10",
             render_grouped_tasks([no_due_date, paint_house, fix_lamp], self.namespace))
 
+    def test_groupby_source(self):
+        """Test that next actions can be grouped by source file."""
+        self.namespace.groupby = "source"
+        no_due_date = todotxt.Task("Call mom", filename="todo.tsk")
+        paint_house = todotxt.Task("Paint house due:2018-10-10", filename="another.tsk")
+        fix_lamp = todotxt.Task("Fix lamp due:2018-10-10", filename="another.tsk")
+        self.assertEqual(
+            f"{no_due_date.filename}:\n- Call mom\n{paint_house.filename}:\n- Paint house due:2018-10-10\n"
+            "- Fix lamp due:2018-10-10", render_grouped_tasks([no_due_date, paint_house, fix_lamp], self.namespace))
+
 
 class RenderArgumentsTest(unittest.TestCase):
     """Unit tests for the render arguments method."""
@@ -131,7 +141,7 @@ class RenderArgumentsTest(unittest.TestCase):
     @given(strategies.sampled_from(["__groupby", "_g"]))
     def test_groupby(self, argument):
         """Test that the groupby arguments are rendered correctly."""
-        self.assertEqual("context duedate priority project", render_arguments(argument, todotxt.Tasks()))
+        self.assertEqual("context duedate priority project source", render_arguments(argument, todotxt.Tasks()))
 
     @given(strategies.sampled_from(["__reference", "_r"]))
     def test_reference(self, argument):

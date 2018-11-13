@@ -315,7 +315,9 @@ def show_next_action_with_style(context, style):
 @then("Next-action shows all next actions grouped by {groupby}")
 def show_next_actions_grouped_by(context, groupby):
     """Show all next actions grouped by context, project, ..."""
-    assert_in(f"No {groupby.replace('due date', 'due date')}:\n- Task A\n", context.next_action())
+    expected_header = context.files[-1].name if groupby == "source" \
+        else f"No {groupby.replace('due date', 'due date')}"
+    assert_in(f"{expected_header}:\n- Task\n", context.next_action())
 
 
 @then("Next-action shows the user the list of {argument_type}: {arguments}")
