@@ -160,7 +160,7 @@ class WriteConfigFileTest(ConfigTestCase):
         expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
         expected += "blocked: true\nfile: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
-    
+
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--groupby", "priority"])
     @patch.object(config, "open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
