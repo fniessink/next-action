@@ -14,9 +14,10 @@ from .config import read_config_file, write_config_file, validate_config_file
 
 
 ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--config-file", "-d", "--due",
-             "-f", "--file", "-h", "--help", "-n", "--number", "-o", "--overdue", "-p", "--priority", "-r",
-             "--reference", "-s", "--style", "-V", "--version")
+             "-f", "--file", "-g", "--groupby", "-h", "--help", "-n", "--number", "-o", "--overdue",
+             "-p", "--priority", "-r", "--reference", "-s", "--style", "-V", "--version")
 REFERENCE_CHOICES = ("always", "never", "multiple")
+GROUPBY_CHOICES = ("context", "duedate", "priority", "project", "source")
 
 
 class NextActionArgumentParser(argparse.ArgumentParser):
@@ -25,8 +26,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def __init__(self, version: str = "?") -> None:
         """Initialize the parser."""
         super().__init__(
-            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] "
-                                "[-b] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] "
+                                "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
                                 "[-p [<priority>]] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
@@ -74,6 +75,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         output_group.add_argument(
             "-b", "--blocked", help="show the tasks blocked by the next action, if any (default: %(default)s)",
             action="store_true")
+        output_group.add_argument(
+            "-g", "--groupby", choices=GROUPBY_CHOICES, default=None,
+            help="group the next actions by context, due date, priority, project, or source (default: %(default)s)")
         output_group.add_argument(
             "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
@@ -185,6 +189,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-r", "--reference"):
             reference = config.get("reference", self.get_default("reference"))
             setattr(namespace, "reference", reference)
+        if self.arguments_not_specified("-g", "--groupby"):
+            groupby = config.get("groupby", self.get_default("groupby"))
+            setattr(namespace, "groupby", groupby)
         if self.arguments_not_specified("-s", "--style"):
             style = config.get("style", self.get_default("style"))
             setattr(namespace, "style", style)

@@ -46,6 +46,8 @@ def write_config_file(namespace: argparse.Namespace) -> None:
         options["priority"] = namespace.priority
     if namespace.blocked:
         options["blocked"] = True
+    if namespace.groupby:
+        options["groupby"] = namespace.groupby
     config = yaml.dump(options, default_flow_style=False)
     sys.stdout.write(intro + config)
 
@@ -78,6 +80,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "reference": {
             "type": "string",
             "allowed": ["always", "never", "multiple"]
+        },
+        "groupby": {
+            "type": "string",
+            "allowed": ["context", "duedate", "priority", "project"]
         },
         "style": {
             "type": "string",

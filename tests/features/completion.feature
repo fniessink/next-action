@@ -33,6 +33,10 @@ Feature: list command line options and arguments for tab completion
     When the user asks for the list of --priority arguments
     Then Next-action shows the user the list of priorities: A B
 
+  Scenario: list groupby options
+    When the user asks for the list of --groupby arguments
+    Then Next-action shows the user the list of groupby arguments: context duedate priority project source
+
   Scenario: list reference options
     When the user asks for the list of --reference arguments
     Then Next-action shows the user the list of reference arguments: always multiple never

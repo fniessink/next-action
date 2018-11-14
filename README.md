@@ -68,8 +68,8 @@ arguments, shows the possible arguments.
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s [<style>]] [-a |
--n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] [-r <ref>] [-s
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -93,6 +93,9 @@ Input options:
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
+  -g {context,duedate,priority,project,source}, --groupby {context,duedate,priority,project,source}
+                        group the next actions by context, due date, priority, project, or source (default:
+                        None)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
                         multiple todo.txt files)
@@ -332,6 +335,29 @@ section below on how to configure *Next-action*.
 
 Not passing an argument to `--style` cancels the style that is configured in the configuration file, if any.
 
+When showing multiple next actions, these can be grouped by passing the `--groupby` option:
+
+```console
+$ next-action --number 5 --groupby context
+phone:
+- (A) Call mom @phone
+store:
+- (B) Buy paint to +PaintHouse @store @weekend
+- (G) Buy wood for new +DogHouse @store
+weekend:
+- (B) Buy paint to +PaintHouse @store @weekend
+work:
+- (C) Finish proposal for important client @work
+home:
+- (K) Pay October invoice @home due:2019-10-28
+```
+
+*Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
+if they belong to multiple groups, as is the case with the `Buy paint` task above.
+
+If you always want to group next actions, you can configure this in the configuration file. See the section
+below on how to configure *Next-action*.
+
 ### Configuring *Next-action*
 
 In addition to specifying options on the command-line, you can also configure options in a configuration file. The
@@ -357,12 +383,13 @@ this: `next-action --write-config-file > ~/.next-action.cfg`.
 Any additional options specified on the command line are used to generate the configuration file:
 
 ```console
-$ next-action --write-config-file --blocked --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
+$ next-action --write-config-file --blocked --groupby context --number 3 --file ~/tasks.txt --style fruity --priority Z -@waiting
 # Configuration file for Next-action. Edit the settings below as you like.
 blocked: true
 file: ~/tasks.txt
 filters:
 - -@waiting
+groupby: context
 number: 3
 priority: Z
 reference: multiple
@@ -501,8 +528,8 @@ will interpret the positional argument as the argument to the option and complai
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-r <ref>] [-s [<style>]] [-a |
--n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] [-r <ref>] [-s
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 
@@ -543,23 +570,20 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
-Creating network "next-action_default" with the default driver
-Creating next-action_unittest_1 ...
-Creating next-action_unittest_1 ... done
+Starting next-action_unittest_1 ...
+Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 245 tests in 2.134s
+unittest_1                | Ran 256 tests in 1.571s
 unittest_1                |
 unittest_1                | OK
-unittest_1                | Name                              Stmts   Miss Branch BrPart  Cover
-unittest_1                | -------------------------------------------------------------------
-unittest_1                | next_action/arguments/parser.py     168      1     64      1    99%
-unittest_1                | next_action/output/__init__.py       44      1     24      1    97%
-unittest_1                | -------------------------------------------------------------------
-unittest_1                | TOTAL                              1584      2    222      2    99%
+unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
+unittest_1                | -----------------------------------------
+unittest_1                | -----------------------------------------
+unittest_1                | TOTAL    1659      0    244      0   100%
 unittest_1                |
-unittest_1                | 27 files skipped due to complete coverage.
-next-action_unittest_1 exited with code 2
+unittest_1                | 29 files skipped due to complete coverage.
+next-action_unittest_1 exited with code 0
 ```
 
 The HTML coverage report is written to `build/unittest-coverage/`.
@@ -570,21 +594,20 @@ To run the feature tests and measure their code coverage:
 
 ```console
 $ docker-compose --no-ansi up behave
-Creating next-action_behave_1 ...
-Creating next-action_behave_1 ... done
+Starting next-action_behave_1 ...
+Starting next-action_behave_1 ... done
 Attaching to next-action_behave_1
-behave_1                  | 15 features passed, 0 failed, 0 skipped
-behave_1                  | 105 scenarios passed, 0 failed, 0 skipped
-behave_1                  | 346 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m36.711s
-behave_1                  | Name                              Stmts   Miss Branch BrPart  Cover
-behave_1                  | -------------------------------------------------------------------
-behave_1                  | next_action/arguments/parser.py     168      1     64      1    99%
-behave_1                  | -------------------------------------------------------------------
-behave_1                  | TOTAL                               475      1    204      1    99%
+behave_1                  | 16 features passed, 0 failed, 0 skipped
+behave_1                  | 114 scenarios passed, 0 failed, 0 skipped
+behave_1                  | 376 steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                  | Took 1m35.558s
+behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
+behave_1                  | -----------------------------------------
+behave_1                  | -----------------------------------------
+behave_1                  | TOTAL     498      0    226      0   100%
 behave_1                  |
-behave_1                  | 11 files skipped due to complete coverage.
-next-action_behave_1 exited with code 2
+behave_1                  | 12 files skipped due to complete coverage.
+next-action_behave_1 exited with code 0
 ```
 
 The HTML coverage report is written to `build/feature-coverage/`.
@@ -600,13 +623,13 @@ To run the quality checks:
 
 ```console
 $ docker-compose --no-ansi up quality
-Creating next-action_quality_1 ...
-Creating next-action_quality_1 ... done
+Starting next-action_quality_1 ...
+Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
 quality_1                 |
-quality_1                 | ------------------------------------
-quality_1                 | Your code has been rated at 10.00/10
+quality_1                 | --------------------------------------------------------------------
+quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 quality_1                 |
 quality_1                 | ------------------------------
 quality_1                 | Checking .
