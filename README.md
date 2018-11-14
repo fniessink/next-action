@@ -145,8 +145,9 @@ Several types of tasks can not be a next action:
 
 - completed tasks (~~`x This is a completed task`~~),
 - tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`),
-- tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`), and
-- blocked tasks (see [task dependencies](#task-dependencies) below).
+- tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`),
+- blocked tasks (see [task dependencies](#task-dependencies) below), and
+- hidden tasks (`This is a hidden task h:1`).
 
 ### Limiting the tasks from which next actions are selected
 
@@ -574,13 +575,13 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 256 tests in 1.571s
+unittest_1                | Ran 258 tests in 1.750s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1659      0    244      0   100%
+unittest_1                | TOTAL    1668      0    244      0   100%
 unittest_1                |
 unittest_1                | 29 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -598,13 +599,13 @@ Starting next-action_behave_1 ...
 Starting next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
-behave_1                  | 114 scenarios passed, 0 failed, 0 skipped
-behave_1                  | 376 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m35.558s
+behave_1                  | 115 scenarios passed, 0 failed, 0 skipped
+behave_1                  | 379 steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                  | Took 1m34.062s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     498      0    226      0   100%
+behave_1                  | TOTAL     500      0    226      0   100%
 behave_1                  |
 behave_1                  | 12 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -628,8 +629,8 @@ Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
 quality_1                 |
-quality_1                 | --------------------------------------------------------------------
-quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+quality_1                 | -------------------------------------------------------------------
+quality_1                 | Your code has been rated at 10.00/10 (previous run: 9.99/10, +0.01)
 quality_1                 |
 quality_1                 | ------------------------------
 quality_1                 | Checking .

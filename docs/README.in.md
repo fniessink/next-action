@@ -125,8 +125,9 @@ Several types of tasks can not be a next action:
 
 - completed tasks (~~`x This is a completed task`~~),
 - tasks with a creation date in the future (`9999-01-01 Start preparing for five-digit years`),
-- tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`), and
-- blocked tasks (see [task dependencies](#task-dependencies) below).
+- tasks with a future threshold date (`Start preparing for emigration to Mars t:3000-01-01`),
+- blocked tasks (see [task dependencies](#task-dependencies) below), and
+- hidden tasks (`This is a hidden task h:1`).
 
 ### Limiting the tasks from which next actions are selected
 

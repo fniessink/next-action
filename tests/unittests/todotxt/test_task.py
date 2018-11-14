@@ -413,3 +413,17 @@ class DependenciesTest(unittest.TestCase):
         task1.add_blocked_task(task2)
         task2.add_blocked_task(task1)
         self.assertTrue(task1.is_blocked())
+
+
+class TaskHiddenessTest(unittest.TestCase):
+    """Unit tests for hidden tasks."""
+
+    def test_visible_task(self):
+        """Test that a regular task is not hidden."""
+        task = todotxt.Task("A task")
+        self.assertFalse(task.is_hidden())
+
+    def test_hidden_task(self):
+        """Test that a task with h:1 is hidden."""
+        task = todotxt.Task("A task h:1")
+        self.assertTrue(task.is_hidden())
