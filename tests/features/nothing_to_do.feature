@@ -44,3 +44,11 @@ Feature: showing there's nothing to do
       """
     When the user asks for the next action for Project
     Then Next-action tells the user there's nothing to do
+
+  Scenario: nothing to do when there are only hidden tasks
+    Given a todo.txt with
+      """
+      Hidden task h:1
+      """
+    When the user asks for the next action
+    Then Next-action tells the user there's nothing to do

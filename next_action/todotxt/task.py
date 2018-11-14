@@ -23,6 +23,10 @@ class Task:
         """Return a text representation of the task."""
         return f"{self.__class__.__name__}<{self.text}>"
 
+    def is_hidden(self) -> bool:
+        """Return whether the task is hidden."""
+        return "1" in self.__prefixed_items("h:")
+
     @functools.lru_cache(maxsize=None)
     def contexts(self) -> Set[str]:
         """Return the contexts of the task."""

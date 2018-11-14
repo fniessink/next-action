@@ -7,7 +7,7 @@ from .todotxt import read_todotxt_files
 
 
 __title__ = "next-action"
-__version__ = "1.10.0"
+__version__ = "1.11.0"
 
 
 def next_action() -> None:

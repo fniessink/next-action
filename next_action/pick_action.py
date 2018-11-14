@@ -21,8 +21,9 @@ def next_actions(tasks: todotxt.Tasks, arguments: argparse.Namespace) -> todotxt
     excluded_contexts = arguments.excluded_contexts
     excluded_projects = arguments.excluded_projects
 
-    # First, get the potential next actions by filtering out tasks with a future creation date or threshold date
-    eligible_tasks = filter(lambda task: not task.is_future(), tasks)
+    # First, get the potential next actions by filtering out hidden tasks and tasks with a future creation date
+    # or threshold date
+    eligible_tasks = filter(lambda task: not task.is_future() and not task.is_hidden(), tasks)
     # Then, exclude tasks that have an excluded context
     if excluded_contexts:
         eligible_tasks = filter(lambda task: not excluded_contexts & task.contexts(), eligible_tasks)
