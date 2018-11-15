@@ -48,7 +48,7 @@ arguments, shows the possible arguments.
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] [-r <ref>] [-s
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
 [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
@@ -73,9 +73,9 @@ Input options:
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
-  -g {context,duedate,priority,project,source}, --groupby {context,duedate,priority,project,source}
-                        group the next actions by context, due date, priority, project, or source (default:
-                        None)
+  -g [<group>], --groupby [<group>]
+                        group the next actions; available groups: context, duedate, priority, project, 
+                        source (default: None)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
                         multiple todo.txt files)
@@ -492,6 +492,17 @@ To always see the tasks blocked by the next action, put this in your configurati
 blocked: true
 ```
 
+Next actions can be configured to be grouped as follows:
+
+```yaml:
+groupby: priority
+```
+
+Possible grouping options are by `context`, `duedate`, `priority`, `project`, and `source`. Specifying a value on
+the command line overrides the grouping in the configuration file, e.g. `next-action --groupby project`.
+To cancel the grouping set in the configuration file all together, use the groupby option without argument:
+`next-action --groupby`.
+
 ### Option details
 
 #### Precedence
@@ -509,7 +520,7 @@ will interpret the positional argument as the argument to the option and complai
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] [-r <ref>] [-s
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
 [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```

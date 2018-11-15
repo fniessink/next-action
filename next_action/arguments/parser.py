@@ -26,8 +26,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
     def __init__(self, version: str = "?") -> None:
         """Initialize the parser."""
         super().__init__(
-            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g <group>] "
-                                "[-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+            usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g "
+                                "[<group>]] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
                                 "[-p [<priority>]] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
@@ -76,8 +76,8 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "-b", "--blocked", help="show the tasks blocked by the next action, if any (default: %(default)s)",
             action="store_true")
         output_group.add_argument(
-            "-g", "--groupby", choices=GROUPBY_CHOICES, default=None,
-            help="group the next actions by context, due date, priority, project, or source (default: %(default)s)")
+            "-g", "--groupby", choices=GROUPBY_CHOICES, default=None, nargs="?", metavar="<group>",
+            help=f"group the next actions; available groups: {', '.join(GROUPBY_CHOICES)} (default: %(default)s)")
         output_group.add_argument(
             "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
