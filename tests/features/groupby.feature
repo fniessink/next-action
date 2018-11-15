@@ -70,3 +70,17 @@ Feature: group next actions by context, project, due date or priority
       """
     When the user asks for all next actions grouped by project
     Then Next-action shows all next actions grouped by project
+
+  Scenario: override group by context configuration without grouping
+    Given a todo.txt named configured_todo.txt with
+      """
+      Task A
+      Task B
+      """
+    And a configuration file with
+      """
+      file: configured_todo.txt
+      groupby: context
+      """
+    When the user asks for all next actions ungrouped
+    Then Next-action shows the user 2 next actions

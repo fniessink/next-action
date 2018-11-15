@@ -103,6 +103,12 @@ def next_action_with_invalid_prio(context):
     context.arguments.extend(["--all", "--priority", "1"])
 
 
+@when("the user asks for all next actions ungrouped")
+def next_action_groupby(context):
+    """Add the groupby option without argument to override a configured group."""
+    context.arguments.extend(["--all", "--groupby"])
+
+
 @when("the user asks for all next actions grouped by {groupby}")
 def next_action_groupby(context, groupby):
     """Add the groupby argument."""
