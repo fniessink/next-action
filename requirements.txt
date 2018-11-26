@@ -1,5 +1,5 @@
 # Dependencies
 Cerberus==1.2
 PyYAML==3.13
-Pygments==2.2.0
+Pygments==2.3.0
 python-dateutil==2.7.5
