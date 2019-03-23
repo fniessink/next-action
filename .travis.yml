@@ -4,7 +4,7 @@ language: python
 install:
 - docker pull fniessink/next-action-dev:latest
 script:
-- docker-compose up #--exit-code-from docs docs
+- docker-compose up -exit-code-from docs docs
 - docker-compose up codacy
 - docker-compose up sonarcloud-scanner
 deploy:

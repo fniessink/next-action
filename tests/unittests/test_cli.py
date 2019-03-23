@@ -21,7 +21,7 @@ class CLITest(unittest.TestCase):
     def test_empty_task_file(self, mock_stdout_write):
         """Test the response when the task file is empty."""
         next_action()
-        self.assertEqual([call("XXX Nothing to do! 😴"), call("\n")], mock_stdout_write.call_args_list)
+        self.assertEqual([call("Nothing to do! 😴"), call("\n")], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action"])
     @patch("fileinput.open", mock_open(read_data="Todo\n"))
