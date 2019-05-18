@@ -63,7 +63,7 @@ services:
     - SONARQUBE_URL=http://sonarqube:9000/
     command: ci/sonarqube-scanner.sh
   sonarqube:
-    image: sonarqube:7.1-alpine
+    image: sonarqube:latest
     container_name: sonarqube
     ports:
     - "9000:9000"

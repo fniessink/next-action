@@ -130,7 +130,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
             "excluded_projects", metavar="-+<project> ...", nargs="*", type=filter_type,
             help="projects the next action must not be part of")
 
-    def parse_args(self, args=None, namespace=None) -> argparse.Namespace:
+    def parse_args(self, args=None, namespace=None) -> argparse.Namespace:  # type: ignore
         """Parse the command-line arguments."""
         namespace, remaining_args = self.parse_known_args(args, namespace)
         self.parse_remaining_args(remaining_args, namespace)

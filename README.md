@@ -103,7 +103,8 @@ Output options:
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
                         borland, bw, colorful, default, emacs, friendly, fruity, igor, lovelace, manni,
                         monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
-                        rrt, tango, trac, vim, vs, xcode (default: None)
+                        rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-light, tango,
+                        trac, vim, vs, xcode (default: None)
 
 Show multiple next actions:
   -a, --all             show all next actions
@@ -586,7 +587,7 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 258 tests in 1.653s
+unittest_1                | Ran 258 tests in 3.305s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
@@ -612,7 +613,7 @@ Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 116 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 383 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m39.543s
+behave_1                  | Took 1m45.811s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
@@ -650,7 +651,6 @@ quality_1                 | ------------------------------
 quality_1                 | Final rating: 10/10
 quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
 quality_1                 | ------------------------------
-quality_1                 | docs/README.in.md: 77: MD009/no-trailing-spaces Trailing spaces [Expected: 0 or 2; Actual: 1]
 next-action_quality_1 exited with code 0
 ```
 

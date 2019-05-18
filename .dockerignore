@@ -3,9 +3,10 @@
 .gitignore
 .hypothesis/
 .mypy_cache/
+.owasp-dependency-check-data
+.scannerwork/
 .sonarlint/
 .venv/
 .vscode/
 build/
 dist/
-

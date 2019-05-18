@@ -98,8 +98,8 @@ Output options:
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
                         colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
-                        paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, tango, trac, vim, vs, xcode
-                        (default: None)
+                        paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark,
+                        solarized-light, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode (default: None)
 
 Show multiple next actions:
   -a, --all             show all next actions

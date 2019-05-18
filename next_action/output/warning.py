@@ -2,7 +2,7 @@
 
 import argparse
 
-from . import todotxt
+from .. import todotxt
 
 
 def invalid_arguments(namespace: argparse.Namespace, tasks: todotxt.Tasks) -> str:

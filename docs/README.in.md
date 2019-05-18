@@ -74,7 +74,7 @@ Input options:
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
   -g [<group>], --groupby [<group>]
-                        group the next actions; available groups: context, duedate, priority, project, 
+                        group the next actions; available groups: context, duedate, priority, project,
                         source (default: None)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
@@ -83,7 +83,8 @@ Output options:
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
                         borland, bw, colorful, default, emacs, friendly, fruity, igor, lovelace, manni,
                         monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
-                        rrt, tango, trac, vim, vs, xcode (default: None)
+                        rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-light, tango,
+                        trac, vim, vs, xcode (default: None)
 
 Show multiple next actions:
   -a, --all             show all next actions
