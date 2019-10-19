@@ -223,7 +223,7 @@ is selected to overdue actions:
 
 ```console
 $ next-action --overdue
-Buy flowers due:2018-02-14
+(L) Pay September invoice @home due:2019-09-28
 ```
 
 #### By priority
@@ -587,7 +587,7 @@ Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 258 tests in 3.305s
+unittest_1                | Ran 258 tests in 6.921s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
@@ -613,7 +613,7 @@ Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 116 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 383 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m45.811s
+behave_1                  | Took 1m40.557s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------

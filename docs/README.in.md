@@ -203,7 +203,7 @@ is selected to overdue actions:
 
 ```console
 $ next-action --overdue
-Buy flowers due:2018-02-14
+(L) Pay September invoice @home due:2019-09-28
 ```
 
 #### By priority
