@@ -208,14 +208,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2019-10-01"
-(L) Pay September invoice @home due:2019-09-28
+$ next-action @home --due "2020-10-01"
+(L) Pay September invoice @home due:2020-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
@@ -223,7 +223,7 @@ is selected to overdue actions:
 
 ```console
 $ next-action --overdue
-(L) Pay September invoice @home due:2019-09-28
+Buy flowers due:2018-02-14
 ```
 
 #### By priority
@@ -351,7 +351,7 @@ weekend:
 work:
 - (C) Finish proposal for important client @work
 home:
-- (K) Pay October invoice @home due:2019-10-28
+- (K) Pay October invoice @home due:2020-10-28
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
@@ -550,14 +550,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 ## Recent changes
@@ -586,14 +586,16 @@ $ docker-compose --no-ansi up unittest
 Starting next-action_unittest_1 ...
 Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
+unittest_1                | /usr/local/lib/python3.6/site-packages/nose/importer.py:12: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+unittest_1                |   from imp import find_module, load_module, acquire_lock, release_lock
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 258 tests in 6.921s
+unittest_1                | Ran 258 tests in 1.537s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1668      0    244      0   100%
+unittest_1                | TOTAL    1668      0    242      0   100%
 unittest_1                |
 unittest_1                | 29 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -613,11 +615,11 @@ Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 116 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 383 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m40.557s
+behave_1                  | Took 1m37.755s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     500      0    226      0   100%
+behave_1                  | TOTAL     500      0    224      0   100%
 behave_1                  |
 behave_1                  | 12 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -628,7 +630,7 @@ The HTML coverage report is written to `build/feature-coverage/`.
 ### Running quality checks
 
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
-the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are chcked with Gherkin-lint.
+the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are checked with Gherkin-lint.
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
 checked with Docker-compose.
 
@@ -640,6 +642,7 @@ Starting next-action_quality_1 ...
 Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
+quality_1                 | Success: no issues found in 12 source files
 quality_1                 |
 quality_1                 | --------------------------------------------------------------------
 quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
@@ -648,8 +651,41 @@ quality_1                 | ------------------------------
 quality_1                 | Checking .
 quality_1                 | Found next-action
 quality_1                 | ------------------------------
-quality_1                 | Final rating: 10/10
-quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
+quality_1                 | Your long_description is not valid ReST:
+quality_1                 | <string>:69: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:69: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:86: (WARNING/2) Definition list ends without a blank line; unexpected unindent.
+quality_1                 | <string>:96: (WARNING/2) Option list ends without a blank line; unexpected unindent.
+quality_1                 | <string>:118: (WARNING/2) Definition list ends without a blank line; unexpected unindent.
+quality_1                 | <string>:119: (WARNING/2) Option list ends without a blank line; unexpected unindent.
+quality_1                 | <string>:121: (WARNING/2) Definition list ends without a blank line; unexpected unindent.
+quality_1                 | <string>:123: (ERROR/3) Unexpected indentation.
+quality_1                 | <string>:124: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
+quality_1                 | <string>:127: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:127: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:296: (ERROR/3) Unexpected indentation.
+quality_1                 | <string>:291: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:291: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:298: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
+quality_1                 | <string>:298: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:298: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:315: (ERROR/3) Unexpected indentation.
+quality_1                 | <string>:316: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
+quality_1                 | <string>:430: (ERROR/3) Unexpected indentation.
+quality_1                 | <string>:428: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:428: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:433: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
+quality_1                 | <string>:433: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:433: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:467: (ERROR/3) Unexpected indentation.
+quality_1                 | <string>:465: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:465: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | <string>:470: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
+quality_1                 | <string>:470: (WARNING/2) Inline literal start-string without end-string.
+quality_1                 | <string>:470: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | ------------------------------
+quality_1                 | Final rating: 9/10
+quality_1                 | Cottage Cheese
 quality_1                 | ------------------------------
 next-action_quality_1 exited with code 0
 ```

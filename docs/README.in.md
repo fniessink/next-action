@@ -188,14 +188,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2019-10-01"
-(L) Pay September invoice @home due:2019-09-28
+$ next-action @home --due "2020-10-01"
+(L) Pay September invoice @home due:2020-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
@@ -203,7 +203,7 @@ is selected to overdue actions:
 
 ```console
 $ next-action --overdue
-(L) Pay September invoice @home due:2019-09-28
+Buy flowers due:2018-02-14
 ```
 
 #### By priority
@@ -331,7 +331,7 @@ weekend:
 work:
 - (C) Finish proposal for important client @work
 home:
-- (K) Pay October invoice @home due:2019-10-28
+- (K) Pay October invoice @home due:2020-10-28
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
@@ -530,14 +530,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 ## Recent changes

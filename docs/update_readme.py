@@ -19,7 +19,7 @@ def do_command(line):
         if "--write-config-file" not in command:
             command.insert(2, "docs/.next-action.cfg")
     output = subprocess.run(
-        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, check=True)  # nosec
+        command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, check=False)  # nosec
     return "\n".join([line.rstrip() for line in output.stdout.rstrip().split("\n")])
 
 
