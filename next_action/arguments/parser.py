@@ -2,12 +2,14 @@
 
 import argparse
 import datetime
+import re
 import shutil
 import string
 import sys
 import textwrap
 from typing import cast, List, Set, Tuple
 
+from dateutil.parser import parse
 from pygments.styles import get_all_styles
 
 from .config import read_config_file, write_config_file, validate_config_file
@@ -208,7 +210,6 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """Insert the configured filters in the namespace, if no matching command line filters are present."""
         filters = config.get("filters", [])
         if isinstance(filters, str):
-            import re
             filters = re.split(r"\s", filters)
         for configured_filter in filters:
             if configured_filter.startswith("@") and configured_filter[len("@"):] not in namespace.excluded_contexts:
@@ -259,7 +260,6 @@ def date_type(value: str) -> datetime.date:
     relative_days = dict(yesterday=-1, today=0, tomorrow=1)
     if value.lower() in relative_days:
         return datetime.date.today() + datetime.timedelta(days=relative_days[value.lower()])
-    from dateutil.parser import parse
     try:
         date_time, remaining_tokens = cast(Tuple, parse(value, fuzzy_with_tokens=True, ignoretz=True))
         if not remaining_tokens:

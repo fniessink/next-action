@@ -70,7 +70,7 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         },
         "priority": {
             "type": "string",
-            "allowed": [letter for letter in string.ascii_uppercase]
+            "allowed": list(string.ascii_uppercase)
         },
         "filters": {
             "type": ["string", "list"],
