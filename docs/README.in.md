@@ -3,8 +3,6 @@
 [![PyPI](https://img.shields.io/pypi/v/next-action.svg)](https://pypi.org/project/next-action/)
 [![Updates](https://pyup.io/repos/github/fniessink/next-action/shield.svg)](https://pyup.io/repos/github/fniessink/next-action/)
 [![Build Status](https://travis-ci.com/fniessink/next-action.svg?branch=master)](https://travis-ci.com/fniessink/next-action)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fniessink/next-action&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/746457c462cd4d9fa23f05424fa932b4)](https://www.codacy.com/app/frank_10/next-action?utm_source=github.com&utm_medium=referral&utm_content=fniessink/next-action&utm_campaign=Badge_Coverage)
 [![SonarQube Badge](https://sonarcloud.io/api/project_badges/measure?project=fniessink%3Anext-action&metric=alert_status)](https://sonarcloud.io/dashboard?id=fniessink%3Anext-action)
 
 Determine the next action to work on from a list of actions in a todo.txt file.
@@ -188,14 +186,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2019-10-01"
-(L) Pay September invoice @home due:2019-09-28
+$ next-action @home --due "2020-10-01"
+(L) Pay September invoice @home due:2020-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
@@ -203,7 +201,7 @@ is selected to overdue actions:
 
 ```console
 $ next-action --overdue
-(L) Pay September invoice @home due:2019-09-28
+Buy flowers due:2018-02-14
 ```
 
 #### By priority
@@ -331,7 +329,7 @@ weekend:
 work:
 - (C) Finish proposal for important client @work
 home:
-- (K) Pay October invoice @home due:2019-10-28
+- (K) Pay October invoice @home due:2020-10-28
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
@@ -530,14 +528,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay October invoice @home due:2019-10-28
+(K) Pay October invoice @home due:2020-10-28
 ```
 
 ## Recent changes
@@ -608,7 +606,7 @@ The HTML coverage report is written to `build/feature-coverage/`.
 ### Running quality checks
 
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
-the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are chcked with Gherkin-lint.
+the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are checked with Gherkin-lint.
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
 checked with Docker-compose.
 

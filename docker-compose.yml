@@ -38,14 +38,6 @@ services:
     - ${PWD}:${PWD}
     - /var/run/docker.sock:/var/run/docker.sock
     command: ci/docs.sh
-  codacy:
-    image: fniessink/next-action-dev:latest
-    working_dir: ${PWD}
-    volumes:
-    - ${PWD}:${PWD}
-    environment:
-    - CODACY_PROJECT_TOKEN
-    command: ci/codacy.sh
   sonarcloud-scanner:
     image: fniessink/next-action-dev:latest
     working_dir: ${PWD}
