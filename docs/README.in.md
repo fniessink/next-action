@@ -608,7 +608,7 @@ The HTML coverage report is written to `build/feature-coverage/`.
 ### Running quality checks
 
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
-the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are chcked with Gherkin-lint.
+the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are checked with Gherkin-lint.
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
 checked with Docker-compose.
 
