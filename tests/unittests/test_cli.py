@@ -65,7 +65,7 @@ class CLITest(unittest.TestCase):
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s [<style>]]
-[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -100,6 +100,7 @@ Output options:
                         colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
                         paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark,
                         solarized-light, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode (default: None)
+  -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
   -a, --all             show all next actions

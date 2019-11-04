@@ -1,4 +1,4 @@
-"""Unit tests for the configration file parsing."""
+"""Unit tests for the configuration file parsing."""
 
 import os
 import sys
@@ -557,4 +557,31 @@ class BlockedTest(ConfigTestCase):
         self.assertEqual(
             [call(USAGE_MESSAGE),
              call("next-action: error: ~/.next-action.cfg is invalid: blocked: unallowed value False\n")],
+            mock_stderr_write.call_args_list)
+
+
+class OpenUrlsTest(ConfigTestCase):
+    """Unit tests for the open-urls parameter."""
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="open_urls: true"))
+    def test_open_urls(self):
+        """Test that the configured value changes the open-urls argument."""
+        self.assertEqual(True, parse_arguments()[1].open_urls)
+
+    @patch.object(sys, "argv", ["next-action", "--open-urls"])
+    @patch.object(config, "open", mock_open(read_data="open_urls: true"))
+    def test_override(self):
+        """Test that a command line argument overrides the configured value."""
+        self.assertEqual(True, parse_arguments()[1].open_urls)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="open_urls: false"))
+    @patch.object(sys.stderr, "write")
+    def test_invalid_open_urls_value(self, mock_stderr_write):
+        """Test that an invalid value raises an error."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE),
+             call("next-action: error: ~/.next-action.cfg is invalid: open_urls: unallowed value False\n")],
             mock_stderr_write.call_args_list)
