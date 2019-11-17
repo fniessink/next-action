@@ -2,7 +2,7 @@
 
 from .arguments import parse_arguments
 from .pick_action import next_actions
-from .output import render_next_action, render_arguments
+from .output import render_next_action, render_arguments, open_urls
 from .todotxt import read_todotxt_files
 
 
@@ -16,8 +16,9 @@ def next_action() -> None:
     Basic recipe:
     1) parse command-line arguments,
     2) read todo.txt file(s),
-    3) determine the next action(s) and,
-    4) display them.
+    3) determine the next action(s),
+    4) display them, and
+    5) open their urls if requested by the user.
     """
     parser, namespace = parse_arguments(__version__)
     try:
@@ -29,3 +30,5 @@ def next_action() -> None:
     else:
         actions = next_actions(tasks, namespace)
         print(render_next_action(actions, tasks, namespace))
+        if namespace.open_urls:
+            open_urls(actions)

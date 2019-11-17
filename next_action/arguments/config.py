@@ -92,6 +92,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
         "blocked": {
             "type": "boolean",
             "allowed": [True]
+        },
+        "open_urls": {
+            "type": "boolean",
+            "allowed": [True]
         }
     }
     validator = cerberus.Validator(schema)

@@ -3,6 +3,7 @@
 import os
 import sys
 import unittest
+import webbrowser
 from unittest.mock import patch, mock_open, call
 
 from next_action import next_action, __version__
@@ -65,7 +66,7 @@ class CLITest(unittest.TestCase):
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s [<style>]]
-[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project> ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
 properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
@@ -100,6 +101,7 @@ Output options:
                         colorful, default, emacs, friendly, fruity, igor, lovelace, manni, monokai, murphy, native,
                         paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark,
                         solarized-light, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode (default: None)
+  -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
   -a, --all             show all next actions
@@ -247,3 +249,13 @@ context or project is mistaken for an argument to an option.
         next_action()
         self.assertEqual(
             [call("A C"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--open-urls"])
+    @patch("fileinput.open", mock_open(read_data="Search https://google.com\n"))
+    @patch.object(webbrowser, "open")
+    @patch.object(sys.stdout, "write")
+    def test_one_task_with_url(self, mock_stdout_write, mock_webbrowser_open):
+        """Test the response when the task file has one task with a URL."""
+        next_action()
+        self.assertEqual([call("Search https://google.com"), call("\n")], mock_stdout_write.call_args_list)
+        self.assertEqual([call("https://google.com")], mock_webbrowser_open.call_args_list)

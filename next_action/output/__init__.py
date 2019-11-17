@@ -8,6 +8,7 @@ from pygments.styles import get_all_styles
 from .. import todotxt, arguments
 from .color import colorize
 from .reference import reference
+from .url import open_urls
 from .warning import invalid_arguments
 
 

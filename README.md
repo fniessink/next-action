@@ -21,7 +21,7 @@ Don't know what *Todo.txt* is? See <https://github.com/todotxt/todo.txt> for the
   - [Limiting the tasks from which next actions are selected](#limiting-the-tasks-from-which-next-actions-are-selected)
   - [Showing more than one next action](#showing-more-than-one-next-action)
   - [Task dependencies](#task-dependencies)
-  - [Styling the output](#styling-the-output)
+  - [Output options](#output-options)
   - [Configuring *Next-action*](#configuring-next-action)
   - [Option details](#option-details)
 - [Recent changes](#recent-changes)
@@ -67,7 +67,8 @@ arguments, shows the possible arguments.
 ```console
 $ next-action --help
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -103,6 +104,7 @@ Output options:
                         monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
                         rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-light, tango,
                         trac, vim, vs, xcode (default: None)
+  -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
   -a, --all             show all next actions
@@ -314,7 +316,7 @@ Additional notes:
   - the blocking task is considered to have a due date that is the minimum of its own due date and the due dates of
     the tasks it is blocking.
 
-### Styling the output
+### Output options
 
 By default, *Next-action* references the todo.txt file from which actions were read if you read tasks from multiple
 todo.txt files. The `--reference` option controls this:
@@ -357,6 +359,8 @@ if they belong to multiple groups, as is the case with the `Buy paint` task abov
 
 If you always want to group next actions, you can configure this in the configuration file. See the section
 below on how to configure *Next-action*.
+
+To open URLs in the description of the next actions, use the `--open-urls` command line option.
 
 ### Configuring *Next-action*
 
@@ -540,7 +544,8 @@ will interpret the positional argument as the argument to the option and complai
 ```console
 $ next-action --due @home
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 
@@ -581,21 +586,19 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
-Starting next-action_unittest_1 ...
-Starting next-action_unittest_1 ... done
+Creating next-action_unittest_1 ...
+Creating next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
-unittest_1                | /usr/local/lib/python3.6/site-packages/nose/importer.py:12: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
-unittest_1                |   from imp import find_module, load_module, acquire_lock, release_lock
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 258 tests in 1.537s
+unittest_1                | Ran 267 tests in 1.693s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1668      0    242      0   100%
+unittest_1                | TOTAL    1726      0    250      0   100%
 unittest_1                |
-unittest_1                | 29 files skipped due to complete coverage.
+unittest_1                | 31 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
 ```
 
@@ -607,20 +610,24 @@ To run the feature tests and measure their code coverage:
 
 ```console
 $ docker-compose --no-ansi up behave
-Starting next-action_behave_1 ...
-Starting next-action_behave_1 ... done
+Creating next-action_behave_1 ...
+Creating next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 16 features passed, 0 failed, 0 skipped
 behave_1                  | 116 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 383 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m37.755s
-behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
-behave_1                  | -----------------------------------------
-behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     500      0    224      0   100%
+behave_1                  | Took 1m32.277s
+behave_1                  | Name                              Stmts   Miss Branch BrPart  Cover
+behave_1                  | -------------------------------------------------------------------
+behave_1                  | next_action/__init__.py              18      1      4      1    91%
+behave_1                  | next_action/arguments/parser.py     177      0     68      1    99%
+behave_1                  | next_action/output/url.py             6      3      4      0    30%
+behave_1                  | next_action/todotxt/task.py          92      1     24      0    99%
+behave_1                  | -------------------------------------------------------------------
+behave_1                  | TOTAL                               516      5    232      2    99%
 behave_1                  |
-behave_1                  | 12 files skipped due to complete coverage.
-next-action_behave_1 exited with code 0
+behave_1                  | 9 files skipped due to complete coverage.
+next-action_behave_1 exited with code 2
 ```
 
 The HTML coverage report is written to `build/feature-coverage/`.
@@ -636,55 +643,31 @@ To run the quality checks:
 
 ```console
 $ docker-compose --no-ansi up quality
-Starting next-action_quality_1 ...
-Starting next-action_quality_1 ... done
+Creating next-action_quality_1 ...
+Creating next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
-quality_1                 | Success: no issues found in 12 source files
+quality_1                 | Success: no issues found in 13 source files
+quality_1                 | ************* Module tests.unittests.test_cli
+quality_1                 | tests/unittests/test_cli.py:15:0: R0904: Too many public methods (21/20) (too-many-public-methods)
+quality_1                 | ************* Module tests.unittests.output.test_url
+quality_1                 | tests/unittests/output/test_url.py:13:4: C0116: Missing function or method docstring (missing-function-docstring)
+quality_1                 | tests/unittests/output/test_url.py:13:4: R0201: Method could be a function (no-self-use)
 quality_1                 |
-quality_1                 | --------------------------------------------------------------------
-quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+quality_1                 | -----------------------------------
+quality_1                 | Your code has been rated at 9.98/10
 quality_1                 |
+quality_1                 | ./tests/unittests/output/test_url.py:13 in public method `test_url`:
+quality_1                 |         D102: Missing docstring in public method
 quality_1                 | ------------------------------
 quality_1                 | Checking .
 quality_1                 | Found next-action
 quality_1                 | ------------------------------
-quality_1                 | Your long_description is not valid ReST:
-quality_1                 | <string>:69: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:69: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:86: (WARNING/2) Definition list ends without a blank line; unexpected unindent.
-quality_1                 | <string>:96: (WARNING/2) Option list ends without a blank line; unexpected unindent.
-quality_1                 | <string>:118: (WARNING/2) Definition list ends without a blank line; unexpected unindent.
-quality_1                 | <string>:119: (WARNING/2) Option list ends without a blank line; unexpected unindent.
-quality_1                 | <string>:121: (WARNING/2) Definition list ends without a blank line; unexpected unindent.
-quality_1                 | <string>:123: (ERROR/3) Unexpected indentation.
-quality_1                 | <string>:124: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
-quality_1                 | <string>:127: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:127: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:296: (ERROR/3) Unexpected indentation.
-quality_1                 | <string>:291: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:291: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:298: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
-quality_1                 | <string>:298: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:298: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:315: (ERROR/3) Unexpected indentation.
-quality_1                 | <string>:316: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
-quality_1                 | <string>:430: (ERROR/3) Unexpected indentation.
-quality_1                 | <string>:428: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:428: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:433: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
-quality_1                 | <string>:433: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:433: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:467: (ERROR/3) Unexpected indentation.
-quality_1                 | <string>:465: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:465: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
-quality_1                 | <string>:470: (WARNING/2) Block quote ends without a blank line; unexpected unindent.
-quality_1                 | <string>:470: (WARNING/2) Inline literal start-string without end-string.
-quality_1                 | <string>:470: (WARNING/2) Inline interpreted text or phrase reference start-string without end-string.
+quality_1                 | Final rating: 10/10
+quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
 quality_1                 | ------------------------------
-quality_1                 | Final rating: 9/10
-quality_1                 | Cottage Cheese
-quality_1                 | ------------------------------
+quality_1                 | docs/README.in.md: 527: MD009/no-trailing-spaces Trailing spaces [Expected: 0 or 2; Actual: 1]
+quality_1                 | README.md: 587: MD013/line-length Line length [Expected: 120; Actual: 212]
 next-action_quality_1 exited with code 0
 ```
 

@@ -1,5 +1,6 @@
 """Code to run before and after certain events during testing."""
 
+import os
 import shutil
 import subprocess  # nosec
 
@@ -8,6 +9,7 @@ def before_all(context):
     """Create a shortcut for invoking Next-action."""
     def run_next_action():
         """Run Next-action and return both stderr and stdout."""
+        os.environ["BROWSER"] = 'echo %s'
         result = subprocess.run(context.arguments, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")
         return result.stdout + result.stderr
 

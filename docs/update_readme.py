@@ -37,7 +37,7 @@ def create_toc(lines, toc_header, min_level=2, max_level=3):
     return "\n".join(result) + "\n"
 
 
-class StateMachine():
+class StateMachine:
     """State machine for processing the lines in the README.md.
 
     Console commands are executed and the output is inserted. The table of contents is inserted and the old
@@ -75,7 +75,9 @@ class StateMachine():
                 regex = re.compile(self.expected_output[len("re: "):].strip(), re.MULTILINE)
                 assert_regex(self.output.strip(), regex)
             else:
-                assert_equal(self.expected_output.strip(), self.output.strip())
+                assert_equal(
+                    self.expected_output.strip(), self.output.strip(),
+                    f"Expected: {self.expected_output.strip()}, got: {self.output.strip()}")
             self.write_lines(line)
             return self.default
         self.expected_output += "\n" + line

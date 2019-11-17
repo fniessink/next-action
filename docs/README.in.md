@@ -47,7 +47,8 @@ arguments, shows the possible arguments.
 ```console
 $ next-action --help
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
@@ -83,6 +84,7 @@ Output options:
                         monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
                         rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-light, tango,
                         trac, vim, vs, xcode (default: None)
+  -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
   -a, --all             show all next actions
@@ -294,7 +296,7 @@ Additional notes:
   - the blocking task is considered to have a due date that is the minimum of its own due date and the due dates of
     the tasks it is blocking.
 
-### Styling the output
+### Output options
 
 By default, *Next-action* references the todo.txt file from which actions were read if you read tasks from multiple
 todo.txt files. The `--reference` option controls this:
@@ -337,6 +339,8 @@ if they belong to multiple groups, as is the case with the `Buy paint` task abov
 
 If you always want to group next actions, you can configure this in the configuration file. See the section
 below on how to configure *Next-action*.
+
+To open URLs in the description of the next actions, use the `--open-urls` command line option.
 
 ### Configuring *Next-action*
 
@@ -502,6 +506,12 @@ the command line overrides the grouping in the configuration file, e.g. `next-ac
 To cancel the grouping set in the configuration file all together, use the groupby option without argument:
 `next-action --groupby`.
 
+To always open URLs, see the `open_urls` option:
+
+```yaml
+open_urls: true
+```
+
 ### Option details
 
 #### Precedence
@@ -520,7 +530,8 @@ will interpret the positional argument as the argument to the option and complai
 ```console
 $ next-action --due @home
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 

@@ -63,7 +63,6 @@ def named_todotxt(context, filename):
 @when("the user asks for the next action")
 def next_action(context):  # pylint: disable=unused-argument
     """Next-action shows the next action by default, so no arguments needed."""
-    pass
 
 
 @when("the user asks for the next action from {filename}")
@@ -104,7 +103,7 @@ def next_action_with_invalid_prio(context):
 
 
 @when("the user asks for all next actions ungrouped")
-def next_action_groupby(context):
+def next_action_ungrouped(context):
     """Add the groupby option without argument to override a configured group."""
     context.arguments.extend(["--all", "--groupby"])
 
@@ -205,6 +204,12 @@ def ask_for_list_of_arguments(context, argument_type):
     if argument_type.endswith(" arguments"):
         argument_type = argument_type[:-len(" arguments")]
     context.arguments.extend(["--list-arguments", f"{argument_type.replace(' ', '_').replace('-', '_')}"])
+
+
+@when("the user asks for the next action with the open urls option")
+def next_action_open_url(context):
+    """Add the open url option."""
+    context.arguments.extend(["--open-url"])
 
 
 @then("Next-action tells the user there's nothing to do")
@@ -361,6 +366,11 @@ def c_or_p_in_and_ex_error_message(context, context_or_project):
 
 
 @then("Next-action tells the user the todo.txt can't be read")
-def unreadable_file_error_messge(context):
+def unreadable_file_error_message(context):
     """Check the error message."""
     assert_in("next-action: error: can't open file: ", context.next_action())
+
+@then('Next-action opens the url "{url}" and shows the next action "{task}"')
+def open_url(context, url, task):
+    """Check the url."""
+    assert_equal(url + "\n" + task + "\n", context.next_action())

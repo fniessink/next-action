@@ -17,7 +17,7 @@ from .config import read_config_file, write_config_file, validate_config_file
 
 ARGUMENTS = ("@", "+", "-@", "-+", "-a", "--all", "-b", "--blocked", "-c", "--config-file", "-d", "--due",
              "-f", "--file", "-g", "--groupby", "-h", "--help", "-n", "--number", "-o", "--overdue",
-             "-p", "--priority", "-r", "--reference", "-s", "--style", "-V", "--version")
+             "-p", "--priority", "-r", "--reference", "-s", "--style", "-u", "--open-urls", "-V", "--version")
 REFERENCE_CHOICES = ("always", "never", "multiple")
 GROUPBY_CHOICES = ("context", "duedate", "priority", "project", "source")
 
@@ -30,7 +30,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         super().__init__(
             usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g "
                                 "[<group>]] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
-                                "[-p [<priority>]] [--] [<context|project> ...]",
+                                "[-p [<priority>]] [-u] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
                         "todo.txt file based on task properties such as priority, due date, and creation date. Limit "
@@ -88,6 +88,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         output_group.add_argument(
             "-s", "--style", metavar="<style>", choices=styles, default=None, nargs="?",
             help=f"colorize the output; available styles: {', '.join(styles)} (default: %(default)s)")
+        output_group.add_argument(
+            "-u", "--open-urls", help="open the urls in the next actions, if any (default: %(default)s)",
+            action="store_true")
 
     def add_number_options(self) -> None:
         """Add the number options to the parser."""
@@ -203,6 +206,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-b", "--blocked"):
             blocked = config.get("blocked", self.get_default("blocked"))
             setattr(namespace, "blocked", blocked)
+        if self.arguments_not_specified("-u", "--open-urls"):
+            open_urls = config.get("open_urls", self.get_default("open_urls"))
+            setattr(namespace, "open_urls", open_urls)
         self.insert_configured_filters(config, namespace)
 
     @staticmethod
