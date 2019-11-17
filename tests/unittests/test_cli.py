@@ -3,6 +3,7 @@
 import os
 import sys
 import unittest
+import webbrowser
 from unittest.mock import patch, mock_open, call
 
 from next_action import next_action, __version__
@@ -248,3 +249,13 @@ context or project is mistaken for an argument to an option.
         next_action()
         self.assertEqual(
             [call("A C"), call("\n")], mock_stdout_write.call_args_list)
+
+    @patch.object(sys, "argv", ["next-action", "--open-urls"])
+    @patch("fileinput.open", mock_open(read_data="Search https://google.com\n"))
+    @patch.object(webbrowser, "open")
+    @patch.object(sys.stdout, "write")
+    def test_one_task_with_url(self, mock_stdout_write, mock_webbrowser_open):
+        """Test the response when the task file has one task with a URL."""
+        next_action()
+        self.assertEqual([call("Search https://google.com"), call("\n")], mock_stdout_write.call_args_list)
+        self.assertEqual([call("https://google.com")], mock_webbrowser_open.call_args_list)

@@ -427,3 +427,27 @@ class TaskHiddenessTest(unittest.TestCase):
         """Test that a task with h:1 is hidden."""
         task = todotxt.Task("A task h:1")
         self.assertTrue(task.is_hidden())
+
+
+class TaskURLsTest(unittest.TestCase):
+    """Unit tests for URLs in tasks."""
+
+    def test_no_urls(self):
+        """Test that a task without URLs returns no URLs."""
+        task = todotxt.Task("A task")
+        self.assertEqual([], task.urls())
+
+    def test_one_url(self):
+        """Test that a task with a URLs returns the URL."""
+        task = todotxt.Task("Search for things https://www.google.com")
+        self.assertEqual(["https://www.google.com"], task.urls())
+
+    def test_multiple_urls(self):
+        """Test that a task with multiple URLs returns the URLs."""
+        task = todotxt.Task("Search for things using https://www.google.com and https://duckduckgo.com")
+        self.assertEqual(["https://www.google.com", "https://duckduckgo.com"], task.urls())
+
+    def test_weird_urls(self):
+        """Test that a task with weird URLs returns the URLs."""
+        task = todotxt.Task("Check out https://www.google.com/check#/foo")
+        self.assertEqual(["https://www.google.com/check#/foo"], task.urls())

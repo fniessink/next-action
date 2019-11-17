@@ -11,6 +11,8 @@ class Task:
     """A task from a line in a todo.txt file."""
 
     iso_date_reg_exp = r"(\d{4})-(\d{1,2})-(\d{1,2})"
+    # Source for the URL regular expression: http://www.noah.org/wiki/RegEx_Python
+    url_reg_exp = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
 
     def __init__(self, todo_txt: str, filename: str = "") -> None:
         """Initialise the task with its Todo.txt text string and originating filename."""
@@ -122,6 +124,10 @@ class Task:
         """Return the id of the task."""
         match = re.search(r"\bid:(\S+)\b", self.text)
         return match.group(1) if match else ""
+
+    def urls(self) -> List[str]:
+        """Return the URLs of the task."""
+        return re.findall(self.url_reg_exp, self.text)
 
     def __prefixed_items(self, prefix: str) -> Set[str]:
         """Return the prefixed items in the task."""
