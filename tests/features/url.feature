@@ -5,5 +5,17 @@ Feature: open url
       """
       A task with a url https://google.com
       """
-    When the user asks for the next action with the open url option
+    When the user asks for the next action with the open urls option
+    Then Next-action opens the url "https://google.com" and shows the next action "A task with a url https://google.com"
+
+  Scenario: configure open url
+    Given a configuration file with
+      """
+      open_urls: true
+      """
+    And a todo.txt with
+      """
+      A task with a url https://google.com
+      """
+    When the user asks for the next action
     Then Next-action opens the url "https://google.com" and shows the next action "A task with a url https://google.com"

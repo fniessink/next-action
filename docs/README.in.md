@@ -506,6 +506,12 @@ the command line overrides the grouping in the configuration file, e.g. `next-ac
 To cancel the grouping set in the configuration file all together, use the groupby option without argument:
 `next-action --groupby`.
 
+To always open URLs, see the `open_urls` option:
+
+```yaml
+open_urls: true
+```
+
 ### Option details
 
 #### Precedence
@@ -524,7 +530,7 @@ will interpret the positional argument as the argument to the option and complai
 ```console
 $ next-action --due @home
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project> 
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
 ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```

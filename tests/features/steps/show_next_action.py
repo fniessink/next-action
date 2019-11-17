@@ -63,7 +63,6 @@ def named_todotxt(context, filename):
 @when("the user asks for the next action")
 def next_action(context):  # pylint: disable=unused-argument
     """Next-action shows the next action by default, so no arguments needed."""
-    pass
 
 
 @when("the user asks for the next action from {filename}")
@@ -104,7 +103,7 @@ def next_action_with_invalid_prio(context):
 
 
 @when("the user asks for all next actions ungrouped")
-def next_action_groupby(context):
+def next_action_ungrouped(context):
     """Add the groupby option without argument to override a configured group."""
     context.arguments.extend(["--all", "--groupby"])
 
@@ -207,7 +206,7 @@ def ask_for_list_of_arguments(context, argument_type):
     context.arguments.extend(["--list-arguments", f"{argument_type.replace(' ', '_').replace('-', '_')}"])
 
 
-@when("the user asks for the next action with the open url option")
+@when("the user asks for the next action with the open urls option")
 def next_action_open_url(context):
     """Add the open url option."""
     context.arguments.extend(["--open-url"])
