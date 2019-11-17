@@ -524,7 +524,8 @@ will interpret the positional argument as the argument to the option and complai
 ```console
 $ next-action --due @home
 Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [--] [<context|project> ...]
+[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project> 
+...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
 

@@ -28,7 +28,7 @@ def config_file(context):
 
 
 def temporary_filename(context, filename):
-    """Match the filenames in the config file to the temporary files' names."""
+    """Match the file names in the config file to the temporary files' names."""
     for file in context.files:
         if file.given_filename == filename:
             return file.name
