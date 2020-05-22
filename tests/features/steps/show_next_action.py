@@ -209,7 +209,7 @@ def ask_for_list_of_arguments(context, argument_type):
 @when("the user asks for the next action with the open urls option")
 def next_action_open_url(context):
     """Add the open url option."""
-    context.arguments.extend(["--open-url"])
+    context.arguments.append("--open-urls")
 
 
 @then("Next-action tells the user there's nothing to do")
@@ -369,6 +369,7 @@ def c_or_p_in_and_ex_error_message(context, context_or_project):
 def unreadable_file_error_message(context):
     """Check the error message."""
     assert_in("next-action: error: can't open file: ", context.next_action())
+
 
 @then('Next-action opens the url "{url}" and shows the next action "{task}"')
 def open_url(context, url, task):
