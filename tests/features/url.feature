@@ -1,7 +1,11 @@
 Feature: open url
 
   Scenario: open a url
-    Given a todo.txt with
+    Given a configuration file with
+      """
+      reference: never  # Without a config file we won't get to 100% branch coverage
+      """
+    And a todo.txt with
       """
       A task with a url https://google.com
       """
