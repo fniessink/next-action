@@ -11,17 +11,18 @@ def config_file(context):
     """Add the contents to the temporary configuration file."""
     context.config_file = tempfile.NamedTemporaryFile(mode="w")
     text = []
+    file_list_key = "file: "
     in_file_list = False
     for line in context.text.split("\n"):
-        if line.startswith("file: "):
-            filename = line[len("file: "):]
-            text.append("file: " + temporary_filename(context, filename))
+        if line.startswith(file_list_key):
+            filename = line[len(file_list_key):]
+            text.append(file_list_key + temporary_filename(context, filename))
         elif in_file_list and line.startswith("- "):
             filename = line[len("- "):]
             text.append("- " + temporary_filename(context, filename))
         else:
             text.append(line)
-        in_file_list = line.startswith("file:") or in_file_list and line.startswith("- ")
+        in_file_list = line.startswith(file_list_key) or in_file_list and line.startswith("- ")
     context.config_file.write("\n".join(text))
     context.config_file.seek(0)
     context.arguments.extend(["--config-file", context.config_file.name])

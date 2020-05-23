@@ -15,9 +15,11 @@ class RenderNextActionTest(unittest.TestCase):
 
     def setUp(self):
         """Set up the namespace with default arguments for all unit tests."""
+        self.filename1 = "todo.txt"
+        self.filename2 = "work.txt"
         self.namespace = argparse.Namespace()
         self.namespace.reference = "multiple"
-        self.namespace.file = ["todo.txt"]
+        self.namespace.file = [self.filename1]
         self.namespace.style = None
         self.namespace.blocked = False
         self.namespace.groupby = None
@@ -25,23 +27,24 @@ class RenderNextActionTest(unittest.TestCase):
     def test_reference_always(self):
         """Test that the source filename is added if reference is always."""
         self.namespace.reference = "always"
-        self.assertEqual("Todo [todo.txt]", render_next_action([todotxt.Task("Todo", "todo.txt")], [], self.namespace))
+        self.assertEqual(
+            f"Todo [{self.filename1}]", render_next_action([todotxt.Task("Todo", self.filename1)], [], self.namespace))
 
     def test_reference_multiple(self):
         """Test that the source filename is added if reference is multiple and there are multiple todo.txt files."""
         self.namespace.file.append("work.txt")
         self.assertEqual(
-            "Todo [todo.txt]\nProposal [work.txt]",
-            render_next_action([todotxt.Task("Todo", "todo.txt"), todotxt.Task("Proposal", "work.txt")], [],
+            f"Todo [{self.filename1}]\nProposal [{self.filename2}]",
+            render_next_action([todotxt.Task("Todo", self.filename1), todotxt.Task("Proposal", self.filename2)], [],
                                self.namespace))
 
     def test_reference_never(self):
         """Test that the source filename is not added if reference is never."""
         self.namespace.reference = "never"
-        self.namespace.file.append("work.txt")
+        self.namespace.file.append(self.filename2)
         self.assertEqual(
             "Todo\nProposal",
-            render_next_action([todotxt.Task("Todo", "todo.txt"), todotxt.Task("Proposal", "work.txt")], [],
+            render_next_action([todotxt.Task("Todo", self.filename1), todotxt.Task("Proposal", self.filename2)], [],
                                self.namespace))
 
     def test_blocked(self):
@@ -121,9 +124,9 @@ class RenderNextActionTest(unittest.TestCase):
     def test_groupby_source(self):
         """Test that next actions can be grouped by source file."""
         self.namespace.groupby = "source"
-        no_due_date = todotxt.Task("Call mom", filename="todo.tsk")
-        paint_house = todotxt.Task("Paint house due:2018-10-10", filename="another.tsk")
-        fix_lamp = todotxt.Task("Fix lamp due:2018-10-10", filename="another.tsk")
+        no_due_date = todotxt.Task("Call mom", filename=self.filename1)
+        paint_house = todotxt.Task("Paint house due:2018-10-10", filename=self.filename2)
+        fix_lamp = todotxt.Task("Fix lamp due:2018-10-10", filename=self.filename2)
         self.assertEqual(
             f"{no_due_date.filename}:\n- Call mom\n{paint_house.filename}:\n- Paint house due:2018-10-10\n"
             "- Fix lamp due:2018-10-10", render_grouped_tasks([no_due_date, paint_house, fix_lamp], self.namespace))
