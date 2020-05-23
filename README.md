@@ -526,6 +526,12 @@ the command line overrides the grouping in the configuration file, e.g. `next-ac
 To cancel the grouping set in the configuration file all together, use the groupby option without argument:
 `next-action --groupby`.
 
+To always open URLs, see the `open_urls` option:
+
+```yaml
+open_urls: true
+```
+
 ### Option details
 
 #### Precedence
@@ -586,17 +592,17 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
-Creating next-action_unittest_1 ...
-Creating next-action_unittest_1 ... done
+Recreating next-action_unittest_1 ...
+Recreating next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 267 tests in 1.693s
+unittest_1                | Ran 269 tests in 2.001s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1726      0    250      0   100%
+unittest_1                | TOTAL    1738      0    250      0   100%
 unittest_1                |
 unittest_1                | 31 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -610,24 +616,20 @@ To run the feature tests and measure their code coverage:
 
 ```console
 $ docker-compose --no-ansi up behave
-Creating next-action_behave_1 ...
-Creating next-action_behave_1 ... done
+Recreating next-action_behave_1 ...
+Recreating next-action_behave_1 ... done
 Attaching to next-action_behave_1
-behave_1                  | 16 features passed, 0 failed, 0 skipped
-behave_1                  | 116 scenarios passed, 0 failed, 0 skipped
-behave_1                  | 383 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 1m32.277s
-behave_1                  | Name                              Stmts   Miss Branch BrPart  Cover
-behave_1                  | -------------------------------------------------------------------
-behave_1                  | next_action/__init__.py              18      1      4      1    91%
-behave_1                  | next_action/arguments/parser.py     177      0     68      1    99%
-behave_1                  | next_action/output/url.py             6      3      4      0    30%
-behave_1                  | next_action/todotxt/task.py          92      1     24      0    99%
-behave_1                  | -------------------------------------------------------------------
-behave_1                  | TOTAL                               516      5    232      2    99%
+behave_1                  | 17 features passed, 0 failed, 0 skipped
+behave_1                  | 118 scenarios passed, 0 failed, 0 skipped
+behave_1                  | 391 steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                  | Took 2m5.313s
+behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
+behave_1                  | -----------------------------------------
+behave_1                  | -----------------------------------------
+behave_1                  | TOTAL     516      0    232      0   100%
 behave_1                  |
-behave_1                  | 9 files skipped due to complete coverage.
-next-action_behave_1 exited with code 2
+behave_1                  | 13 files skipped due to complete coverage.
+next-action_behave_1 exited with code 0
 ```
 
 The HTML coverage report is written to `build/feature-coverage/`.
@@ -643,22 +645,15 @@ To run the quality checks:
 
 ```console
 $ docker-compose --no-ansi up quality
-Creating next-action_quality_1 ...
-Creating next-action_quality_1 ... done
+Recreating next-action_quality_1 ...
+Recreating next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
 quality_1                 | Success: no issues found in 13 source files
-quality_1                 | ************* Module tests.unittests.test_cli
-quality_1                 | tests/unittests/test_cli.py:15:0: R0904: Too many public methods (21/20) (too-many-public-methods)
-quality_1                 | ************* Module tests.unittests.output.test_url
-quality_1                 | tests/unittests/output/test_url.py:13:4: C0116: Missing function or method docstring (missing-function-docstring)
-quality_1                 | tests/unittests/output/test_url.py:13:4: R0201: Method could be a function (no-self-use)
 quality_1                 |
-quality_1                 | -----------------------------------
-quality_1                 | Your code has been rated at 9.98/10
+quality_1                 | ------------------------------------
+quality_1                 | Your code has been rated at 10.00/10
 quality_1                 |
-quality_1                 | ./tests/unittests/output/test_url.py:13 in public method `test_url`:
-quality_1                 |         D102: Missing docstring in public method
 quality_1                 | ------------------------------
 quality_1                 | Checking .
 quality_1                 | Found next-action
@@ -666,8 +661,6 @@ quality_1                 | ------------------------------
 quality_1                 | Final rating: 10/10
 quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
 quality_1                 | ------------------------------
-quality_1                 | docs/README.in.md: 527: MD009/no-trailing-spaces Trailing spaces [Expected: 0 or 2; Actual: 1]
-quality_1                 | README.md: 587: MD013/line-length Line length [Expected: 120; Actual: 212]
 next-action_quality_1 exited with code 0
 ```
 
