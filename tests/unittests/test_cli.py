@@ -12,7 +12,7 @@ from next_action.arguments import config
 from .arguments.test_parser import USAGE_MESSAGE
 
 
-@patch.object(config, "open", mock_open(read_data=""))
+@patch.object(config, "open", mock_open(read_data=""))  # pylint: disable=too-many-public-methods
 class CLITest(unittest.TestCase):
     """Unit tests for the command-line interface."""
 
@@ -98,7 +98,7 @@ Output options:
                         todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
-                        colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace, manni, monokai, murphy, 
+                        colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace, manni, monokai, murphy,
                         native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark,
                         solarized-light, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode (default: None)
   -u, --open-urls       open the urls in the next actions, if any (default: False)
