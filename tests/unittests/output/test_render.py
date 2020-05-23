@@ -23,6 +23,11 @@ class RenderNextActionTest(unittest.TestCase):
         self.namespace.style = None
         self.namespace.blocked = False
         self.namespace.groupby = None
+        self.call_mom = todotxt.Task("Call mom", filename=self.filename1)
+        self.paint_house = todotxt.Task(
+            "(A) Paint house @home +HomeImprovement due:2018-10-10", filename=self.filename2)
+        self.fix_lamp = todotxt.Task("(A) Fix lamp @home +HomeImprovement due:2018-10-10", filename=self.filename2)
+        self.repeat = todotxt.Task("Repeat id:repeat")
 
     def test_reference_always(self):
         """Test that the source filename is added if reference is always."""
@@ -51,22 +56,19 @@ class RenderNextActionTest(unittest.TestCase):
         """Test that the blocked task is rendered."""
         self.namespace.blocked = True
         rinse = todotxt.Task("Rinse before:repeat")
-        repeat = todotxt.Task("Repeat id:repeat")
-        rinse.add_blocked_task(repeat)
+        rinse.add_blocked_task(self.repeat)
         self.assertEqual(
-            "Rinse before:repeat\nblocks:\n- Repeat id:repeat",
-            render_next_action([rinse], [], self.namespace))
+            f"Rinse before:repeat\nblocks:\n- {self.repeat.text}", render_next_action([rinse], [], self.namespace))
 
     def test_blocked_multiple(self):
         """Test that multiple blocked tasks are rendered."""
         self.namespace.blocked = True
         lather = todotxt.Task("Rinse before:repeat before:rinse")
-        repeat = todotxt.Task("Repeat id:repeat")
         rinse = todotxt.Task("Rinse id:rinse")
-        lather.add_blocked_task(repeat)
+        lather.add_blocked_task(self.repeat)
         lather.add_blocked_task(rinse)
         self.assertEqual(
-            "Rinse before:repeat before:rinse\nblocks:\n- Repeat id:repeat\n- Rinse id:rinse",
+            f"Rinse before:repeat before:rinse\nblocks:\n- {self.repeat.text}\n- Rinse id:rinse",
             render_next_action([lather], [], self.namespace))
 
     def test_blocked_recursive(self):
@@ -74,62 +76,49 @@ class RenderNextActionTest(unittest.TestCase):
         self.namespace.blocked = True
         lather = todotxt.Task("Lather before:rinse")
         rinse = todotxt.Task("Rinse id:rinse before:repeat")
-        repeat = todotxt.Task("Repeat id:repeat")
         lather.add_blocked_task(rinse)
-        rinse.add_blocked_task(repeat)
+        rinse.add_blocked_task(self.repeat)
         self.assertEqual(
-            "Lather before:rinse\nblocks:\n- Rinse id:rinse before:repeat\n  blocks:\n  - Repeat id:repeat",
+            f"Lather before:rinse\nblocks:\n- Rinse id:rinse before:repeat\n  blocks:\n  - {self.repeat.text}",
             render_next_action([lather], [], self.namespace))
 
     def test_groupby_context(self):
         """Test that next actions can be grouped by context."""
         self.namespace.groupby = "context"
-        no_context = todotxt.Task("Call mom")
-        paint_house = todotxt.Task("Paint house @home")
-        fix_lamp = todotxt.Task("Fix lamp @home")
         self.assertEqual(
-            "No context:\n- Call mom\nhome:\n- Paint house @home\n- Fix lamp @home",
-            render_grouped_tasks([no_context, paint_house, fix_lamp], self.namespace))
+            f"No context:\n- {self.call_mom.text}\nhome:\n- {self.paint_house.text}\n- {self.fix_lamp.text}",
+            render_grouped_tasks([self.call_mom, self.paint_house, self.fix_lamp], self.namespace))
 
     def test_groupby_project(self):
         """Test that next actions can be grouped by project."""
         self.namespace.groupby = "project"
-        no_project = todotxt.Task("Call mom")
-        paint_house = todotxt.Task("Paint house +HomeImprovement")
-        fix_lamp = todotxt.Task("Fix lamp +HomeImprovement")
         self.assertEqual(
-            "No project:\n- Call mom\nHomeImprovement:\n- Paint house +HomeImprovement\n- Fix lamp +HomeImprovement",
-            render_grouped_tasks([no_project, paint_house, fix_lamp], self.namespace))
+            f"No project:\n- {self.call_mom.text}\nHomeImprovement:\n- {self.paint_house.text}\n"
+            f"- {self.fix_lamp.text}",
+            render_grouped_tasks([self.call_mom, self.paint_house, self.fix_lamp], self.namespace))
 
     def test_groupby_priority(self):
         """Test that next actions can be grouped by priority."""
         self.namespace.groupby = "priority"
-        no_priority = todotxt.Task("Call mom")
-        paint_house = todotxt.Task("(A) Paint house")
-        fix_lamp = todotxt.Task("(A) Fix lamp")
         self.assertEqual(
-            "No priority:\n- Call mom\nA:\n- (A) Paint house\n- (A) Fix lamp",
-            render_grouped_tasks([no_priority, paint_house, fix_lamp], self.namespace))
+            f"No priority:\n- {self.call_mom.text}\nA:\n- {self.paint_house.text}\n- {self.fix_lamp.text}",
+            render_grouped_tasks([self.call_mom, self.paint_house, self.fix_lamp], self.namespace))
 
     def test_groupby_due_date(self):
         """Test that next actions can be grouped by due date."""
         self.namespace.groupby = "duedate"
-        no_due_date = todotxt.Task("Call mom")
-        paint_house = todotxt.Task("Paint house due:2018-10-10")
-        fix_lamp = todotxt.Task("Fix lamp due:2018-10-10")
         self.assertEqual(
-            "No due date:\n- Call mom\n2018-10-10:\n- Paint house due:2018-10-10\n- Fix lamp due:2018-10-10",
-            render_grouped_tasks([no_due_date, paint_house, fix_lamp], self.namespace))
+            f"No due date:\n- {self.call_mom.text}\n2018-10-10:\n- {self.paint_house.text}\n"
+            f"- {self.fix_lamp.text}",
+            render_grouped_tasks([self.call_mom, self.paint_house, self.fix_lamp], self.namespace))
 
     def test_groupby_source(self):
         """Test that next actions can be grouped by source file."""
         self.namespace.groupby = "source"
-        no_due_date = todotxt.Task("Call mom", filename=self.filename1)
-        paint_house = todotxt.Task("Paint house due:2018-10-10", filename=self.filename2)
-        fix_lamp = todotxt.Task("Fix lamp due:2018-10-10", filename=self.filename2)
         self.assertEqual(
-            f"{no_due_date.filename}:\n- Call mom\n{paint_house.filename}:\n- Paint house due:2018-10-10\n"
-            "- Fix lamp due:2018-10-10", render_grouped_tasks([no_due_date, paint_house, fix_lamp], self.namespace))
+            f"{self.call_mom.filename}:\n- {self.call_mom.text}\n{self.paint_house.filename}:\n"
+            f"- {self.paint_house.text}\n- {self.fix_lamp.text}",
+            render_grouped_tasks([self.call_mom, self.paint_house, self.fix_lamp], self.namespace))
 
 
 class RenderArgumentsTest(unittest.TestCase):

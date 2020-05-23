@@ -64,7 +64,7 @@ class PickActionTest(fixtures.TestCaseWithNamespace):
 
     def test_project(self):
         """Test that a task with a project takes precedence over a task without a project."""
-        task1 = todotxt.Task("Task 1")
+        task1 = todotxt.Task("Task 1 without project")
         task2 = todotxt.Task("Task 2 +Project")
         self.assertEqual([task2, task1], pick_action.next_actions([task1, task2], self.namespace))
 
@@ -102,10 +102,10 @@ class FilterTasksTest(fixtures.TestCaseWithNamespace):
 
     def test_excluded_contexts(self):
         """Test that contexts can be excluded."""
-        task = todotxt.Task("(A) Todo @computer @work")
-        task = todotxt.Task("(A) Todo @computer")
-        self.namespace.excluded_contexts = {"computer"}
-        self.assertEqual([], pick_action.next_actions([task], self.namespace))
+        task1 = todotxt.Task("(A) Todo @home @work")
+        task2 = todotxt.Task("(A) Todo @home")
+        self.namespace.excluded_contexts = {"home"}
+        self.assertEqual([], pick_action.next_actions([task1, task2], self.namespace))
 
     def test_not_excluded_context(self):
         """Test that a task is not excluded if it doesn't belong to the excluded category."""
@@ -165,38 +165,32 @@ class IgnoredTasksTest(fixtures.TestCaseWithNamespace):
         self.assertEqual([], pick_action.next_actions([future_task1, future_task2], self.namespace))
 
 
-class OverdueTasks(fixtures.TestCaseWithNamespace):
-    """Unit tests for the overdue filter."""
+class DueAndOverdueTasks(fixtures.TestCaseWithNamespace):
+    """Unit tests for the overdue and is_due filters."""
+
+    def setUp(self):
+        """Set up tasks."""
+        super().setUp()
+        self.no_duedate = todotxt.Task("Task")
+        self.future_duedate = todotxt.Task("Task due:9999-01-01")
+        self.overdue = todotxt.Task("Task due:2000-01-01")
+        self.tasks = [self.no_duedate, self.future_duedate, self.overdue]
 
     def test_overdue_tasks(self):
         """Test that tasks that not overdue are filtered."""
-        no_duedate = todotxt.Task("Task")
-        future_duedate = todotxt.Task("Task due:9999-01-01")
-        overdue = todotxt.Task("Task due:2000-01-01")
         self.namespace.overdue = True
         self.namespace.time_travel = None
-        self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
-
-
-class DueTasks(fixtures.TestCaseWithNamespace):
-    """Unit tests for the is_due filter."""
+        self.assertEqual([self.overdue], pick_action.next_actions(self.tasks, self.namespace))
 
     def test_due_tasks(self):
         """Test that tasks that are not due are filtered."""
-        no_duedate = todotxt.Task("Task")
-        future_duedate = todotxt.Task("Task due:9999-01-01")
-        overdue = todotxt.Task("Task due:2000-01-01")
         self.namespace.due = datetime.date(2000, 1, 1)
-        self.assertEqual([overdue], pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
+        self.assertEqual([self.overdue], pick_action.next_actions(self.tasks, self.namespace))
 
     def test_any_due_tasks(self):
         """Test that tasks that are not due are filtered."""
-        no_duedate = todotxt.Task("Task")
-        future_duedate = todotxt.Task("Task due:9999-01-01")
-        overdue = todotxt.Task("Task due:2000-01-01")
         self.namespace.due = datetime.date.max
-        self.assertEqual([overdue, future_duedate],
-                         pick_action.next_actions([no_duedate, future_duedate, overdue], self.namespace))
+        self.assertEqual([self.overdue, self.future_duedate], pick_action.next_actions(self.tasks, self.namespace))
 
 
 class MinimimPriorityTest(fixtures.TestCaseWithNamespace):
