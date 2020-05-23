@@ -12,7 +12,7 @@ from next_action.arguments import config
 from .arguments.test_parser import USAGE_MESSAGE
 
 
-@patch.object(config, "open", mock_open(read_data=""))
+@patch.object(config, "open", mock_open(read_data=""))  # pylint: disable=too-many-public-methods
 class CLITest(unittest.TestCase):
     """Unit tests for the command-line interface."""
 

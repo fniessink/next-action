@@ -23,6 +23,12 @@ class ParserTestCase(unittest.TestCase):
         """Set up the terminal width for all unit tests."""
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
 
+    def assert_system_exit(self, mock_stderr_write, error_message):
+        """Assert that parse_arguments() exits with a system exit and writes the usage message and an error message."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual([call(USAGE_MESSAGE), call(f"next-action: error: {error_message}\n")],
+                         mock_stderr_write.call_args_list)
+
 
 @patch.object(config, "open", mock_open(read_data=""))
 class NoArgumentTest(ParserTestCase):
@@ -100,10 +106,7 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_empty_context(self, mock_stderr_write):
         """Test that the argument parser exits if the context is empty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument <context|project>: context name missing\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument <context|project>: context name missing")
 
     @patch.object(sys, "argv", ["next-action", "-@home"])
     def test_exclude_context(self):
@@ -114,18 +117,13 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_include_exclude_context(self, mock_stderr_write):
         """Test that contexts cannot be included and excluded."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: @home is both included and excluded\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "@home is both included and excluded")
 
     @patch.object(sys, "argv", ["next-action", "-^"])
     @patch.object(sys.stderr, "write")
     def test_invalid_extra_argument(self, mock_stderr_write):
         """Test that the argument parser exits if the extra argument is invalid."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: unrecognized argument: -^\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "unrecognized argument: -^")
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse"])
     def test_one_project(self):
@@ -141,10 +139,7 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_empty_project(self, mock_stderr_write):
         """Test that the argument parser exits if the project is empty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument <context|project>: project name missing\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument <context|project>: project name missing")
 
     @patch.object(sys, "argv", ["next-action", "-+DogHouse"])
     def test_exclude_project(self):
@@ -155,19 +150,13 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_include_exclude_project(self, mock_stderr_write):
         """Test that projects cannot be included and excluded."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: +DogHouse is both included and excluded\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "+DogHouse is both included and excluded")
 
     @patch.object(sys, "argv", ["next-action", "-+"])
     @patch.object(sys.stderr, "write")
     def test_empty_excluded_project(self, mock_stderr_write):
         """Test that the argument parser exits if the project is empty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument <context|project>: project name missing\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument <context|project>: project name missing")
 
     @patch.object(sys, "argv", ["next-action", "+DogHouse", "@home", "+PaintHouse", "@weekend"])
     def test_contexts_and_projects(self):
@@ -187,10 +176,7 @@ class FilterArgumentTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_faulty_option(self, mock_stderr_write):
         """Test that the argument parser exits if the option is faulty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument <context|project>: unrecognized argument: home\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument <context|project>: unrecognized argument: home")
 
 
 @patch.object(config, "open", mock_open(read_data=""))
@@ -211,19 +197,13 @@ class NumberTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_faulty_number(self, mock_stderr_write):
         """Test that the argument parser exits if the option is faulty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -n/--number: invalid number: not_a_number\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -n/--number: invalid number: not_a_number")
 
     @patch.object(sys, "argv", ["next-action", "--number", "-1"])
     @patch.object(sys.stderr, "write")
     def test_negative_number(self, mock_stderr_write):
         """Test that the argument parser exits if the option is faulty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -n/--number: invalid number: -1\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -n/--number: invalid number: -1")
 
     @patch.object(sys, "argv", ["next-action", "--all"])
     def test_all_actions(self):
@@ -234,10 +214,7 @@ class NumberTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_all_and_number(self, mock_stderr_write):
         """Test that the argument parser exits if the both --all and --number are used."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -n/--number: not allowed with argument -a/--all\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -n/--number: not allowed with argument -a/--all")
 
 
 @patch.object(config, "open", mock_open(read_data=""))
@@ -268,37 +245,25 @@ class DueDateTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_faulty_date(self, mock_stderr_write):
         """Test that the argument parser exits if the option is faulty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date: not_a_date\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -d/--due: invalid date: not_a_date")
 
     @patch.object(sys, "argv", ["next-action", "--due", "2019-02-30"])
     @patch.object(sys.stderr, "write")
     def test_invalid_date(self, mock_stderr_write):
         """Test that the argument parser exits if the option is invalid."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date: 2019-02-30\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -d/--due: invalid date: 2019-02-30")
 
     @patch.object(sys, "argv", ["next-action", "--due", "2019-02-15-12"])
     @patch.object(sys.stderr, "write")
     def test_too_long(self, mock_stderr_write):
         """Test that the argument parser exits if the option is invalid."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date: 2019-02-15-12\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -d/--due: invalid date: 2019-02-15-12")
 
     @patch.object(sys, "argv", ["next-action", "--due", "Extra 2019-02-15"])
     @patch.object(sys.stderr, "write")
     def test_extra_tokens(self, mock_stderr_write):
         """Test that the argument parser exits if the option is invalid."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -d/--due: invalid date: Extra 2019-02-15\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(mock_stderr_write, "argument -d/--due: invalid date: Extra 2019-02-15")
 
 
 @patch.object(config, "open", mock_open(read_data=""))
@@ -329,8 +294,6 @@ class ReferenceTest(ParserTestCase):
     @patch.object(sys.stderr, "write")
     def test_faulty_date(self, mock_stderr_write):
         """Test that the argument parser exits if the option is faulty."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: argument -r/--reference: invalid choice: 'not_an_option' "
-                               "(choose from 'always', 'never', 'multiple')\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_system_exit(
+            mock_stderr_write,
+            "argument -r/--reference: invalid choice: 'not_an_option' (choose from 'always', 'never', 'multiple')")

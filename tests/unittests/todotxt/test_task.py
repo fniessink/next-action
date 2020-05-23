@@ -255,8 +255,8 @@ class DueDateTest(unittest.TestCase):
 
     def test_is_due(self):
         """Test the is_due method."""
-        self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date.today()))
-        self.assertTrue(todotxt.Task("due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
+        self.assertTrue(todotxt.Task("due:2019-01-01").is_due(datetime.date.today()))
+        self.assertTrue(todotxt.Task("due:2019-01-01").is_due(datetime.date(2019, 1, 1)))
         self.assertTrue(todotxt.Task("9999-01-01 due:2018-01-01").is_due(datetime.date(2018, 1, 1)))
         self.assertFalse(todotxt.Task("due:2018-01-01").is_due(datetime.date(2017, 12, 31)))
         self.assertFalse(todotxt.Task("Without due date").is_due(datetime.date(2017, 12, 31)))
@@ -266,8 +266,8 @@ class DueDateTest(unittest.TestCase):
 
         Test that the due date of a task without its own due date equals the due date of the task it is blocking.
         """
-        after = todotxt.Task("After id:1 due:2018-01-01")
-        before = todotxt.Task("Before before:1")
+        after = todotxt.Task("After id:after due:2018-01-01")
+        before = todotxt.Task("Before before:after")
         after.set_is_blocked()
         before.add_blocked_task(after)
         self.assertEqual(datetime.date(2018, 1, 1), before.due_date())
@@ -278,9 +278,9 @@ class DueDateTest(unittest.TestCase):
         Test that the due date of a task without its own due date equals the earliest due date of the tasks it is
         blocking.
         """
-        after1 = todotxt.Task("After id:1 due:2018-10-01")
+        after1 = todotxt.Task("After id:after due:2018-10-01")
         after2 = todotxt.Task("After after:before due:2018-01-01")
-        before = todotxt.Task("Before before:1 id:before")
+        before = todotxt.Task("Before before:after id:before")
         after1.set_is_blocked()
         after2.set_is_blocked()
         before.add_blocked_task(after1)

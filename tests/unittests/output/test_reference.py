@@ -14,18 +14,19 @@ class ReferenceTest(unittest.TestCase):
         """Set up the namespace with default arguments for all unit tests."""
         self.namespace = argparse.Namespace()
         self.namespace.reference = "multiple"
+        self.filename = "todo.txt"
 
     def test_always(self):
         """Test that the source filename is added."""
         self.namespace.reference = "always"
-        self.assertEqual("Todo [todo.txt]", reference(todotxt.Task("Todo", "todo.txt"), self.namespace))
+        self.assertEqual(f"Todo [{self.filename}]", reference(todotxt.Task("Todo", self.filename), self.namespace))
 
     def test_never(self):
         """Test that the source filename is not added."""
         self.namespace.reference = "never"
-        self.assertEqual("Todo", reference(todotxt.Task("Todo", "todo.txt"), self.namespace))
+        self.assertEqual("Todo", reference(todotxt.Task("Todo", self.filename), self.namespace))
 
     def test_multiple(self):
         """Test that the source filename is added."""
-        self.namespace.file = ["todo.txt", "project.txt"]
-        self.assertEqual("Todo [todo.txt]", reference(todotxt.Task("Todo", "todo.txt"), self.namespace))
+        self.namespace.file = [self.filename, "project.txt"]
+        self.assertEqual(f"Todo [{self.filename}]", reference(todotxt.Task("Todo", self.filename), self.namespace))

@@ -33,7 +33,7 @@ class ReadConfigFileTest(ConfigTestCase):
     @patch.object(config, "open")
     def test_missing_default_config(self, mock_file_open):
         """Test that a missing config file at the default location is no problem."""
-        mock_file_open.side_effect = FileNotFoundError("some problem")
+        mock_file_open.side_effect = FileNotFoundError("file not found")
         self.assertEqual(["~/todo.txt"], parse_arguments()[1].file)
 
     @patch.object(sys, "argv", ["next-action"])
@@ -62,9 +62,9 @@ class ReadConfigFileTest(ConfigTestCase):
     @patch.object(sys.stderr, "write")
     def test_error_opening(self, mock_stderr_write, mock_file_open):
         """Test a config file that throws an error."""
-        mock_file_open.side_effect = OSError("some problem")
+        mock_file_open.side_effect = OSError("file opening problem")
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: file opening problem\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -72,9 +72,9 @@ class ReadConfigFileTest(ConfigTestCase):
     @patch.object(sys.stderr, "write")
     def test_error_parsing(self, mock_stderr_write, mock_file_open):
         """Test a config file that throws a parsing error."""
-        mock_file_open.side_effect = yaml.YAMLError("some problem")
+        mock_file_open.side_effect = yaml.YAMLError("parse error")
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't parse config.cfg: some problem\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't parse config.cfg: parse error\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
@@ -82,9 +82,9 @@ class ReadConfigFileTest(ConfigTestCase):
     @patch.object(sys.stderr, "write")
     def test_file_not_found(self, mock_stderr_write, mock_file_open):
         """Test a config file that throws an error."""
-        mock_file_open.side_effect = FileNotFoundError("some problem")
+        mock_file_open.side_effect = FileNotFoundError("file not found")
         self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
+        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: file not found\n")],
                          mock_stderr_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--config-file"])
@@ -98,15 +98,20 @@ class ReadConfigFileTest(ConfigTestCase):
 class WriteConfigFileTest(ConfigTestCase):
     """Unit tests for the write-config-file argument."""
 
+    def setUp(self):
+        """Set up the configuration file header and default configuration file."""
+        super().setUp()
+        self.configuration_file_header = "# Configuration file for Next-action. Edit the settings below as you like.\n"
+        self.default_configuration_file = self.configuration_file_header + \
+            "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])
     @patch.object(config, "open", mock_open(read_data=""))
     @patch.object(sys.stdout, "write")
     def test_default_file(self, mock_stdout_write):
         """Test that a config file can be written to stdout."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assertEqual([call(self.default_configuration_file)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--number", "3", "--reference", "never",
                                 "--style", "fruity", "--file", "~/tasks.txt", "--priority", "Z", "@context", "+project",
@@ -116,7 +121,7 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_with_args(self, mock_stdout_write):
         """Test that the config file written to stdout includes the other arguments."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n" \
+        expected = self.configuration_file_header + \
             "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- -@excluded_context\n- -+excluded_project\n" \
             "number: 3\npriority: Z\nreference: never\nstyle: fruity\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
@@ -127,8 +132,8 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_multiple_files(self, mock_stdout_write):
         """Test that the config file contains a list of files if multiple file arguments are passed."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file:\n- ~/tasks.txt\n- project.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+        expected = self.configuration_file_header + \
+            "file:\n- ~/tasks.txt\n- project.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--all"])
@@ -137,8 +142,7 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_show_all(self, mock_stdout_write):
         """Test that the config file contains "all" true" instead of a number."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "all: true\nfile: ~/todo.txt\nreference: multiple\nstyle: default\n"
+        expected = self.configuration_file_header + "all: true\nfile: ~/todo.txt\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--priority"])
@@ -147,9 +151,7 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_priority(self, mock_stdout_write):
         """Test that priority without argument is processed correctly."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assertEqual([call(self.default_configuration_file)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--blocked"])
     @patch.object(config, "open", mock_open(read_data=""))
@@ -157,8 +159,8 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_blocked(self, mock_stdout_write):
         """Test that the blocked option is processed correctly."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "blocked: true\nfile: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+        expected = self.configuration_file_header + \
+            "blocked: true\nfile: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--groupby", "priority"])
@@ -167,8 +169,8 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_groupby(self, mock_stdout_write):
         """Test that the groupby argument is processed correctly."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\ngroupby: priority\nnumber: 1\nreference: multiple\nstyle: default\n"
+        expected = self.configuration_file_header + \
+            "file: ~/todo.txt\ngroupby: priority\nnumber: 1\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])
@@ -177,8 +179,7 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_read_config(self, mock_stdout_write):
         """Test that the written config file contains the read config file."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\nnumber: 3\nreference: multiple\nstyle: default\n"
+        expected = self.configuration_file_header + "file: ~/todo.txt\nnumber: 3\nreference: multiple\nstyle: default\n"
         self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--config"])
@@ -187,9 +188,7 @@ class WriteConfigFileTest(ConfigTestCase):
     def test_ignore_config(self, mock_stdout_write):
         """Test that the written config file does not contain the read config file."""
         self.assertRaises(SystemExit, parse_arguments)
-        expected = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        expected += "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assertEqual([call(self.default_configuration_file)], mock_stdout_write.call_args_list)
 
 
 class FilenameTest(ConfigTestCase):
