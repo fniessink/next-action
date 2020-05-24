@@ -596,13 +596,13 @@ Recreating next-action_unittest_1 ...
 Recreating next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 269 tests in 2.001s
+unittest_1                | Ran 263 tests in 1.635s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1738      0    250      0   100%
+unittest_1                | TOTAL    1642      0    252      0   100%
 unittest_1                |
 unittest_1                | 31 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -622,7 +622,7 @@ Attaching to next-action_behave_1
 behave_1                  | 17 features passed, 0 failed, 0 skipped
 behave_1                  | 118 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 391 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 2m5.313s
+behave_1                  | Took 2m5.257s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
