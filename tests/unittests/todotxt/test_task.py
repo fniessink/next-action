@@ -291,128 +291,42 @@ class DueDateTest(unittest.TestCase):
 class DependenciesTest(unittest.TestCase):
     """Unit tests for dependency relations."""
 
-    before_keys = strategies.sampled_from(["p", "before"])
+    def setUp(self):
+        """Set up some tasks."""
+        self.task = todotxt.Task("Todo")
+        self.blocked = todotxt.Task("Blocked")
 
-    @given(strategies.sampled_from(["Todo", "Todo id:", "Todo id:id", "Todo p:", "Todo p:id",
-                                    "Todo before:", "Todo before:id", "Todo after:", "Todo after:id"]))
-    def test_task_without_dependencies(self, todo_text):
+    def test_unblocked_task(self):
         """Test that a task without dependencies is not blocked."""
-        tasks = todotxt.Tasks()
-        task = todotxt.Task(todo_text)
-        another_task = todotxt.Task("Another task")
-        tasks.extend([task, another_task])
-        self.assertFalse(task.is_blocked())
+        self.assertFalse(self.task.is_blocked())
 
-    @given(before_keys)
-    def test_one_before_another(self, before_key):
-        """Test that a task specified to be done before another task blocks the latter."""
-        after = todotxt.Task("After id:1")
-        before = todotxt.Task(f"Before {before_key}:1")
-        after.set_is_blocked()
-        before.add_blocked_task(after)
-        self.assertTrue(after.is_blocked())
+    def test_set_blocked(self):
+        """Test that a task can be blocked."""
+        self.task.set_is_blocked()
+        self.assertTrue(self.task.is_blocked())
 
-    def test_one_after_another(self):
-        """Test that a task specified to be done after another task blocks the first."""
-        after = todotxt.Task("After after:1")
-        before = todotxt.Task("Before id:1")
-        after.set_is_blocked()
-        before.add_blocked_task(after)
-        self.assertTrue(after.is_blocked())
+    def test_blocked_tasks(self):
+        """Test that a task can have tasks it blocks."""
+        self.task.add_blocked_task(self.blocked)
+        self.assertEqual([self.blocked], self.task.blocked_tasks())
 
-    @given(before_keys)
-    def test_one_before_two(self, before_key):
-        """Test that a task that is specified to be done before two other tasks blocks both tasks."""
-        before = todotxt.Task(f"Before {before_key}:1 {before_key}:2")
-        after1 = todotxt.Task("After id:1")
-        after2 = todotxt.Task("After id:1")
-        before.add_blocked_task(after1)
-        before.add_blocked_task(after2)
-        after1.set_is_blocked()
-        after2.set_is_blocked()
-        self.assertTrue(after1.is_blocked())
-        self.assertTrue(after2.is_blocked())
-
-    def test_one_after_two(self):
-        """Test that a task that is specified to be done after two other tasks is blocked by both."""
-        before1 = todotxt.Task("Before 1 id:1")
-        before2 = todotxt.Task("Before 2 id:2")
-        after = todotxt.Task("After after:1 after:2")
-        before1.add_blocked_task(after)
-        before2.add_blocked_task(after)
-        after.set_is_blocked()
-        self.assertTrue(after.is_blocked())
-
-    @given(before_keys)
-    def test_two_before_one(self, before_key):
-        """Test that a task that is specified to be done after two other tasks is blocked by both."""
-        before1 = todotxt.Task(f"Before 1 {before_key}:1")
-        before2 = todotxt.Task(f"Before 2 {before_key}:1")
-        after = todotxt.Task("After id:1")
-        before1.add_blocked_task(after)
-        before2.add_blocked_task(after)
-        after.set_is_blocked()
-        self.assertTrue(after.is_blocked())
-
-    def test_two_after_one(self):
-        """Test that two tasks that are specified to be done after one other task are both blocked."""
-        before = todotxt.Task("Before id:before")
-        after1 = todotxt.Task("After 1 after:before")
-        after2 = todotxt.Task("After 2 after:before")
-        before.add_blocked_task(after1)
-        before.add_blocked_task(after2)
-        after1.set_is_blocked()
-        after2.set_is_blocked()
-        self.assertTrue(after1.is_blocked())
-        self.assertTrue(after2.is_blocked())
-
-    @given(before_keys)
-    def test_self_before_self(self, before_key):
+    def test_block_self(self):
         """Test that a task can be blocked by itself.
 
         This doesn't make sense, but we're not in the business of validating todo.txt files.
         """
-        task = todotxt.Task(f"Todo id:1 {before_key}:1")
-        task.set_is_blocked()
-        task.add_blocked_task(task)
-        self.assertTrue(task.is_blocked())
+        self.task.add_blocked_task(self.task)
+        self.assertEqual([self.task], self.task.blocked_tasks())
 
-    def test_self_after_self(self):
-        """Test that a task can be blocked by itself.
-
-        This doesn't make sense, but we're not in the business of validating todo.txt files.
-        """
-        task = todotxt.Task("Todo id:1 after:1")
-        task.set_is_blocked()
-        task.add_blocked_task(task)
-        self.assertTrue(task.is_blocked())
-
-    @given(before_keys)
-    def test_self_before_self_indirect(self, before_key):
+    def test_block_self_indirectly(self):
         """Test that a task can be blocked by a second task that is blocked by the first task.
 
         This doesn't make sense, but we're not in the business of validating todo.txt files.
         """
-        task1 = todotxt.Task(f"Task 1 id:1 {before_key}:2")
-        task2 = todotxt.Task(f"Task 2 id:2 {before_key}:1")
-        task1.set_is_blocked()
-        task2.set_is_blocked()
-        task1.add_blocked_task(task2)
-        task2.add_blocked_task(task1)
-        self.assertTrue(task1.is_blocked())
-
-    def test_self_after_self_indirect(self):
-        """Test that a task can be blocked by a second task that is blocked by the first task.
-
-        This doesn't make sense, but we're not in the business of validating todo.txt files.
-        """
-        task1 = todotxt.Task("Task 1 id:1 after:2")
-        task2 = todotxt.Task("Task 2 id:2 after:1")
-        task1.set_is_blocked()
-        task2.set_is_blocked()
-        task1.add_blocked_task(task2)
-        task2.add_blocked_task(task1)
-        self.assertTrue(task1.is_blocked())
+        self.task.add_blocked_task(self.blocked)
+        self.blocked.add_blocked_task(self.task)
+        self.assertEqual([self.task], self.blocked.blocked_tasks())
+        self.assertEqual([self.blocked], self.task.blocked_tasks())
 
 
 class TaskHiddenessTest(unittest.TestCase):
