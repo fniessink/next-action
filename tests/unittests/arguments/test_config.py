@@ -19,6 +19,16 @@ class ConfigTestCase(unittest.TestCase):
         """Set the terminal width for all unit tests."""
         os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
 
+    @patch.object(sys.stderr, "write")
+    def assert_parse_error(self, error_message: str, mock_stderr_write):
+        """Assert parse_arguments throws a parse error and shows the error message."""
+        self.assertRaises(SystemExit, parse_arguments)
+        self.assertEqual(
+            [call(USAGE_MESSAGE), call(f"next-action: error: {error_message}\n")], mock_stderr_write.call_args_list)
+
+
+# pylint: disable=no-value-for-parameter
+
 
 class ReadConfigFileTest(ConfigTestCase):
     """Unit tests for reading the config file."""
@@ -38,54 +48,37 @@ class ReadConfigFileTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="- this_is_invalid"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_document(self, mock_stderr_write):
+    def test_invalid_document(self):
         """Test that a config file that's not valid YAML raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: ~/.next-action.cfg is invalid: '['this_is_invalid']' is not a "
-                               "document, must be a dict\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_parse_error(
+            "~/.next-action.cfg is invalid: '['this_is_invalid']' is not a document, must be a dict")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="foo: bar"))
-    @patch.object(sys.stderr, "write")
-    def test_no_file_key(self, mock_stderr_write):
+    def test_no_file_key(self):
         """Test that a config file without file key doesn't change the filenames."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE),
-                          call("next-action: error: ~/.next-action.cfg is invalid: foo: unknown field\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: foo: unknown field")
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open")
-    @patch.object(sys.stderr, "write")
-    def test_error_opening(self, mock_stderr_write, mock_file_open):
+    def test_error_opening(self, mock_file_open):
         """Test a config file that throws an error."""
         mock_file_open.side_effect = OSError("file opening problem")
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: file opening problem\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_parse_error("can't open file: file opening problem")
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open")
-    @patch.object(sys.stderr, "write")
-    def test_error_parsing(self, mock_stderr_write, mock_file_open):
+    def test_error_parsing(self, mock_file_open):
         """Test a config file that throws a parsing error."""
         mock_file_open.side_effect = yaml.YAMLError("parse error")
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't parse config.cfg: parse error\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_parse_error("can't parse config.cfg: parse error")
 
     @patch.object(sys, "argv", ["next-action", "--config-file", "config.cfg"])
     @patch.object(config, "open")
-    @patch.object(sys.stderr, "write")
-    def test_file_not_found(self, mock_stderr_write, mock_file_open):
+    def test_file_not_found(self, mock_file_open):
         """Test a config file that throws an error."""
         mock_file_open.side_effect = FileNotFoundError("file not found")
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: file not found\n")],
-                         mock_stderr_write.call_args_list)
+        self.assert_parse_error("can't open file: file not found")
 
     @patch.object(sys, "argv", ["next-action", "--config-file"])
     @patch.object(config, "open")
@@ -101,94 +94,78 @@ class WriteConfigFileTest(ConfigTestCase):
     def setUp(self):
         """Set up the configuration file header and default configuration file."""
         super().setUp()
-        self.configuration_file_header = "# Configuration file for Next-action. Edit the settings below as you like.\n"
-        self.default_configuration_file = self.configuration_file_header + \
-            "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+        self.default_configuration = "file: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
+
+    @patch.object(sys.stdout, "write")
+    def assert_config(self, configuration: str, mock_stdout_write) -> None:
+        """Assert that the configuration file written to stdout equals the specified config."""
+        self.assertRaises(SystemExit, parse_arguments)
+        config_file = "# Configuration file for Next-action. Edit the settings below as you like.\n" + configuration
+        self.assertEqual([call(config_file)], mock_stdout_write.call_args_list)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_default_file(self, mock_stdout_write):
+    def test_default_file(self):
         """Test that a config file can be written to stdout."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(self.default_configuration_file)], mock_stdout_write.call_args_list)
+        self.assert_config(self.default_configuration)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--number", "3", "--reference", "never",
                                 "--style", "fruity", "--file", "~/tasks.txt", "--priority", "Z", "@context", "+project",
                                 "-@excluded_context", "-+excluded_project"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_with_args(self, mock_stdout_write):
+    def test_with_args(self):
         """Test that the config file written to stdout includes the other arguments."""
-        self.assertRaises(SystemExit, parse_arguments)
-        expected = self.configuration_file_header + \
-            "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- -@excluded_context\n- -+excluded_project\n" \
-            "number: 3\npriority: Z\nreference: never\nstyle: fruity\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assert_config(
+            "file: ~/tasks.txt\nfilters:\n- '@context'\n- +project\n- -@excluded_context\n- -+excluded_project\n"
+            "number: 3\npriority: Z\nreference: never\nstyle: fruity\n")
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--file", "~/tasks.txt", "--file", "project.txt"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_multiple_files(self, mock_stdout_write):
+    def test_multiple_files(self):
         """Test that the config file contains a list of files if multiple file arguments are passed."""
-        self.assertRaises(SystemExit, parse_arguments)
-        expected = self.configuration_file_header + \
-            "file:\n- ~/tasks.txt\n- project.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assert_config("file:\n- ~/tasks.txt\n- project.txt\nnumber: 1\nreference: multiple\nstyle: default\n")
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--all"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_show_all(self, mock_stdout_write):
+    def test_show_all(self):
         """Test that the config file contains "all" true" instead of a number."""
-        self.assertRaises(SystemExit, parse_arguments)
-        expected = self.configuration_file_header + "all: true\nfile: ~/todo.txt\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assert_config("all: true\nfile: ~/todo.txt\nreference: multiple\nstyle: default\n")
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--priority"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_priority(self, mock_stdout_write):
+    def test_priority(self):
         """Test that priority without argument is processed correctly."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(self.default_configuration_file)], mock_stdout_write.call_args_list)
+        self.assert_config(self.default_configuration)
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--blocked"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_blocked(self, mock_stdout_write):
+    def test_blocked(self):
         """Test that the blocked option is processed correctly."""
-        self.assertRaises(SystemExit, parse_arguments)
-        expected = self.configuration_file_header + \
-            "blocked: true\nfile: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assert_config("blocked: true\nfile: ~/todo.txt\nnumber: 1\nreference: multiple\nstyle: default\n")
+
+    @patch.object(sys, "argv", ["next-action", "--write-config-file", "--line-number"])
+    @patch.object(config, "open", mock_open(read_data=""))
+    def test_line_number(self):
+        """Test that the line number option is processed correctly."""
+        self.assert_config("file: ~/todo.txt\nline_number: true\nnumber: 1\nreference: multiple\nstyle: default\n")
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--groupby", "priority"])
     @patch.object(config, "open", mock_open(read_data=""))
-    @patch.object(sys.stdout, "write")
-    def test_groupby(self, mock_stdout_write):
+    def test_groupby(self):
         """Test that the groupby argument is processed correctly."""
-        self.assertRaises(SystemExit, parse_arguments)
-        expected = self.configuration_file_header + \
-            "file: ~/todo.txt\ngroupby: priority\nnumber: 1\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assert_config("file: ~/todo.txt\ngroupby: priority\nnumber: 1\nreference: multiple\nstyle: default\n")
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
-    @patch.object(sys.stdout, "write")
-    def test_read_config(self, mock_stdout_write):
+    def test_read_config(self):
         """Test that the written config file contains the read config file."""
-        self.assertRaises(SystemExit, parse_arguments)
-        expected = self.configuration_file_header + "file: ~/todo.txt\nnumber: 3\nreference: multiple\nstyle: default\n"
-        self.assertEqual([call(expected)], mock_stdout_write.call_args_list)
+        self.assert_config("file: ~/todo.txt\nnumber: 3\nreference: multiple\nstyle: default\n")
 
     @patch.object(sys, "argv", ["next-action", "--write-config-file", "--config"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
-    @patch.object(sys.stdout, "write")
-    def test_ignore_config(self, mock_stdout_write):
+    def test_ignore_config(self):
         """Test that the written config file does not contain the read config file."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual([call(self.default_configuration_file)], mock_stdout_write.call_args_list)
+        self.assert_config(self.default_configuration)
 
 
 class FilenameTest(ConfigTestCase):
@@ -196,25 +173,15 @@ class FilenameTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file: 0"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_filename(self, mock_stderr_write):
+    def test_invalid_filename(self):
         """Test a config file with an invalid file name."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: "
-                                       "file: must be of ['string', 'list'] type\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: file: must be of ['string', 'list'] type")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file:\n- todo.txt\n- 0"))
-    @patch.object(sys.stderr, "write")
-    def test_valid_and_invalid(self, mock_stderr_write):
+    def test_valid_and_invalid(self):
         """Test a config file with an invalid file name."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: file: 1: must be of string type\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: file: 1: must be of string type")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="file: todo.txt"))
@@ -240,25 +207,15 @@ class NumberTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="number: not_a_number"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_number(self, mock_stderr_write):
+    def test_invalid_number(self):
         """Test a config file with an invalid number."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: number: must be of integer type\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: number: must be of integer type")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="number: 0"))
-    @patch.object(sys.stderr, "write")
-    def test_zero(self, mock_stderr_write):
+    def test_zero(self):
         """Test a config file with an invalid number."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: number: min value is 1\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: number: min value is 1")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="number: 3"))
@@ -280,26 +237,15 @@ class NumberTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="all: False"))
-    @patch.object(sys.stderr, "write")
-    def test_all_false(self, mock_stderr_write):
+    def test_all_false(self):
         """Test a config file with all is false."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: all: unallowed value False\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: all: unallowed value False")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="all: True\nnumber: 3"))
-    @patch.object(sys.stderr, "write")
-    def test_all_and_number(self, mock_stderr_write):
+    def test_all_and_number(self):
         """Test that a config file with both --all and --number is invalid."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: number: "
-                  "'all' must not be present with 'number'\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: number: 'all' must not be present with 'number'")
 
     @patch.object(sys, "argv", ["next-action", "--number", "3"])
     @patch.object(config, "open", mock_open(read_data="all: True"))
@@ -337,14 +283,9 @@ class ConfigStyleTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="style: invalid_style"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_style(self, mock_stderr_write):
+    def test_invalid_style(self):
         """Test that an invalid style raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: style: unallowed value invalid_style\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: style: unallowed value invalid_style")
 
 
 class PriorityTest(ConfigTestCase):
@@ -376,14 +317,31 @@ class PriorityTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="priority: ZZZ"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_priority(self, mock_stderr_write):
+    def test_invalid_priority(self):
         """Test that an invalid priority raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: priority: unallowed value ZZZ\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: priority: unallowed value ZZZ")
+
+
+class LineNumberTest(ConfigTestCase):
+    """Unit tests for the line number parameter."""
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="line_number: true"))
+    def test_valid_line_number(self):
+        """Test that a valid line number value changes the line number argument."""
+        self.assertEqual(True, parse_arguments()[1].line_number)
+
+    @patch.object(sys, "argv", ["next-action", "--line-number"])
+    @patch.object(config, "open", mock_open(read_data="line_number: true"))
+    def test_override(self):
+        """Test that a command line argument overrides the configured value."""
+        self.assertEqual(True, parse_arguments()[1].line_number)
+
+    @patch.object(sys, "argv", ["next-action"])
+    @patch.object(config, "open", mock_open(read_data="line_number: false"))
+    def test_invalid_line_number(self):
+        """Test that an invalid value raises an error."""
+        self.assert_parse_error("~/.next-action.cfg is invalid: line_number: unallowed value False")
 
 
 class ReferenceTest(ConfigTestCase):
@@ -403,14 +361,9 @@ class ReferenceTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="reference: invalid"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_priority(self, mock_stderr_write):
+    def test_invalid_reference(self):
         """Test that an invalid value raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: reference: unallowed value invalid\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: reference: unallowed value invalid")
 
 
 class GroupByTest(ConfigTestCase):
@@ -430,14 +383,9 @@ class GroupByTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="groupby: invalid"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_group(self, mock_stderr_write):
+    def test_invalid_group(self):
         """Test that an invalid value raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: groupby: unallowed value invalid\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: groupby: unallowed value invalid")
 
 
 class FiltersTest(ConfigTestCase):
@@ -509,27 +457,17 @@ class FiltersTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters:\n- invalid\n"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_filter_list(self, mock_stderr_write):
+    def test_invalid_filter_list(self):
         """Test that an invalid filter raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
         regex = r"^\-?[@|\+]\S+"
-        self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: 0: "
-                                       f"value does not match regex '{regex}'\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error(f"~/.next-action.cfg is invalid: filters: 0: value does not match regex '{regex}'")
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="filters: invalid\n"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_filter_string(self, mock_stderr_write):
+    def test_invalid_filter_string(self):
         """Test that an invalid filter raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
         regex = r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*"
-        self.assertEqual(
-            [call(USAGE_MESSAGE), call("next-action: error: ~/.next-action.cfg is invalid: filters: "
-                                       f"value does not match regex '{regex}'\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error(f"~/.next-action.cfg is invalid: filters: value does not match regex '{regex}'")
 
 
 class BlockedTest(ConfigTestCase):
@@ -549,14 +487,9 @@ class BlockedTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="blocked: false"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_blocked_value(self, mock_stderr_write):
+    def test_invalid_blocked_value(self):
         """Test that an invalid value raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: blocked: unallowed value False\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: blocked: unallowed value False")
 
 
 class OpenUrlsTest(ConfigTestCase):
@@ -576,11 +509,6 @@ class OpenUrlsTest(ConfigTestCase):
 
     @patch.object(sys, "argv", ["next-action"])
     @patch.object(config, "open", mock_open(read_data="open_urls: false"))
-    @patch.object(sys.stderr, "write")
-    def test_invalid_open_urls_value(self, mock_stderr_write):
+    def test_invalid_open_urls_value(self):
         """Test that an invalid value raises an error."""
-        self.assertRaises(SystemExit, parse_arguments)
-        self.assertEqual(
-            [call(USAGE_MESSAGE),
-             call("next-action: error: ~/.next-action.cfg is invalid: open_urls: unallowed value False\n")],
-            mock_stderr_write.call_args_list)
+        self.assert_parse_error("~/.next-action.cfg is invalid: open_urls: unallowed value False")

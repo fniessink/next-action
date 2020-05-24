@@ -48,6 +48,8 @@ def write_config_file(namespace: argparse.Namespace) -> None:
         options["blocked"] = True
     if namespace.groupby:
         options["groupby"] = namespace.groupby
+    if namespace.line_number:
+        options["line_number"] = True
     config = yaml.dump(options, default_flow_style=False)
     sys.stdout.write(intro + config)
 
@@ -76,6 +78,10 @@ def validate_config_file(config, config_filename: str, error: Callable[[str], No
             "type": ["string", "list"],
             "regex": r"^\-?[@|\+]\S+(\s+\-?[@|\+]\S+)*",
             "schema": {"type": "string", "regex": r"^\-?[@|\+]\S+"}
+        },
+        "line_number": {
+            "type": "boolean",
+            "allowed": [True]
         },
         "reference": {
             "type": "string",

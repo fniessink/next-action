@@ -29,7 +29,7 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         """Initialize the parser."""
         super().__init__(
             usage=textwrap.fill("next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g "
-                                "[<group>]] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
+                                "[<group>]] [-l] [-r <ref>] [-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] "
                                 "[-p [<priority>]] [-u] [--] [<context|project> ...]",
                                 width=shutil.get_terminal_size().columns - len("usage: ")),
             description="Show the next action in your todo.txt. The next action is selected from the tasks in the "
@@ -80,6 +80,9 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         output_group.add_argument(
             "-g", "--groupby", choices=GROUPBY_CHOICES, default=None, nargs="?", metavar="<group>",
             help=f"group the next actions; available groups: {', '.join(GROUPBY_CHOICES)} (default: %(default)s)")
+        output_group.add_argument(
+            "-l", "--line-number", action="store_true",
+            help="reference next actions with the line number in their todo.txt file (default: %(default)s)")
         output_group.add_argument(
             "-r", "--reference", choices=REFERENCE_CHOICES, default="multiple",
             help="reference next actions with the name of their todo.txt file (default: when reading multiple "
@@ -191,24 +194,12 @@ class NextActionArgumentParser(argparse.ArgumentParser):
         if self.arguments_not_specified("-n", "--number", "-a", "--all"):
             number = sys.maxsize if config.get("all", False) else config.get("number", self.get_default("number"))
             setattr(namespace, "number", number)
-        if self.arguments_not_specified("-r", "--reference"):
-            reference = config.get("reference", self.get_default("reference"))
-            setattr(namespace, "reference", reference)
-        if self.arguments_not_specified("-g", "--groupby"):
-            groupby = config.get("groupby", self.get_default("groupby"))
-            setattr(namespace, "groupby", groupby)
-        if self.arguments_not_specified("-s", "--style"):
-            style = config.get("style", self.get_default("style"))
-            setattr(namespace, "style", style)
-        if self.arguments_not_specified("-p", "--priority"):
-            priority = config.get("priority", self.get_default("priority"))
-            setattr(namespace, "priority", priority)
-        if self.arguments_not_specified("-b", "--blocked"):
-            blocked = config.get("blocked", self.get_default("blocked"))
-            setattr(namespace, "blocked", blocked)
-        if self.arguments_not_specified("-u", "--open-urls"):
-            open_urls = config.get("open_urls", self.get_default("open_urls"))
-            setattr(namespace, "open_urls", open_urls)
+        for argument in [("-b", "--blocked"), ("-g", "--groupby"), ("-l", "--line-number"), ("-p", "--priority"),
+                         ("-r", "--reference"), ("-s", "--style"), ("-u", "--open-urls")]:
+            if self.arguments_not_specified(*argument):
+                parameter = argument[1].lstrip("-").replace("-", "_")
+                value = config.get(parameter, self.get_default(parameter))
+                setattr(namespace, parameter, value)
         self.insert_configured_filters(config, namespace)
 
     @staticmethod

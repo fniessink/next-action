@@ -43,3 +43,13 @@ Feature: generate a Next-action configuration file
     When the user asks for a configuration file
     And the user specifies the groupby-argument with value context
     Then Next-action includes the groupby-argument with value context in the configuration file
+
+  Scenario: add line-number-option
+    When the user asks for a configuration file
+    And the user specifies the line-number-option
+    Then Next-action includes the line-number-option in the configuration file
+
+  Scenario: add reference-argument
+    When the user asks for a configuration file
+    And the user specifies the reference-argument with value never
+    Then Next-action includes the reference-argument with value never in the configuration file
