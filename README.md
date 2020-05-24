@@ -66,8 +66,8 @@ arguments, shows the possible arguments.
 
 ```console
 $ next-action --help
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-l] [-r <ref>]
+[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
 ...]
 
 Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
@@ -95,6 +95,7 @@ Output options:
   -g [<group>], --groupby [<group>]
                         group the next actions; available groups: context, duedate, priority, project,
                         source (default: None)
+  -l, --line-number     reference next actions with the line number in their todo.txt file (default: False)
   -r {always,never,multiple}, --reference {always,never,multiple}
                         reference next actions with the name of their todo.txt file (default: when reading
                         multiple todo.txt files)
@@ -326,8 +327,26 @@ $ next-action --reference always
 (A) Call mom @phone [docs/todo.txt]
 ```
 
-Use `--reference never` to turn off this behavior. To permanently change this, configure the option in the
-configuration file. See the section below on how to configure *Next-action*.
+Use `--reference never` to not show the source files, even when tasks are read from multiple todo.txt files. To
+permanently change this, configure the `reference` option in the configuration file. See the section below on how to
+configure *Next-action*.
+
+To make *Next-action* reference the line number that tasks have in their source todo.txt files, use the `--line-number`
+option:
+
+```console
+$ next-action --line-number
+(A) Call mom @phone [1]
+```
+
+It's also possible to have *Next-action* show both the source file and the line number:
+
+```console
+$ next-action --line-number --reference always
+(A) Call mom @phone [docs/todo.txt:1]
+```
+
+See the section below on how to configure *Next-action* to always show the source file and/or line number.
 
 The next actions can be colorized using the `--style` argument. Run `next-action --help` to see the list of possible
 styles.
@@ -491,8 +510,8 @@ use the priority option without argument: `next-action --priority`.
 
 #### Configuring the output
 
-Whether the next actions should have a reference to the todo.txt file from which they were read can be configured
-using the reference keyword:
+Whether the next actions should have a reference to the todo.txt file from which they were read can be configured using
+the `reference` keyword:
 
 ```yaml
 reference: always
@@ -501,7 +520,14 @@ reference: always
 Possible values are `always`, `never`, or `multiple`. The latter means that the filename is only added when you read
 tasks from multiple todo.txt files. The default value is `multiple`.
 
-The output style can be configured using the style keyword:
+Whether the next actions should have a reference to their line number in the todo.txt file from which they were read
+can be configured using the `line_number` keyword:
+
+```yaml
+line_number: true
+```
+
+The output style can be configured using the `style` keyword:
 
 ```yaml
 style: colorful
@@ -517,7 +543,7 @@ blocked: true
 
 Next actions can be configured to be grouped as follows:
 
-```yaml:
+```yaml
 groupby: priority
 ```
 
@@ -526,7 +552,7 @@ the command line overrides the grouping in the configuration file, e.g. `next-ac
 To cancel the grouping set in the configuration file all together, use the groupby option without argument:
 `next-action --groupby`.
 
-To always open URLs, see the `open_urls` option:
+To always open URLs, use the `open_urls` option:
 
 ```yaml
 open_urls: true
@@ -549,8 +575,8 @@ will interpret the positional argument as the argument to the option and complai
 
 ```console
 $ next-action --due @home
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-l] [-r <ref>]
+[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
 ...]
 next-action: error: argument -d/--due: invalid date: @home
 ```
@@ -596,13 +622,13 @@ Recreating next-action_unittest_1 ...
 Recreating next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 263 tests in 1.635s
+unittest_1                | Ran 271 tests in 6.171s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1642      0    252      0   100%
+unittest_1                | TOTAL    1625      0    248      0   100%
 unittest_1                |
 unittest_1                | 31 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -620,13 +646,13 @@ Recreating next-action_behave_1 ...
 Recreating next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 17 features passed, 0 failed, 0 skipped
-behave_1                  | 118 scenarios passed, 0 failed, 0 skipped
-behave_1                  | 391 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 2m5.257s
+behave_1                  | 123 scenarios passed, 0 failed, 0 skipped
+behave_1                  | 411 steps passed, 0 failed, 0 skipped, 0 undefined
+behave_1                  | Took 4m15.737s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     516      0    232      0   100%
+behave_1                  | TOTAL     509      0    228      0   100%
 behave_1                  |
 behave_1                  | 13 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0

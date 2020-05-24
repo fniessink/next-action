@@ -134,7 +134,13 @@ def next_action_with_invalid_arg(context, argument):
     context.arguments.append(argument)
 
 
-@when("the user asks for the next action to be referenced {reference}")
+@when("the user asks for the line number to be referenced")
+def next_action_ref_line_number(context):
+    """Add the line number argument."""
+    context.arguments.append("--line-number")
+
+
+@when("the user asks for the source file to be referenced {reference}")
 def next_action_ref_always(context, reference):
     """Add the reference argument."""
     context.arguments.extend(["--reference", reference])
@@ -216,6 +222,12 @@ def next_action_open_url(context):
 def nothing_todo(context):
     """Check that Next-action tells the user there's nothing to do."""
     assert_in("Nothing to do!", context.next_action())
+
+
+@then("Next-action references the line number of the next action")
+def check_line_number(context):
+    """Check the line number reference."""
+    assert_in("1]", context.next_action())
 
 
 @then("Next-action references the source file of the next action")

@@ -34,5 +34,6 @@ def read_todotxt_files(filenames: List[str]) -> Tasks:
     """Read tasks from the Todo.txt files."""
     filenames = [os.path.expanduser(filename) for filename in filenames]
     with cast(fileinput.FileInput, fileinput.input(filenames)) as todotxt_file:
-        tasks = [Task(line.strip(), todotxt_file.filename()) for line in todotxt_file if uncompleted_task_on(line)]
+        tasks = [Task(line.strip(), todotxt_file.filename(), index + 1) for index, line in enumerate(todotxt_file)
+                 if uncompleted_task_on(line)]
     return Tasks(unblocked_tasks(tasks))

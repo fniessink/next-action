@@ -76,8 +76,7 @@ class StateMachine:
                 assert_regex(self.output.strip(), regex)
             else:
                 assert_equal(
-                    self.expected_output.strip(), self.output.strip(),
-                    f"Expected: {self.expected_output.strip()}, got: {self.output.strip()}")
+                    self.expected_output.strip(), self.output.strip(), "Expected: {first}, got: {second}")
             self.write_lines(line)
             return self.default
         self.expected_output += "\n" + line

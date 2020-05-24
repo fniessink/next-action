@@ -14,10 +14,11 @@ class Task:
     # Source for the URL regular expression: http://www.noah.org/wiki/RegEx_Python
     url_reg_exp = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
 
-    def __init__(self, todo_txt: str, filename: str = "") -> None:
-        """Initialise the task with its Todo.txt text string and originating filename."""
+    def __init__(self, todo_txt: str, filename: str = "", line_number: int = None) -> None:
+        """Initialise the task with its Todo.txt text string, originating filename, and originating line number."""
         self.text = todo_txt
         self.filename = filename
+        self.line_number = line_number
         self.__is_blocked = False
         self.__blocked_tasks: List["Task"] = []
 

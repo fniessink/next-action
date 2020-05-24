@@ -1,15 +1,15 @@
-Feature: reference next actions with the source file
+Feature: reference the source file and/or line number of next actions
 
-  Scenario: reference next action always
+  Scenario: reference source file always
     Given a todo.txt with
         """
         A task
         """
     When the user asks for the next action
-    And the user asks for the next action to be referenced always
+    And the user asks for the source file to be referenced always
     Then Next-action references the source file of the next action
 
-  Scenario: reference next action never
+  Scenario: reference source file never
     Given a todo.txt with
         """
         A task
@@ -19,10 +19,10 @@ Feature: reference next actions with the source file
        Another task
        """
     When the user asks for the next action
-    And the user asks for the next action to be referenced never
+    And the user asks for the source file to be referenced never
     Then Next-action doesn't reference the source file of the next action
 
-  Scenario: reference in configuration file
+  Scenario: reference source file in configuration file
     Given a configuration file with
       """
       reference: always
@@ -34,7 +34,7 @@ Feature: reference next actions with the source file
     When the user asks for the next action
     Then Next-action references the source file of the next action
 
-  Scenario: override reference in configuration file
+  Scenario: override reference source file in configuration file
     Given a configuration file with
       """
       reference: always
@@ -44,5 +44,37 @@ Feature: reference next actions with the source file
         A task
         """
     When the user asks for the next action
-    And the user asks for the next action to be referenced never
+    And the user asks for the source file to be referenced never
     Then Next-action doesn't reference the source file of the next action
+
+  Scenario: reference line number
+    Given a todo.txt with
+        """
+        A task
+        """
+    When the user asks for the next action
+    And the user asks for the line number to be referenced
+    Then Next-action references the line number of the next action
+
+  Scenario: reference line number in configuration file
+    Given a configuration file with
+      """
+      line_number: true
+      """
+    And a todo.txt with
+        """
+        A task
+        """
+    When the user asks for the next action
+    Then Next-action references the line number of the next action
+
+  Scenario: reference line number and source file
+    Given a todo.txt with
+        """
+        A task
+        """
+    When the user asks for the next action
+    And the user asks for the line number to be referenced
+    And the user asks for the source file to be referenced always
+    Then Next-action references the line number of the next action
+    And Next-action references the source file of the next action

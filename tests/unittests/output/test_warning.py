@@ -20,44 +20,44 @@ class InvalidArgumentsTest(fixtures.TestCaseWithNamespace):
 
     def test_missing_context(self):
         """Test the message with one missing context."""
-        self.namespace.contexts = set(["home"])
+        self.namespace.contexts = {"home"}
         self.assertEqual(" (warning: unknown context: home)", invalid_arguments(self.namespace, self.tasks))
 
     def test_missing_contexts(self):
         """Test the message with two missing contexts."""
-        self.namespace.contexts = set(["home", "work"])
+        self.namespace.contexts = {"home", "work"}
         self.assertEqual(" (warning: unknown contexts: home, work)", invalid_arguments(self.namespace, self.tasks))
 
     def test_missing_project(self):
         """Test the message with one missing project."""
-        self.namespace.projects = set(["DogHouse"])
+        self.namespace.projects = {"DogHouse"}
         self.assertEqual(" (warning: unknown project: DogHouse)", invalid_arguments(self.namespace, self.tasks))
 
     def test_missing_projects(self):
         """Test the message with two missing projects."""
-        self.namespace.projects = set(["DogHouse", "BigTrip"])
+        self.namespace.projects = {"DogHouse", "BigTrip"}
         self.assertEqual(" (warning: unknown projects: BigTrip, DogHouse)",
                          invalid_arguments(self.namespace, self.tasks))
 
     def test_missing_excluded_context(self):
         """Test the message with one missing excluded context."""
-        self.namespace.excluded_contexts = set(["home"])
+        self.namespace.excluded_contexts = {"home"}
         self.assertEqual(" (warning: unknown context: home)", invalid_arguments(self.namespace, self.tasks))
 
     def test_missing_excluded_project(self):
         """Test the message with one missing excluded project."""
-        self.namespace.excluded_projects = set(["DogHouse"])
+        self.namespace.excluded_projects = {"DogHouse"}
         self.assertEqual(" (warning: unknown project: DogHouse)", invalid_arguments(self.namespace, self.tasks))
 
     def test_missing_context_project(self):
         """Test the message with one missing context and one missing project."""
-        self.namespace.contexts = set(["home"])
-        self.namespace.projects = set(["DogHouse"])
+        self.namespace.contexts = {"home"}
+        self.namespace.projects = {"DogHouse"}
         self.assertEqual(" (warning: unknown context: home; unknown project: DogHouse)",
                          invalid_arguments(self.namespace, self.tasks))
 
     def test_present_context(self):
         """Test the message with one present context."""
-        self.namespace.contexts = set(["home"])
+        self.namespace.contexts = {"home"}
         self.tasks.append(todotxt.Task("A task @home"))  # pylint: disable=no-member
         self.assertEqual("", invalid_arguments(self.namespace, self.tasks))

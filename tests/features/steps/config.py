@@ -101,7 +101,7 @@ def check_config_argument(context, argument, value):
 @then("Next-action includes the {option}-option in the configuration file")
 def check_config_option(context, option):
     """Check that Next-action includes the option in the configuration file."""
-    assert_in(option + ": true", context.next_action())
+    assert_in(option.replace("-", "_") + ": true", context.next_action())
 
 
 @then("Next-action includes the {filter_type}-filter in the configuration file")
