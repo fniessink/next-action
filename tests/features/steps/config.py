@@ -22,7 +22,7 @@ def config_file(context):
             text.append("- " + temporary_filename(context, filename))
         else:
             text.append(line)
-        in_file_list = line.startswith(file_list_key) or in_file_list and line.startswith("- ")
+        in_file_list = line.startswith(file_list_key.strip()) or in_file_list and line.startswith("- ")
     context.config_file.write("\n".join(text))
     context.config_file.seek(0)
     context.arguments.extend(["--config-file", context.config_file.name])
