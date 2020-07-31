@@ -9,7 +9,7 @@ mypy==0.782
 hypothesis==5.23.8
 nose==1.3.7
 pycodestyle==2.6.0
-pydeps==1.9.4
+pydeps==1.9.6
 pydocstyle==5.0.2
 pylint==2.5.3
 pyroma==2.6
