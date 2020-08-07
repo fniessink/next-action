@@ -1,5 +1,5 @@
-FROM koalaman/shellcheck:v0.6.0 AS shellcheck
-FROM hadolint/hadolint:v1.16.3 AS hadolint
+FROM koalaman/shellcheck-alpine:v0.7.1 AS shellcheck
+FROM hadolint/hadolint:v1.18.0-alpine AS hadolint
 FROM python:3.8-alpine
 
 LABEL maintainer="Frank Niessink <frank@niessink.com>"
@@ -18,7 +18,7 @@ RUN sed -i 's/use_embedded_jre=true/use_embedded_jre=false/g' /sonar-scanner/bin
 COPY --from=shellcheck /bin/shellcheck /usr/local/bin/
 COPY --from=hadolint /bin/hadolint /usr/local/bin/
 
-RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0 markdown-to-html@0.0.13
+RUN npm install -g gherkin-lint@4.1.2 markdownlint-cli@0.23.2 markdown-to-html@0.0.13
 RUN pip install pip==20.2.1
 WORKDIR /next-action
 COPY requirements*.txt /next-action/
