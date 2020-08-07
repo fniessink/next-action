@@ -81,10 +81,10 @@ Output options:
                         multiple todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
-                        borland, bw, colorful, default, emacs, friendly, fruity, igor, lovelace, manni,
-                        monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
-                        rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-light, tango,
-                        trac, vim, vs, xcode (default: None)
+                        borland, bw, colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace,
+                        manni, monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc,
+                        rainbow_dash, rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-
+                        light, tango, trac, vim, vs, xcode (default: None)
   -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
