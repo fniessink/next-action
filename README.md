@@ -101,10 +101,10 @@ Output options:
                         multiple todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
-                        borland, bw, colorful, default, emacs, friendly, fruity, igor, lovelace, manni,
-                        monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash,
-                        rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-light, tango,
-                        trac, vim, vs, xcode (default: None)
+                        borland, bw, colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace,
+                        manni, monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc,
+                        rainbow_dash, rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-
+                        light, tango, trac, vim, vs, xcode (default: None)
   -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
@@ -618,17 +618,17 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
-Recreating next-action_unittest_1 ...
-Recreating next-action_unittest_1 ... done
+Starting next-action_unittest_1 ...
+Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 271 tests in 6.171s
+unittest_1                | Ran 271 tests in 1.498s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
 unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1625      0    248      0   100%
+unittest_1                | TOTAL    1772      0    244      0   100%
 unittest_1                |
 unittest_1                | 31 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -642,17 +642,17 @@ To run the feature tests and measure their code coverage:
 
 ```console
 $ docker-compose --no-ansi up behave
-Recreating next-action_behave_1 ...
-Recreating next-action_behave_1 ... done
+Creating next-action_behave_1 ...
+Creating next-action_behave_1 ... done
 Attaching to next-action_behave_1
 behave_1                  | 17 features passed, 0 failed, 0 skipped
 behave_1                  | 123 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 411 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 4m15.737s
+behave_1                  | Took 2m20.956s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     509      0    228      0   100%
+behave_1                  | TOTAL     510      0    224      0   100%
 behave_1                  |
 behave_1                  | 13 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -671,14 +671,16 @@ To run the quality checks:
 
 ```console
 $ docker-compose --no-ansi up quality
-Recreating next-action_quality_1 ...
-Recreating next-action_quality_1 ... done
+Creating next-action_quality_1 ...
+Creating next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
 quality_1                 | Success: no issues found in 13 source files
+quality_1                 | ************* Module tests.unittests.test_cli
+quality_1                 | tests/unittests/test_cli.py:16:0: R0904: Too many public methods (21/20) (too-many-public-methods)
 quality_1                 |
-quality_1                 | ------------------------------------
-quality_1                 | Your code has been rated at 10.00/10
+quality_1                 | -----------------------------------
+quality_1                 | Your code has been rated at 9.99/10
 quality_1                 |
 quality_1                 | ------------------------------
 quality_1                 | Checking .
@@ -687,6 +689,8 @@ quality_1                 | ------------------------------
 quality_1                 | Final rating: 10/10
 quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
 quality_1                 | ------------------------------
+quality_1                 | /usr/local/lib/python3.8/site-packages/setuptools/distutils_patch.py:25: UserWarning: Distutils was imported before Setuptools. This usage is discouraged and may exhibit undesirable behaviors or errors. Please use Setuptools' objects directly or at least import Setuptools first.
+quality_1                 |   warnings.warn(
 next-action_quality_1 exited with code 0
 ```
 
