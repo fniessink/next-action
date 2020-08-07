@@ -19,7 +19,7 @@ COPY --from=shellcheck /bin/shellcheck /usr/local/bin/
 COPY --from=hadolint /bin/hadolint /usr/local/bin/
 
 RUN npm install -g gherkin-lint@2.13.2 markdownlint-cli@0.13.0 markdown-to-html@0.0.13
-RUN pip install pip==20.1.1
+RUN pip install pip==20.2.1
 WORKDIR /next-action
 COPY requirements*.txt /next-action/
 RUN pip install -r requirements.txt -r requirements-dev.txt
