@@ -209,14 +209,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2020-10-28
+(K) Pay October invoice @home due:2021-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2020-10-01"
-(L) Pay September invoice @home due:2020-09-28
+$ next-action @home --due "2021-10-01"
+(L) Pay September invoice @home due:2021-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
@@ -370,7 +370,7 @@ weekend:
 work:
 - (C) Finish proposal for important client @work
 home:
-- (K) Pay October invoice @home due:2020-10-28
+- (K) Pay October invoice @home due:2021-10-28
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
@@ -585,14 +585,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2020-10-28
+(K) Pay October invoice @home due:2021-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay October invoice @home due:2020-10-28
+(K) Pay October invoice @home due:2021-10-28
 ```
 
 ## Recent changes
@@ -618,11 +618,11 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --no-ansi up unittest
-Starting next-action_unittest_1 ...
-Starting next-action_unittest_1 ... done
+Creating next-action_unittest_1 ...
+Creating next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 271 tests in 1.498s
+unittest_1                | Ran 271 tests in 1.768s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
@@ -648,7 +648,7 @@ Attaching to next-action_behave_1
 behave_1                  | 17 features passed, 0 failed, 0 skipped
 behave_1                  | 123 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 411 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 2m20.956s
+behave_1                  | Took 2m9.666s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | -----------------------------------------
@@ -691,6 +691,7 @@ quality_1                 | Your cheese is so fresh most people think it's a cre
 quality_1                 | ------------------------------
 quality_1                 | /usr/local/lib/python3.8/site-packages/setuptools/distutils_patch.py:25: UserWarning: Distutils was imported before Setuptools. This usage is discouraged and may exhibit undesirable behaviors or errors. Please use Setuptools' objects directly or at least import Setuptools first.
 quality_1                 |   warnings.warn(
+quality_1                 | README.md:692:121 MD013/line-length Line length [Expected: 120; Actual: 307]
 next-action_quality_1 exited with code 0
 ```
 

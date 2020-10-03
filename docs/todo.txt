@@ -5,8 +5,8 @@
 Get rid of old +DogHouse @home
 Borrow ladder from the neighbors +PaintHouse @home
 Buy flowers due:2018-02-14
-(L) Pay September invoice @home due:2020-09-28
-(K) Pay October invoice @home due:2020-10-28
+(L) Pay September invoice @home due:2021-09-28
+(K) Pay October invoice @home due:2021-10-28
 Buy groceries @store +DinnerParty before:meal
 Cook meal @home +DinnerParty id:meal due:2018-07-01
 Take out the garbage @home +DinnerParty due:2018-07-02
