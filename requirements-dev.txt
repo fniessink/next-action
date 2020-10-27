@@ -1,5 +1,5 @@
 # Development dependencies
-asserts==0.11.0
+asserts==0.11.1
 bandit==1.6.2
 behave==1.2.6
 coverage==5.3
