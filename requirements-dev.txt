@@ -1,6 +1,6 @@
 # Development dependencies
 asserts==0.11.1
-bandit==1.6.2
+bandit==1.6.3
 behave==1.2.6
 coverage==5.3
 docker-compose==1.27.4
