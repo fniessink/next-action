@@ -2,6 +2,7 @@ services:
   - docker
 language: python
 install:
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker pull fniessink/next-action-dev:latest
 script:
 - docker-compose up --exit-code-from docs docs
