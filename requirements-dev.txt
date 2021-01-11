@@ -14,7 +14,7 @@ pydeps==1.9.13
 pydocstyle==5.1.1
 pylint==2.6.0
 pyroma==2.6
-safety==1.10.1
+safety==1.10.2
 setuptools==51.1.2
 twine==3.3.0
 vulture==2.1
