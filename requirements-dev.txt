@@ -17,4 +17,4 @@ pyroma==2.6
 safety==1.10.3
 setuptools==51.1.2
 twine==3.3.0
-vulture==2.2
+vulture==2.3
