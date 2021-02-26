@@ -3,7 +3,7 @@ asserts==0.11.1
 bandit==1.7.0
 behave==1.2.6
 coverage==5.4
-docker-compose==1.28.4
+docker-compose==1.28.5
 hypothesis==6.3.2
 lxml==4.6.2
 mypy==0.812
