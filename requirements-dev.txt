@@ -16,5 +16,5 @@ pylint==2.7.2
 pyroma==2.6
 safety==1.10.3
 setuptools==54.1.2
-twine==3.4.0
+twine==3.4.1
 vulture==2.3
