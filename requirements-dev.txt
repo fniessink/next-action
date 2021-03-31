@@ -12,7 +12,7 @@ pip==21.0.1
 pycodestyle==2.7.0
 pydeps==1.9.13
 pydocstyle==6.0.0
-pylint==2.7.3
+pylint==2.7.4
 pyroma==2.6
 safety==1.10.3
 setuptools==54.2.0
