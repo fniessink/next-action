@@ -13,7 +13,7 @@ pycodestyle==2.7.0
 pydeps==1.10.12
 pydocstyle==6.1.1
 pylint==2.12.2
-pyroma==3.2
+pyroma==3.2.1
 safety==1.10.3
 setuptools==58.0.4
 twine==3.8.0
