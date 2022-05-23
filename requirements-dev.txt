@@ -2,7 +2,7 @@
 asserts==0.11.1
 bandit==1.7.4
 behave==1.2.6
-coverage==6.3.3
+coverage==6.4
 docker-compose==1.29.2
 hypothesis==6.46.6
 lxml==4.8.0
