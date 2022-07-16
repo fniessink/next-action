@@ -10,7 +10,7 @@ mypy==0.950
 nose==1.3.7
 pip==22.1.1
 pycodestyle==2.8.0
-pydeps==1.10.18
+pydeps==1.10.21
 pydocstyle==6.1.1
 pylint==2.13.9
 pyroma==4.0
