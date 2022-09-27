@@ -6,7 +6,7 @@ coverage==6.4.2
 docker-compose==1.29.2
 hypothesis==6.52.1
 lxml==4.9.1
-mypy==0.961
+mypy==0.981
 nose==1.3.7
 pip==22.1.2
 pycodestyle==2.8.0
