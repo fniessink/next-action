@@ -1,5 +1,5 @@
 FROM koalaman/shellcheck-alpine:v0.8.0 AS shellcheck
-FROM hadolint/hadolint:v1.23.0-alpine AS hadolint
+FROM hadolint/hadolint:v2.10.0-alpine AS hadolint
 FROM python:3.8-alpine
 
 LABEL maintainer="Frank Niessink <frank@niessink.com>"
