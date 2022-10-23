@@ -1,6 +1,6 @@
 FROM koalaman/shellcheck-alpine:v0.8.0 AS shellcheck
 FROM hadolint/hadolint:v2.10.0-alpine AS hadolint
-FROM python:3.8-alpine
+FROM python:3.10-alpine
 
 LABEL maintainer="Frank Niessink <frank@niessink.com>"
 LABEL description="Development dependencies for Next-action."
