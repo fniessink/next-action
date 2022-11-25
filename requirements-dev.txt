@@ -15,6 +15,6 @@ pydocstyle==6.1.1
 pylint==2.15.4
 pyroma==4.0
 safety==2.3.1
-setuptools==65.5.0
+setuptools==65.6.3
 twine==4.0.1
 vulture==2.6
