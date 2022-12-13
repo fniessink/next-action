@@ -1,4 +1,4 @@
-FROM koalaman/shellcheck-alpine:v0.8.0 AS shellcheck
+FROM koalaman/shellcheck-alpine:v0.9.0 AS shellcheck
 FROM hadolint/hadolint:v2.12.0-alpine AS hadolint
 FROM python:3.11-alpine
 
