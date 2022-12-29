@@ -620,11 +620,11 @@ To run the unit tests and check their code coverage:
 
 ```console
 $ docker-compose --ansi never up unittest
-Recreating next-action-unittest-1 ...
-Recreating next-action-unittest-1 ... done
+Starting next-action_unittest_1 ...
+Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 271 tests in 0.883s
+unittest_1                | Ran 271 tests in 0.904s
 unittest_1                |
 unittest_1                | OK
 unittest_1                | Wrote XML report to build/unittest-coverage.xml
@@ -645,145 +645,145 @@ To run the feature tests and measure their code coverage:
 
 ```console
 $ docker-compose --ansi never up behave
-Starting next-action_behave_1 ...
-Starting next-action_behave_1 ... done
+Recreating next-action-behave-1 ...
+Recreating next-action-behave-1 ... done
 Attaching to next-action_behave_1
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.100.266765
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.101.779911
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.102.657236
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.103.332057
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.104.967716
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.105.131554
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.106.491719
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.107.815756
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.108.095149
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.109.258416
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.110.903726
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.111.316070
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.112.931921
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.113.580521
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.114.616002
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.115.793551
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.116.672190
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.117.891185
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.118.837708
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.119.975070
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.120.399013
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.121.910893
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.122.194440
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.123.575803
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.124.817941
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.125.333395
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.126.109763
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.127.104753
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.128.881219
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.129.858718
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.130.227156
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.131.500508
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.132.115319
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.133.753588
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.134.211585
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.136.370446
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.138.286428
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.139.853876
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.14.884987
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.140.296133
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.141.704779
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.142.288609
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.143.156773
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.144.633990
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.145.465558
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.146.115077
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.15.510046
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.16.405097
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.17.739351
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.18.278461
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.19.121140
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.20.696279
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.21.074769
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.22.074564
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.23.343497
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.24.989977
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.25.494949
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.26.623155
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.27.636643
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.28.109826
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.29.725753
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.30.040634
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.31.896503
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.32.394338
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.33.915127
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.34.405281
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.35.211098
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.36.354451
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.37.112315
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.38.544978
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.39.553202
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.40.722428
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.41.621279
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.42.145630
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.43.526881
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.44.338982
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.45.646391
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.46.636142
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.47.563328
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.48.328380
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.49.711189
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.50.601965
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.51.910418
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.52.933105
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.53.690830
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.54.568958
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.55.688426
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.56.193376
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.57.620157
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.58.186510
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.59.832234
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.60.865595
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.61.111048
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.62.055203
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.63.276062
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.64.233614
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.65.603211
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.66.552786
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.67.481073
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.68.774306
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.69.164562
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.70.971641
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.71.479794
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.72.493747
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.73.848598
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.74.023515
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.75.628035
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.76.533473
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.77.991015
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.78.831578
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.79.214333
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.80.774663
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.81.877266
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.82.816821
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.83.985588
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.84.045601
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.85.590987
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.86.029803
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.87.241060
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.88.252424
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.89.118562
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.90.477681
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.91.200550
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.92.875853
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.93.947379
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.94.713581
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.95.034197
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.96.564417
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.97.913416
-behave_1                  | Combined data file .coverage.c3609d2d2ff4.98.960503
-behave_1                  | Skipping duplicate data .coverage.c3609d2d2ff4.99.421677
+behave_1                  | Combined data file .coverage.f9e48bea7d95.100.996597
+behave_1                  | Combined data file .coverage.f9e48bea7d95.101.468471
+behave_1                  | Combined data file .coverage.f9e48bea7d95.102.854521
+behave_1                  | Combined data file .coverage.f9e48bea7d95.103.361367
+behave_1                  | Combined data file .coverage.f9e48bea7d95.104.722380
+behave_1                  | Combined data file .coverage.f9e48bea7d95.105.691922
+behave_1                  | Combined data file .coverage.f9e48bea7d95.106.997495
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.107.853243
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.108.502747
+behave_1                  | Combined data file .coverage.f9e48bea7d95.109.685711
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.110.474711
+behave_1                  | Combined data file .coverage.f9e48bea7d95.111.106389
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.112.344641
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.113.436204
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.114.897070
+behave_1                  | Combined data file .coverage.f9e48bea7d95.115.679258
+behave_1                  | Combined data file .coverage.f9e48bea7d95.116.142323
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.117.252794
+behave_1                  | Combined data file .coverage.f9e48bea7d95.118.393226
+behave_1                  | Combined data file .coverage.f9e48bea7d95.119.830421
+behave_1                  | Combined data file .coverage.f9e48bea7d95.120.078151
+behave_1                  | Combined data file .coverage.f9e48bea7d95.121.212746
+behave_1                  | Combined data file .coverage.f9e48bea7d95.122.454488
+behave_1                  | Combined data file .coverage.f9e48bea7d95.123.606910
+behave_1                  | Combined data file .coverage.f9e48bea7d95.124.112553
+behave_1                  | Combined data file .coverage.f9e48bea7d95.125.180563
+behave_1                  | Combined data file .coverage.f9e48bea7d95.126.047724
+behave_1                  | Combined data file .coverage.f9e48bea7d95.127.622212
+behave_1                  | Combined data file .coverage.f9e48bea7d95.128.082620
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.129.132072
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.130.825663
+behave_1                  | Combined data file .coverage.f9e48bea7d95.131.310472
+behave_1                  | Combined data file .coverage.f9e48bea7d95.132.481878
+behave_1                  | Combined data file .coverage.f9e48bea7d95.133.188328
+behave_1                  | Combined data file .coverage.f9e48bea7d95.134.082220
+behave_1                  | Combined data file .coverage.f9e48bea7d95.136.993070
+behave_1                  | Combined data file .coverage.f9e48bea7d95.138.675878
+behave_1                  | Combined data file .coverage.f9e48bea7d95.139.839670
+behave_1                  | Combined data file .coverage.f9e48bea7d95.14.760860
+behave_1                  | Combined data file .coverage.f9e48bea7d95.140.879862
+behave_1                  | Combined data file .coverage.f9e48bea7d95.141.698673
+behave_1                  | Combined data file .coverage.f9e48bea7d95.142.706060
+behave_1                  | Combined data file .coverage.f9e48bea7d95.143.569652
+behave_1                  | Combined data file .coverage.f9e48bea7d95.144.010638
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.145.494133
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.146.546100
+behave_1                  | Combined data file .coverage.f9e48bea7d95.15.453513
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.16.871577
+behave_1                  | Combined data file .coverage.f9e48bea7d95.17.473306
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.18.987600
+behave_1                  | Combined data file .coverage.f9e48bea7d95.19.552598
+behave_1                  | Combined data file .coverage.f9e48bea7d95.20.307829
+behave_1                  | Combined data file .coverage.f9e48bea7d95.21.004194
+behave_1                  | Combined data file .coverage.f9e48bea7d95.22.396873
+behave_1                  | Combined data file .coverage.f9e48bea7d95.23.503332
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.24.937995
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.25.903019
+behave_1                  | Combined data file .coverage.f9e48bea7d95.26.566137
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.27.113632
+behave_1                  | Combined data file .coverage.f9e48bea7d95.28.069561
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.29.421169
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.30.731897
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.31.422909
+behave_1                  | Combined data file .coverage.f9e48bea7d95.32.651102
+behave_1                  | Combined data file .coverage.f9e48bea7d95.33.984725
+behave_1                  | Combined data file .coverage.f9e48bea7d95.34.169024
+behave_1                  | Combined data file .coverage.f9e48bea7d95.35.885876
+behave_1                  | Combined data file .coverage.f9e48bea7d95.36.142778
+behave_1                  | Combined data file .coverage.f9e48bea7d95.37.741503
+behave_1                  | Combined data file .coverage.f9e48bea7d95.38.339222
+behave_1                  | Combined data file .coverage.f9e48bea7d95.39.675483
+behave_1                  | Combined data file .coverage.f9e48bea7d95.40.956591
+behave_1                  | Combined data file .coverage.f9e48bea7d95.41.506336
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.42.368008
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.43.179873
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.44.797321
+behave_1                  | Combined data file .coverage.f9e48bea7d95.45.800435
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.46.146398
+behave_1                  | Combined data file .coverage.f9e48bea7d95.47.653462
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.48.240043
+behave_1                  | Combined data file .coverage.f9e48bea7d95.49.378486
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.50.708162
+behave_1                  | Combined data file .coverage.f9e48bea7d95.51.933167
+behave_1                  | Combined data file .coverage.f9e48bea7d95.52.043555
+behave_1                  | Combined data file .coverage.f9e48bea7d95.53.416687
+behave_1                  | Combined data file .coverage.f9e48bea7d95.54.113898
+behave_1                  | Combined data file .coverage.f9e48bea7d95.55.178675
+behave_1                  | Combined data file .coverage.f9e48bea7d95.56.648765
+behave_1                  | Combined data file .coverage.f9e48bea7d95.57.741583
+behave_1                  | Combined data file .coverage.f9e48bea7d95.58.681165
+behave_1                  | Combined data file .coverage.f9e48bea7d95.59.176869
+behave_1                  | Combined data file .coverage.f9e48bea7d95.60.333890
+behave_1                  | Combined data file .coverage.f9e48bea7d95.61.440367
+behave_1                  | Combined data file .coverage.f9e48bea7d95.62.243922
+behave_1                  | Combined data file .coverage.f9e48bea7d95.63.806391
+behave_1                  | Combined data file .coverage.f9e48bea7d95.64.694169
+behave_1                  | Combined data file .coverage.f9e48bea7d95.65.780015
+behave_1                  | Combined data file .coverage.f9e48bea7d95.66.933522
+behave_1                  | Combined data file .coverage.f9e48bea7d95.67.828830
+behave_1                  | Combined data file .coverage.f9e48bea7d95.68.476091
+behave_1                  | Combined data file .coverage.f9e48bea7d95.69.532228
+behave_1                  | Combined data file .coverage.f9e48bea7d95.70.877471
+behave_1                  | Combined data file .coverage.f9e48bea7d95.71.321021
+behave_1                  | Combined data file .coverage.f9e48bea7d95.72.838844
+behave_1                  | Combined data file .coverage.f9e48bea7d95.73.684358
+behave_1                  | Combined data file .coverage.f9e48bea7d95.74.479984
+behave_1                  | Combined data file .coverage.f9e48bea7d95.75.000009
+behave_1                  | Combined data file .coverage.f9e48bea7d95.76.397658
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.77.370677
+behave_1                  | Combined data file .coverage.f9e48bea7d95.78.157607
+behave_1                  | Combined data file .coverage.f9e48bea7d95.79.278957
+behave_1                  | Combined data file .coverage.f9e48bea7d95.80.670824
+behave_1                  | Combined data file .coverage.f9e48bea7d95.81.626418
+behave_1                  | Combined data file .coverage.f9e48bea7d95.82.347252
+behave_1                  | Combined data file .coverage.f9e48bea7d95.83.513331
+behave_1                  | Combined data file .coverage.f9e48bea7d95.84.330391
+behave_1                  | Combined data file .coverage.f9e48bea7d95.85.510453
+behave_1                  | Combined data file .coverage.f9e48bea7d95.86.173373
+behave_1                  | Combined data file .coverage.f9e48bea7d95.87.741144
+behave_1                  | Combined data file .coverage.f9e48bea7d95.88.205487
+behave_1                  | Combined data file .coverage.f9e48bea7d95.89.069661
+behave_1                  | Combined data file .coverage.f9e48bea7d95.90.032718
+behave_1                  | Combined data file .coverage.f9e48bea7d95.91.861635
+behave_1                  | Combined data file .coverage.f9e48bea7d95.92.160322
+behave_1                  | Combined data file .coverage.f9e48bea7d95.93.019135
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.94.061856
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.95.659068
+behave_1                  | Combined data file .coverage.f9e48bea7d95.96.165910
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.97.534646
+behave_1                  | Combined data file .coverage.f9e48bea7d95.98.430516
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.99.295454
 behave_1                  | Wrote HTML report to build/feature-coverage/index.html
 behave_1                  | 17 features passed, 0 failed, 0 skipped
 behave_1                  | 123 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 411 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 0m33.977s
+behave_1                  | Took 0m38.196s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
 behave_1                  | TOTAL     510      0    256      0   100%
@@ -805,14 +805,14 @@ To run the quality checks:
 
 ```console
 $ docker-compose --ansi never up quality
-Recreating next-action-quality-1 ...
-Recreating next-action-quality-1 ... done
+Starting next-action_quality_1 ...
+Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
 quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/Developer/next-action/build/mypy/index.html
 quality_1                 | Success: no issues found in 13 source files
 quality_1                 |
-quality_1                 | ------------------------------------
-quality_1                 | Your code has been rated at 10.00/10
+quality_1                 | --------------------------------------------------------------------
+quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 quality_1                 |
 quality_1                 | ------------------------------
 quality_1                 | Checking .

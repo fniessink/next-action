@@ -657,6 +657,7 @@ re: (Creating|Recreating|Starting) \S+_quality_1 ...
 (Creating|Recreating|Starting) \S+_quality_1 ... done
 Attaching to \S+_quality_1
 \S+quality_1\s+| Generated HTML report (via XSLT): /.*/build/mypy/index.html
+\S+quality_1\s+| Success: no issues found in \d+ source files
 \S+quality_1\s+|
 \S+quality_1\s+| ------------------------------------
 \S+quality_1\s+| Your code has been rated at 10.00/10
@@ -664,6 +665,7 @@ Attaching to \S+_quality_1
 \S+quality_1\s+|
 \S+quality_1\s+| ------------------------------
 \S+quality_1\s+| Checking .
+\S+quality_1\s+| Getting metadata for wheel...
 \S+quality_1\s+| Found next-action
 \S+quality_1\s+| ------------------------------
 \S+quality_1\s+| Final rating: 10/10

@@ -21,7 +21,7 @@ services:
 
 unittest:
   stage: test
-  script: docker compose up unittest
+  script: docker-compose up unittest
   coverage: '/ \d+%/'
   artifacts:
     paths:
@@ -29,7 +29,7 @@ unittest:
 
 behave:
   stage: test
-  script: docker compose up behave
+  script: docker-compose up behave
   coverage: '/ \d+%/'
   artifacts:
     paths:
@@ -37,21 +37,21 @@ behave:
 
 security:
   stage: test
-  script: docker compose up security
+  script: docker-compose up security
   artifacts:
     paths:
       - build/bandit.html
 
 quality:
   stage: test
-  script: docker compose up quality
+  script: docker-compose up quality
   artifacts:
     paths:
       - build/mypy
 
 docs:
   stage: test
-  script: docker compose up docs
+  script: docker-compose up docs
   artifacts:
     paths:
       - build/README.html
