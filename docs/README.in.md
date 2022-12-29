@@ -54,7 +54,7 @@ Show the next action in your todo.txt. The next action is selected from the task
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
 is selected by specifying contexts the tasks must have and/or projects the tasks must belong to.
 
-Optional arguments:
+Options:
   -h, --help            show this help message and exit
   -V, --version         show program's version number and exit
 
@@ -81,10 +81,12 @@ Output options:
                         multiple todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
-                        borland, bw, colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace,
-                        manni, monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc,
-                        rainbow_dash, rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-
-                        light, tango, trac, vim, vs, xcode (default: None)
+                        borland, bw, colorful, default, dracula, emacs, friendly, friendly_grayscale,
+                        fruity, github-dark, gruvbox-dark, gruvbox-light, igor, inkpot, lilypond, lovelace,
+                        manni, material, monokai, murphy, native, nord, nord-darker, one-dark, paraiso-dark,
+                        paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark, solarized-
+                        light, staroffice, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode,
+                        zenburn (default: None)
   -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
@@ -189,14 +191,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2021-10-28
+(K) Pay October invoice @home due:2023-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2021-10-01"
-(L) Pay September invoice @home due:2021-09-28
+$ next-action @home --due "2023-10-01"
+(L) Pay September invoice @home due:2023-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
@@ -350,7 +352,7 @@ weekend:
 work:
 - (C) Finish proposal for important client @work
 home:
-- (K) Pay October invoice @home due:2021-10-28
+- (K) Pay October invoice @home due:2023-10-28
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
@@ -565,14 +567,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2021-10-28
+(K) Pay October invoice @home due:2023-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay October invoice @home due:2021-10-28
+(K) Pay October invoice @home due:2023-10-28
 ```
 
 ## Recent changes
@@ -597,7 +599,7 @@ The `docker-compose.yml` contains services for each of the development tools. Th
 To run the unit tests and check their code coverage:
 
 ```console
-$ docker-compose --no-ansi up unittest
+$ docker-compose --ansi never up unittest
 re: (Creating|Recreating|Starting) \S+_unittest_1 ...
 (Creating|Recreating|Starting) \S+_unittest_1 ... done
 Attaching to \S+_unittest_1
@@ -621,7 +623,7 @@ The HTML coverage report is written to `build/unittest-coverage/`.
 To run the feature tests and measure their code coverage:
 
 ```console
-$ docker-compose --no-ansi up behave
+$ docker-compose --ansi never up behave
 re: (Creating|Recreating|Starting) \S+_behave_1 ...
 (Creating|Recreating|Starting) \S+_behave_1 ... done
 Attaching to \S+_behave_1
@@ -645,12 +647,12 @@ The HTML coverage report is written to `build/feature-coverage/`.
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
 the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are checked with Gherkin-lint.
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
-checked with Docker-compose.
+checked with docker compose.
 
 To run the quality checks:
 
 ```console
-$ docker-compose --no-ansi up quality
+$ docker-compose --ansi never up quality
 re: (Creating|Recreating|Starting) \S+_quality_1 ...
 (Creating|Recreating|Starting) \S+_quality_1 ... done
 Attaching to \S+_quality_1
@@ -672,7 +674,7 @@ Attaching to \S+_quality_1
 
 ### Generating documentation
 
-This `README.md` file is generated with `docker-compose up docs`.
+This `README.md` file is generated with `docker compose up docs`.
 
 The dependency graph below is created with Pydeps and the package and class diagrams below are created with
 Pyreverse (part of Pylint).

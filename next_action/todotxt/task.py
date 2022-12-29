@@ -14,7 +14,7 @@ class Task:
     # Source for the URL regular expression: http://www.noah.org/wiki/RegEx_Python
     url_reg_exp = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+#]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
 
-    def __init__(self, todo_txt: str, filename: str = "", line_number: int = None) -> None:
+    def __init__(self, todo_txt: str, filename: str = "", line_number: Optional[int] = None) -> None:
         """Initialise the task with its Todo.txt text string, originating filename, and originating line number."""
         self.text = todo_txt
         self.filename = filename
@@ -30,17 +30,17 @@ class Task:
         """Return whether the task is hidden."""
         return "1" in self.__prefixed_items("h:")
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def contexts(self) -> Set[str]:
         """Return the contexts of the task."""
         return self.__prefixed_items("@")
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def projects(self) -> Set[str]:
         """Return the projects of the task."""
         return self.__prefixed_items(r"\+")
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def priority(self) -> Optional[str]:
         """Return the priority of the task."""
         match = re.match(r"\(([A-Z])\) ", self.text)
@@ -55,18 +55,18 @@ class Task:
             return priority <= min_priority
         return False
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def creation_date(self) -> Optional[datetime.date]:
         """Return the creation date of the task."""
         match = re.match(fr"(?:\([A-Z]\) )?{self.iso_date_reg_exp}\b", self.text)
         return self.__create_date(match)
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def threshold_date(self) -> Optional[datetime.date]:
         """Return the threshold date of the task."""
         return self.__find_keyed_date("t")
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def due_date(self) -> Optional[datetime.date]:
         """Return the due date of the task."""
         due_dates = [self.__find_keyed_date("due")]
@@ -110,17 +110,17 @@ class Task:
         """Add the task to the blocked tasks."""
         self.__blocked_tasks.append(task)
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def child_ids(self) -> Set[str]:
         """Return the ids of the child tasks."""
         return {match.group(1) for match in re.finditer(r"\bafter:(\S+)\b", self.text)}
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def parent_ids(self) -> Set[str]:
         """Return the ids of the parent tasks."""
         return {match.group(2) for match in re.finditer(r"\b(p|before):(\S+)\b", self.text)}
 
-    @functools.lru_cache(maxsize=None)
+    @functools.lru_cache
     def task_id(self) -> str:
         """Return the id of the task."""
         match = re.search(r"\bid:(\S+)\b", self.text)

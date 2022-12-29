@@ -2,8 +2,8 @@
 
 mypy next_action
 pylint next_action tests docs
-pycodestyle .
-pydocstyle .
+pycodestyle next_action tests
+pydocstyle next_action tests
 vulture next_action .vulture-whitelist.py
 pyroma --min=10 .
 shellcheck extra/.next-action-completion.bash ci/*.sh

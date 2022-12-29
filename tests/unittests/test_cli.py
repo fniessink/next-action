@@ -12,8 +12,8 @@ from next_action.arguments import config
 from .arguments.test_parser import USAGE_MESSAGE
 
 
-@patch.object(config, "open", mock_open(read_data=""))  # pylint: disable=too-many-public-methods
-class CLITest(unittest.TestCase):
+@patch.object(config, "open", mock_open(read_data=""))
+class CLITest(unittest.TestCase):  # pylint: disable=too-many-public-methods
     """Unit tests for the command-line interface."""
 
     @patch.object(sys, "argv", ["next-action"])
@@ -54,6 +54,7 @@ class CLITest(unittest.TestCase):
     def test_missing_file(self, mock_stderr_write, mock_file_open):
         """Test the response when the task file can't be found."""
         mock_file_open.side_effect = OSError("some problem")
+        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual([call(USAGE_MESSAGE), call("next-action: error: can't open file: some problem\n")],
                          mock_stderr_write.call_args_list)
@@ -62,46 +63,50 @@ class CLITest(unittest.TestCase):
     @patch.object(sys.stdout, "write")
     def test_help(self, mock_stdout_write):
         """Test the help message."""
-        os.environ['COLUMNS'] = "120"  # Fake that the terminal is wide enough.
+        os.environ['COLUMNS'] = "110"  # Fake that the terminal is wide enough.
         self.assertRaises(SystemExit, next_action)
         self.assertEqual(call("""\
-Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-l] [-r <ref>] [-s
-[<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project> ...]
+Usage: next-action [-h] [-V] [-c [<config.cfg>] | -w] [-f <todo.txt> ...] [-b] [-g [<group>]] [-l] [-r <ref>]
+[-s [<style>]] [-a | -n <number>] [-d [<due date>] | -o] [-p [<priority>]] [-u] [--] [<context|project>
+...]
 
-Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based on task
-properties such as priority, due date, and creation date. Limit the tasks from which the next action is selected by
-specifying contexts the tasks must have and/or projects the tasks must belong to.
+Show the next action in your todo.txt. The next action is selected from the tasks in the todo.txt file based
+on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
+is selected by specifying contexts the tasks must have and/or projects the tasks must belong to.
 
-Optional arguments:
+Options:
   -h, --help            show this help message and exit
   -V, --version         show program's version number and exit
 
 Configuration options:
   -c [<config.cfg>], --config-file [<config.cfg>]
-                        filename of configuration file to read (default: ~/.next-action.cfg); omit filename to not
-                        read any configuration file
+                        filename of configuration file to read (default: ~/.next-action.cfg); omit filename
+                        to not read any configuration file
   -w, --write-config-file
                         generate a sample configuration file and exit
 
 Input options:
   -f <todo.txt>, --file <todo.txt>
-                        filename of todo.txt file to read; can be '-' to read from standard input; argument can be
-                        repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
+                        filename of todo.txt file to read; can be '-' to read from standard input; argument
+                        can be repeated to read tasks from multiple todo.txt files (default: ~/todo.txt)
 
 Output options:
   -b, --blocked         show the tasks blocked by the next action, if any (default: False)
   -g [<group>], --groupby [<group>]
-                        group the next actions; available groups: context, duedate, priority, project, source
-                        (default: None)
+                        group the next actions; available groups: context, duedate, priority, project,
+                        source (default: None)
   -l, --line-number     reference next actions with the line number in their todo.txt file (default: False)
   -r {always,never,multiple}, --reference {always,never,multiple}
-                        reference next actions with the name of their todo.txt file (default: when reading multiple
-                        todo.txt files)
+                        reference next actions with the name of their todo.txt file (default: when reading
+                        multiple todo.txt files)
   -s [<style>], --style [<style>]
-                        colorize the output; available styles: abap, algol, algol_nu, arduino, autumn, borland, bw,
-                        colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace, manni, monokai, murphy,
-                        native, paraiso-dark, paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark,
-                        solarized-light, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode (default: None)
+                        colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
+                        borland, bw, colorful, default, dracula, emacs, friendly, friendly_grayscale,
+                        fruity, github-dark, gruvbox-dark, gruvbox-light, igor, inkpot, lilypond, lovelace,
+                        manni, material, monokai, murphy, native, nord, nord-darker, one-dark, paraiso-dark,
+                        paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark, solarized-
+                        light, staroffice, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode,
+                        zenburn (default: None)
   -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
@@ -111,19 +116,19 @@ Show multiple next actions:
 
 Limit the tasks from which the next actions are selected:
   -d [<due date>], --due [<due date>]
-                        show only next actions with a due date; if a date is given, show only next actions due on or
-                        before that date
+                        show only next actions with a due date; if a date is given, show only next actions
+                        due on or before that date
   -o, --overdue         show only overdue next actions
   -p [<priority>], --priority [<priority>]
                         minimum priority (A-Z) of next actions to show (default: None)
   @<context> ...        contexts the next action must have
-  +<project> ...        projects the next action must be part of; if repeated the next action must be part of at least
-                        one of the projects
+  +<project> ...        projects the next action must be part of; if repeated the next action must be part
+                        of at least one of the projects
   -@<context> ...       contexts the next action must not have
   -+<project> ...       projects the next action must not be part of
 
-Use -- to separate options with optional arguments from contexts and projects, in order to handle cases where a
-context or project is mistaken for an argument to an option.
+Use -- to separate options with optional arguments from contexts and projects, in order to handle cases
+where a context or project is mistaken for an argument to an option.
 """),
                          mock_stdout_write.call_args_list[0])
 

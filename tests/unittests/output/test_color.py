@@ -23,12 +23,15 @@ class ColorizeTest(unittest.TestCase):
     def test_default_style(self):
         """Test that the output is styled when a style is passed."""
         task = "(A) Task @home +Project"
-        self.assertEqual('\x1b[38;5;18;01m(A)\x1b[39;00m Task \x1b[38;5;124m@home\x1b[39m \x1b[38;5;9m+Project\x1b[39m',
-                         colorize(task, self.namespace))
+        self.assertEqual(
+            '\x1b[38;5;18;01m(A)\x1b[39;00m Task \x1b[38;5;124m@home\x1b[39m \x1b[38;5;160m+Project\x1b[39m',
+            colorize(task, self.namespace)
+        )
 
     def test_strip_added_linebreak(self):
         """Test that the linebreak added by Pygments is removed."""
         task = "(A) Task @home +Project\n"
         self.assertEqual(
-            '\x1b[38;5;18;01m(A)\x1b[39;00m Task \x1b[38;5;124m@home\x1b[39m \x1b[38;5;9m+Project\x1b[39m\n',
-            colorize(task, self.namespace))
+            '\x1b[38;5;18;01m(A)\x1b[39;00m Task \x1b[38;5;124m@home\x1b[39m \x1b[38;5;160m+Project\x1b[39m\n',
+            colorize(task, self.namespace)
+        )

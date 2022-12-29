@@ -42,7 +42,7 @@ def task_id(index):
 def create_random_todo_txt():
     """Create a Todo.txt file with random tasks."""
     ids = []
-    with open("todo.txt", "w") as todo_txt:
+    with open("todo.txt", "w", encoding="utf-8") as todo_txt:
         for i in range(10000):
             before = after = ""
             if len(ids) > 3:

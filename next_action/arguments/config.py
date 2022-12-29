@@ -14,17 +14,17 @@ import cerberus
 def read_config_file(filename: str, default_filename: str, error: Callable[[str], None]):
     """Read and parse the configuration file."""
     try:
-        with open(os.path.expanduser(filename), "r") as config_file:
+        with open(os.path.expanduser(filename), "r", encoding="utf-8") as config_file:
             return yaml.safe_load(config_file.read())
     except FileNotFoundError as reason:
         if filename == default_filename:
             # Don't complain if there's no configuration file at the default location
-            return dict()  # pragma: no cover-behave
-        error(f"can't open file: {reason}")
+            return {}  # pragma: no cover-behave
+        return error(f"can't open file: {reason}")
     except OSError as reason:
-        error(f"can't open file: {reason}")
+        return error(f"can't open file: {reason}")
     except yaml.YAMLError as reason:
-        error(f"can't parse {filename}: {reason}")
+        return error(f"can't parse {filename}: {reason}")
 
 
 def write_config_file(namespace: argparse.Namespace) -> None:

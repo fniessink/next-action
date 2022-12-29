@@ -10,10 +10,10 @@ __pycache__
 build
 coverage.xml
 dist
+venv
 *.egg-info
 .idea
 .venv
 .hypothesis
 .tox
 .owasp-dependency-check-data
-
