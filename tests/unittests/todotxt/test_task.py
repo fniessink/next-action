@@ -204,7 +204,7 @@ class ThresholdDateTest(unittest.TestCase):
 
     def test_threshold_today(self):
         """Test a task with threshold today."""
-        task = todotxt.Task("Todo t:{0}".format(datetime.date.today().isoformat()))
+        task = todotxt.Task(f"Todo t:{datetime.date.today().isoformat()}")
         self.assertEqual(datetime.date.today(), task.threshold_date())
         self.assertFalse(task.is_future())
 

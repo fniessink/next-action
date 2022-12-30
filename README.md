@@ -74,7 +74,7 @@ Show the next action in your todo.txt. The next action is selected from the task
 on task properties such as priority, due date, and creation date. Limit the tasks from which the next action
 is selected by specifying contexts the tasks must have and/or projects the tasks must belong to.
 
-Optional arguments:
+Options:
   -h, --help            show this help message and exit
   -V, --version         show program's version number and exit
 
@@ -101,10 +101,12 @@ Output options:
                         multiple todo.txt files)
   -s [<style>], --style [<style>]
                         colorize the output; available styles: abap, algol, algol_nu, arduino, autumn,
-                        borland, bw, colorful, default, emacs, friendly, fruity, igor, inkpot, lovelace,
-                        manni, monokai, murphy, native, paraiso-dark, paraiso-light, pastie, perldoc,
-                        rainbow_dash, rrt, sas, solarized-dark, solarized-light, stata, stata-dark, stata-
-                        light, tango, trac, vim, vs, xcode (default: None)
+                        borland, bw, colorful, default, dracula, emacs, friendly, friendly_grayscale,
+                        fruity, github-dark, gruvbox-dark, gruvbox-light, igor, inkpot, lilypond, lovelace,
+                        manni, material, monokai, murphy, native, nord, nord-darker, one-dark, paraiso-dark,
+                        paraiso-light, pastie, perldoc, rainbow_dash, rrt, sas, solarized-dark, solarized-
+                        light, staroffice, stata, stata-dark, stata-light, tango, trac, vim, vs, xcode,
+                        zenburn (default: None)
   -u, --open-urls       open the urls in the next actions, if any (default: False)
 
 Show multiple next actions:
@@ -209,14 +211,14 @@ To limit the the tasks from which the next action is selected to actions with a 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2021-10-28
+(K) Pay October invoice @home due:2023-10-28
 ```
 
 Add a due date to select a next action from tasks due on or before that date:
 
 ```console
-$ next-action @home --due "2021-10-01"
-(L) Pay September invoice @home due:2021-09-28
+$ next-action @home --due "2023-10-01"
+(L) Pay September invoice @home due:2023-09-28
 ```
 
 To make sure you have no overdue actions, or work on overdue actions first, limit the tasks from which the next action
@@ -370,7 +372,7 @@ weekend:
 work:
 - (C) Finish proposal for important client @work
 home:
-- (K) Pay October invoice @home due:2021-10-28
+- (K) Pay October invoice @home due:2023-10-28
 ```
 
 *Next-action* sorts the groups according to the most important next action in the group. Actions may be repeated
@@ -585,14 +587,14 @@ There's two ways to help *Next-action* figure out what you mean. Either reverse 
 
 ```console
 $ next-action @home --due
-(K) Pay October invoice @home due:2021-10-28
+(K) Pay October invoice @home due:2023-10-28
 ```
 
 Or use `--` to separate the option from the positional argument(s):
 
 ```console
 $ next-action --due -- @home
-(K) Pay October invoice @home due:2021-10-28
+(K) Pay October invoice @home due:2023-10-28
 ```
 
 ## Recent changes
@@ -617,18 +619,19 @@ The `docker-compose.yml` contains services for each of the development tools. Th
 To run the unit tests and check their code coverage:
 
 ```console
-$ docker-compose --no-ansi up unittest
-Creating next-action_unittest_1 ...
-Creating next-action_unittest_1 ... done
+$ docker-compose --ansi never up unittest
+Starting next-action_unittest_1 ...
+Starting next-action_unittest_1 ... done
 Attaching to next-action_unittest_1
 unittest_1                | ----------------------------------------------------------------------
-unittest_1                | Ran 271 tests in 1.768s
+unittest_1                | Ran 271 tests in 0.904s
 unittest_1                |
 unittest_1                | OK
+unittest_1                | Wrote XML report to build/unittest-coverage.xml
+unittest_1                | Wrote HTML report to build/unittest-coverage/index.html
 unittest_1                | Name    Stmts   Miss Branch BrPart  Cover
 unittest_1                | -----------------------------------------
-unittest_1                | -----------------------------------------
-unittest_1                | TOTAL    1772      0    244      0   100%
+unittest_1                | TOTAL    1773      0   1028      0   100%
 unittest_1                |
 unittest_1                | 31 files skipped due to complete coverage.
 next-action_unittest_1 exited with code 0
@@ -641,18 +644,149 @@ The HTML coverage report is written to `build/unittest-coverage/`.
 To run the feature tests and measure their code coverage:
 
 ```console
-$ docker-compose --no-ansi up behave
-Creating next-action_behave_1 ...
-Creating next-action_behave_1 ... done
+$ docker-compose --ansi never up behave
+Recreating next-action-behave-1 ...
+Recreating next-action-behave-1 ... done
 Attaching to next-action_behave_1
+behave_1                  | Combined data file .coverage.f9e48bea7d95.100.996597
+behave_1                  | Combined data file .coverage.f9e48bea7d95.101.468471
+behave_1                  | Combined data file .coverage.f9e48bea7d95.102.854521
+behave_1                  | Combined data file .coverage.f9e48bea7d95.103.361367
+behave_1                  | Combined data file .coverage.f9e48bea7d95.104.722380
+behave_1                  | Combined data file .coverage.f9e48bea7d95.105.691922
+behave_1                  | Combined data file .coverage.f9e48bea7d95.106.997495
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.107.853243
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.108.502747
+behave_1                  | Combined data file .coverage.f9e48bea7d95.109.685711
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.110.474711
+behave_1                  | Combined data file .coverage.f9e48bea7d95.111.106389
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.112.344641
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.113.436204
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.114.897070
+behave_1                  | Combined data file .coverage.f9e48bea7d95.115.679258
+behave_1                  | Combined data file .coverage.f9e48bea7d95.116.142323
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.117.252794
+behave_1                  | Combined data file .coverage.f9e48bea7d95.118.393226
+behave_1                  | Combined data file .coverage.f9e48bea7d95.119.830421
+behave_1                  | Combined data file .coverage.f9e48bea7d95.120.078151
+behave_1                  | Combined data file .coverage.f9e48bea7d95.121.212746
+behave_1                  | Combined data file .coverage.f9e48bea7d95.122.454488
+behave_1                  | Combined data file .coverage.f9e48bea7d95.123.606910
+behave_1                  | Combined data file .coverage.f9e48bea7d95.124.112553
+behave_1                  | Combined data file .coverage.f9e48bea7d95.125.180563
+behave_1                  | Combined data file .coverage.f9e48bea7d95.126.047724
+behave_1                  | Combined data file .coverage.f9e48bea7d95.127.622212
+behave_1                  | Combined data file .coverage.f9e48bea7d95.128.082620
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.129.132072
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.130.825663
+behave_1                  | Combined data file .coverage.f9e48bea7d95.131.310472
+behave_1                  | Combined data file .coverage.f9e48bea7d95.132.481878
+behave_1                  | Combined data file .coverage.f9e48bea7d95.133.188328
+behave_1                  | Combined data file .coverage.f9e48bea7d95.134.082220
+behave_1                  | Combined data file .coverage.f9e48bea7d95.136.993070
+behave_1                  | Combined data file .coverage.f9e48bea7d95.138.675878
+behave_1                  | Combined data file .coverage.f9e48bea7d95.139.839670
+behave_1                  | Combined data file .coverage.f9e48bea7d95.14.760860
+behave_1                  | Combined data file .coverage.f9e48bea7d95.140.879862
+behave_1                  | Combined data file .coverage.f9e48bea7d95.141.698673
+behave_1                  | Combined data file .coverage.f9e48bea7d95.142.706060
+behave_1                  | Combined data file .coverage.f9e48bea7d95.143.569652
+behave_1                  | Combined data file .coverage.f9e48bea7d95.144.010638
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.145.494133
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.146.546100
+behave_1                  | Combined data file .coverage.f9e48bea7d95.15.453513
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.16.871577
+behave_1                  | Combined data file .coverage.f9e48bea7d95.17.473306
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.18.987600
+behave_1                  | Combined data file .coverage.f9e48bea7d95.19.552598
+behave_1                  | Combined data file .coverage.f9e48bea7d95.20.307829
+behave_1                  | Combined data file .coverage.f9e48bea7d95.21.004194
+behave_1                  | Combined data file .coverage.f9e48bea7d95.22.396873
+behave_1                  | Combined data file .coverage.f9e48bea7d95.23.503332
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.24.937995
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.25.903019
+behave_1                  | Combined data file .coverage.f9e48bea7d95.26.566137
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.27.113632
+behave_1                  | Combined data file .coverage.f9e48bea7d95.28.069561
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.29.421169
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.30.731897
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.31.422909
+behave_1                  | Combined data file .coverage.f9e48bea7d95.32.651102
+behave_1                  | Combined data file .coverage.f9e48bea7d95.33.984725
+behave_1                  | Combined data file .coverage.f9e48bea7d95.34.169024
+behave_1                  | Combined data file .coverage.f9e48bea7d95.35.885876
+behave_1                  | Combined data file .coverage.f9e48bea7d95.36.142778
+behave_1                  | Combined data file .coverage.f9e48bea7d95.37.741503
+behave_1                  | Combined data file .coverage.f9e48bea7d95.38.339222
+behave_1                  | Combined data file .coverage.f9e48bea7d95.39.675483
+behave_1                  | Combined data file .coverage.f9e48bea7d95.40.956591
+behave_1                  | Combined data file .coverage.f9e48bea7d95.41.506336
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.42.368008
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.43.179873
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.44.797321
+behave_1                  | Combined data file .coverage.f9e48bea7d95.45.800435
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.46.146398
+behave_1                  | Combined data file .coverage.f9e48bea7d95.47.653462
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.48.240043
+behave_1                  | Combined data file .coverage.f9e48bea7d95.49.378486
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.50.708162
+behave_1                  | Combined data file .coverage.f9e48bea7d95.51.933167
+behave_1                  | Combined data file .coverage.f9e48bea7d95.52.043555
+behave_1                  | Combined data file .coverage.f9e48bea7d95.53.416687
+behave_1                  | Combined data file .coverage.f9e48bea7d95.54.113898
+behave_1                  | Combined data file .coverage.f9e48bea7d95.55.178675
+behave_1                  | Combined data file .coverage.f9e48bea7d95.56.648765
+behave_1                  | Combined data file .coverage.f9e48bea7d95.57.741583
+behave_1                  | Combined data file .coverage.f9e48bea7d95.58.681165
+behave_1                  | Combined data file .coverage.f9e48bea7d95.59.176869
+behave_1                  | Combined data file .coverage.f9e48bea7d95.60.333890
+behave_1                  | Combined data file .coverage.f9e48bea7d95.61.440367
+behave_1                  | Combined data file .coverage.f9e48bea7d95.62.243922
+behave_1                  | Combined data file .coverage.f9e48bea7d95.63.806391
+behave_1                  | Combined data file .coverage.f9e48bea7d95.64.694169
+behave_1                  | Combined data file .coverage.f9e48bea7d95.65.780015
+behave_1                  | Combined data file .coverage.f9e48bea7d95.66.933522
+behave_1                  | Combined data file .coverage.f9e48bea7d95.67.828830
+behave_1                  | Combined data file .coverage.f9e48bea7d95.68.476091
+behave_1                  | Combined data file .coverage.f9e48bea7d95.69.532228
+behave_1                  | Combined data file .coverage.f9e48bea7d95.70.877471
+behave_1                  | Combined data file .coverage.f9e48bea7d95.71.321021
+behave_1                  | Combined data file .coverage.f9e48bea7d95.72.838844
+behave_1                  | Combined data file .coverage.f9e48bea7d95.73.684358
+behave_1                  | Combined data file .coverage.f9e48bea7d95.74.479984
+behave_1                  | Combined data file .coverage.f9e48bea7d95.75.000009
+behave_1                  | Combined data file .coverage.f9e48bea7d95.76.397658
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.77.370677
+behave_1                  | Combined data file .coverage.f9e48bea7d95.78.157607
+behave_1                  | Combined data file .coverage.f9e48bea7d95.79.278957
+behave_1                  | Combined data file .coverage.f9e48bea7d95.80.670824
+behave_1                  | Combined data file .coverage.f9e48bea7d95.81.626418
+behave_1                  | Combined data file .coverage.f9e48bea7d95.82.347252
+behave_1                  | Combined data file .coverage.f9e48bea7d95.83.513331
+behave_1                  | Combined data file .coverage.f9e48bea7d95.84.330391
+behave_1                  | Combined data file .coverage.f9e48bea7d95.85.510453
+behave_1                  | Combined data file .coverage.f9e48bea7d95.86.173373
+behave_1                  | Combined data file .coverage.f9e48bea7d95.87.741144
+behave_1                  | Combined data file .coverage.f9e48bea7d95.88.205487
+behave_1                  | Combined data file .coverage.f9e48bea7d95.89.069661
+behave_1                  | Combined data file .coverage.f9e48bea7d95.90.032718
+behave_1                  | Combined data file .coverage.f9e48bea7d95.91.861635
+behave_1                  | Combined data file .coverage.f9e48bea7d95.92.160322
+behave_1                  | Combined data file .coverage.f9e48bea7d95.93.019135
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.94.061856
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.95.659068
+behave_1                  | Combined data file .coverage.f9e48bea7d95.96.165910
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.97.534646
+behave_1                  | Combined data file .coverage.f9e48bea7d95.98.430516
+behave_1                  | Skipping duplicate data .coverage.f9e48bea7d95.99.295454
+behave_1                  | Wrote HTML report to build/feature-coverage/index.html
 behave_1                  | 17 features passed, 0 failed, 0 skipped
 behave_1                  | 123 scenarios passed, 0 failed, 0 skipped
 behave_1                  | 411 steps passed, 0 failed, 0 skipped, 0 undefined
-behave_1                  | Took 2m9.666s
+behave_1                  | Took 0m38.196s
 behave_1                  | Name    Stmts   Miss Branch BrPart  Cover
 behave_1                  | -----------------------------------------
-behave_1                  | -----------------------------------------
-behave_1                  | TOTAL     510      0    224      0   100%
+behave_1                  | TOTAL     510      0    256      0   100%
 behave_1                  |
 behave_1                  | 13 files skipped due to complete coverage.
 next-action_behave_1 exited with code 0
@@ -665,39 +799,35 @@ The HTML coverage report is written to `build/feature-coverage/`.
 The tools Mypy, Pylint, Pycodestyle, Pydocstyle, Bandit, Pyroma, and Vulture are used to check for quality issues in
 the Python code. Shellcheck is used evaluate the Bash code. Gherkin feature files are checked with Gherkin-lint.
 The Markdown files are evaluated with Markdownlint. The Dockerfile is checked with Hadolint. The docker-compose.yml is
-checked with Docker-compose.
+checked with docker compose.
 
 To run the quality checks:
 
 ```console
-$ docker-compose --no-ansi up quality
-Creating next-action_quality_1 ...
-Creating next-action_quality_1 ... done
+$ docker-compose --ansi never up quality
+Starting next-action_quality_1 ...
+Starting next-action_quality_1 ... done
 Attaching to next-action_quality_1
-quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/workspace/next-action/build/mypy/index.html
+quality_1                 | Generated HTML report (via XSLT): /Users/fniessink/Developer/next-action/build/mypy/index.html
 quality_1                 | Success: no issues found in 13 source files
-quality_1                 | ************* Module tests.unittests.test_cli
-quality_1                 | tests/unittests/test_cli.py:16:0: R0904: Too many public methods (21/20) (too-many-public-methods)
 quality_1                 |
-quality_1                 | -----------------------------------
-quality_1                 | Your code has been rated at 9.99/10
+quality_1                 | --------------------------------------------------------------------
+quality_1                 | Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 quality_1                 |
 quality_1                 | ------------------------------
 quality_1                 | Checking .
+quality_1                 | Getting metadata for wheel...
 quality_1                 | Found next-action
 quality_1                 | ------------------------------
 quality_1                 | Final rating: 10/10
 quality_1                 | Your cheese is so fresh most people think it's a cream: Mascarpone
 quality_1                 | ------------------------------
-quality_1                 | /usr/local/lib/python3.8/site-packages/setuptools/distutils_patch.py:25: UserWarning: Distutils was imported before Setuptools. This usage is discouraged and may exhibit undesirable behaviors or errors. Please use Setuptools' objects directly or at least import Setuptools first.
-quality_1                 |   warnings.warn(
-quality_1                 | README.md:692:121 MD013/line-length Line length [Expected: 120; Actual: 307]
 next-action_quality_1 exited with code 0
 ```
 
 ### Generating documentation
 
-This `README.md` file is generated with `docker-compose up docs`.
+This `README.md` file is generated with `docker compose up docs`.
 
 The dependency graph below is created with Pydeps and the package and class diagrams below are created with
 Pyreverse (part of Pylint).

@@ -101,7 +101,7 @@ class StateMachine:
 def update_readme():
     """Read the README markdown template line by line and update table of contents and console commands."""
     start = datetime.datetime.now()
-    with open("docs/README.in.md") as readme_in:
+    with open("docs/README.in.md", encoding="utf-8") as readme_in:
         lines = readme_in.readlines()
     toc_header = "## Table of contents"
     machine = StateMachine(create_toc(lines, toc_header), toc_header)
@@ -110,7 +110,7 @@ def update_readme():
         sys.stderr.write(".")
         sys.stderr.flush()
         process = process(line.rstrip())
-    pathlib.Path("README.md").write_text("\n".join(machine.lines) + "\n")
+    pathlib.Path("README.md").write_text("\n".join(machine.lines) + "\n", encoding="utf-8")
     duration = datetime.datetime.now() - start
     sys.stderr.write("\n" + "-" * 40 + f"\nProcessed {len(lines)} lines in {duration.seconds}s.\n")
 

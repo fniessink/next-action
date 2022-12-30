@@ -37,7 +37,7 @@ behave:
 
 security:
   stage: test
-  script: docker-compose up security 
+  script: docker-compose up security
   artifacts:
     paths:
       - build/bandit.html

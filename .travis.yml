@@ -5,10 +5,10 @@ install:
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - docker pull fniessink/next-action-dev:latest
 script:
-- docker-compose up --exit-code-from docs docs
-- docker-compose up sonarcloud-scanner
+- docker compose up --exit-code-from docs docs
+- docker compose up sonarcloud-scanner
 deploy:
   provider: script
-  script: docker-compose up release
+  script: docker compose up release
   on:
     tags: true
