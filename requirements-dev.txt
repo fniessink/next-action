@@ -1,6 +1,6 @@
 # Development dependencies
 asserts==0.12.0
-bandit==1.7.5
+bandit==1.7.6
 behave==1.2.6
 coverage==7.3.4
 hypothesis==6.92.1
